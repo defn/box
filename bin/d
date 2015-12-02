@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+function main {
+  local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
+  source "$shome/script/profile"
+
+  export VAGRANT_CWD="$shome"
+
+  if [[ "$#" == 0 ]]; then
+    echo "$(basename "$0"): up|destroy ssh|rsync|scp"
+    return 0
+  fi
+
+  local nm_action="$1"; shift
+  local nm_guest="$(basename "$0")"
+  case "$nm_action" in
+    up|destroy)
+      vagrant "$nm_action" "$nm_guest" "$@"
+      ;;
+    ssh|rsync|scp)
+      vagrant "$nm_guest" "$nm_action" "$@"
+      ;;
+    *)
+      vagrant "$nm_action" "$nm_guest" "$@"
+      ;;
+  esac
+}
+
+source sub "$BASH_SOURCE" "$@"

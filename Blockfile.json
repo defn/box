@@ -1,6 +1,13 @@
 {
   "require": [
-    "mongodb",
-    "boxcar"
+    [ 
+      "app",
+      "jq",
+      "pkgsrc"
+    ],
+    [
+      "basebox",
+      "basebox-vagrants"
+    ]
   ]
 }
