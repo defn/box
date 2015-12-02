@@ -8,6 +8,10 @@
     [
       "basebox",
       "basebox-vagrants"
+    ],
+    [
+      "consul",
+      "openvpn"
     ]
   ]
 }
