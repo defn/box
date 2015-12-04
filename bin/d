@@ -29,7 +29,7 @@ function main {
       if [[ "$nm_guest" == "fga0" ]]; then
         "$nm_guest" destroy -f
         if [[ -n "${1:-}" ]]; then
-          export IMAGE="$1; shift"
+          export IMAGE="$1"; shift
         fi
         "$nm_guest" up
       fi
