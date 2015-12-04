@@ -25,16 +25,12 @@ function main {
     id)
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
       ;;
-    rebuild)
-      if [[ "$nm_guest" == "fga0" ]]; then
-        docker tag -f ubuntu:packer ubuntu:packer-input
-        "$nm_guest" destroy -f
-        "$nm_guest" up
-      fi
-      ;;
-    build)
+    rebuild|build)
       if [[ "$nm_guest" == "fga0" ]]; then
         "$nm_guest" destroy -f
+        if [[ -n "${1:-}" ]]; then
+          export IMAGE="$1; shift"
+        fi
         "$nm_guest" up
       fi
       ;;
