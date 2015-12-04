@@ -3,16 +3,19 @@
 function main {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
   source "$shome/script/profile"
+  require
 
   export VAGRANT_CWD="$HOME"
 
   if [[ "$#" == 0 ]]; then
-    echo "$(basename "$0"): up|destroy ssh|rsync|scp id"
+    echo "$(basename "$0"): up|destroy ssh|rsync|scp id rebuild build"
     return 0
   fi
 
   local nm_action="$1"; shift
   local nm_guest="$(basename "$0")"
+  local nm_provider='docker'
+
   case "$nm_action" in
     up|destroy)
       vagrant "$nm_action" "$nm_guest" "$@"
@@ -22,6 +25,19 @@ function main {
       ;;
     id)
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
+      ;;
+    rebuild)
+      if [[ "$nm_guest" == "fga0" ]]; then
+        docker tag -f ubuntu:packer ubuntu:packer-input
+        "$nm_guest" destroy -f
+        "$nm_guest" up
+      fi
+      ;;
+    build)
+      if [[ "$nm_guest" == "fga0" ]]; then
+        "$nm_guest" destroy -f
+        "$nm_guest" up
+      fi
       ;;
     *)
       vagrant "$nm_action" "$nm_guest" "$@"
