@@ -26,13 +26,11 @@ function main {
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
       ;;
     rebuild|build)
-      if [[ "$nm_guest" == "fga0" ]]; then
-        "$nm_guest" destroy -f
-        if [[ -n "${1:-}" ]]; then
-          export IMAGE="$1"; shift
-        fi
-        "$nm_guest" up
+      "$nm_guest" destroy -f
+      if [[ -n "${1:-}" ]]; then
+        export IMAGE="$1"; shift
       fi
+      "$nm_guest" up
       ;;
     *)
       vagrant "$nm_action" "$nm_guest" "$@"
