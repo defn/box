@@ -7,7 +7,8 @@
     ],
     [
       "basebox",
-      "basebox-vagrants"
+      "osx"
+      "basebox-vagrants",
     ],
     [
       "consul",
