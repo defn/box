@@ -31,6 +31,9 @@ function main {
         export IMAGE="$1"; shift
       fi
       "$nm_guest" up
+      if [[ "$nm_guest" == "fga0" ]]; then
+        docker commit $($nm_guest id) ubuntu:vagrant
+      fi
       ;;
     *)
       vagrant "$nm_action" "$nm_guest" "$@"
