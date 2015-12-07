@@ -38,7 +38,7 @@ function main {
       "$nm_guest" up
       ;;
     remove)
-      docker rm ubuntu:vagrant
+      docker rmi ubuntu:vagrant
       ;;
     add)
       docker commit $($nm_guest id) ubuntu:vagrant
