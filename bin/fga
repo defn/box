@@ -22,16 +22,11 @@ function main {
     ssh|rsync|scp)
       vagrant "$nm_guest" "$nm_action" "$@"
       ;;
+    build|remove|add|rebuild)
+      ${nm_provider} "$nm_action" "$@"
+      ;;
     id)
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
-      ;;
-    rebuild)
-      ${nm_provider} build
-      ${nm_provider} remove
-      ${nm_provider} add
-      ;;
-    build|remove|add)
-      ${nm_provider} "$nm_action" "$@"
       ;;
     *)
       vagrant "$nm_action" "$nm_guest" "$@"
