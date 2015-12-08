@@ -12,7 +12,7 @@ function main {
   fi
 
   local nm_action="$1"; shift
-  local nm_guest='local'
+  local nm_guest='fga'
   local nm_provider='virtualbox'
 
   case "$nm_action" in
