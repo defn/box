@@ -25,7 +25,7 @@ function main {
       vagrant "$nm_action" "$nm_guest" "$@"
       ;;
     ssh|rsync|scp)
-      parity "$nm_acton" "$nm_guest" "$@"
+      parity "$nm_action" "$nm_guest" "$@"
       ;;
     build|remove|add|rebuild)
       ${nm_provider} "$nm_action" "$@"
