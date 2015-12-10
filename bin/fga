@@ -18,11 +18,14 @@ function main {
   local nm_provider='virtualbox'
 
   case "$nm_action" in
-    up|destroy)
+    up)
+      parity "$nm_action" "$nm_guest" "$@"
+      ;;
+    destroy)
       vagrant "$nm_action" "$nm_guest" "$@"
       ;;
     ssh|rsync|scp)
-      vagrant "$nm_guest" "$nm_action" "$@"
+      parity "$nm_acton" "$nm_guest" "$@"
       ;;
     build|remove|add|rebuild)
       ${nm_provider} "$nm_action" "$@"
