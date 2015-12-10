@@ -29,7 +29,7 @@ function main {
       ;;
     rebuild)
       $0 build
-      $0 remove
+      $0 remove || true
       $0 add
       ;;
     build)
