@@ -27,7 +27,12 @@ function main {
     ssh|rsync|scp)
       parity "$nm_action" "$nm_guest" "$@"
       ;;
-    build|remove|add|rebuild)
+    rebuild)
+      fga destroy -f || true
+      ${nm_provider} rebuild
+      fga up
+      ;;
+    build|remove|add)
       ${nm_provider} "$nm_action" "$@"
       ;;
     id)
