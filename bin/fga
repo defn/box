@@ -31,6 +31,7 @@ function main {
       fga destroy -f || true
       ${nm_provider} rebuild
       fga up
+      fga0 rebuild
       ;;
     build|remove|add)
       ${nm_provider} "$nm_action" "$@"
