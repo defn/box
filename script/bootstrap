@@ -8,6 +8,9 @@ function bootstrap {
   pkg ensure net/wget
   pkg ensure www/curl
   pkg ensure devel/jq
+  pkg ensure security/mozilla-rootcerts
+  mozilla-rootcerts install || true
 }
 
 bootstrap
+
