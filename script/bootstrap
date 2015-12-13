@@ -7,6 +7,7 @@ function bootstrap {
   pkg_ensure misc/getopt
   pkg_ensure net/wget
   pkg_ensure www/curl
+  pkg_ensure devel/jq
 }
 
 bootstrap
