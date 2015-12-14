@@ -9,7 +9,7 @@ function main {
   export VAGRANT_CWD="$HOME"
 
   if [[ "$#" == 0 ]]; then
-    echo "$(basename "$0"): up|destroy ssh|rsync|scp id build"
+    echo "$(basename "$0"): up|destroy ssh|rsync|scp id media rebuild build|remove"
     return 0
   fi
 
@@ -30,23 +30,21 @@ function main {
     id)
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
       ;;
+    media)
+      fga0 rebuild
+      ;;
     rebuild)
-      $0 build
-      $0 remove || true
-      $0 add
+      $nm_guest remove 2>&1 1>/dev/null || true
+      $nm_guest build
       ;;
     build)
-      "$nm_guest" destroy -f
       if [[ -n "${1:-}" ]]; then
         export IMAGE="$1"; shift
       fi
       "$nm_guest" up
       ;;
     remove)
-      docker rmi ubuntu:vagrant
-      ;;
-    add)
-      docker commit $($nm_guest id) ubuntu:vagrant
+      "$nm_guest" destroy -f
       ;;
     *)
       vagrant "$nm_action" "$nm_guest" "$@"
