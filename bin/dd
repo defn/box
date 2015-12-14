@@ -31,7 +31,7 @@ function main {
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
       ;;
     media)
-      "$nm_provider" rebuild
+      "$nm_provider" build
       ;;
     rebuild)
       "$nm_guest" build
