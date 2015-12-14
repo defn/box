@@ -9,7 +9,7 @@ function main {
   export VAGRANT_CWD="$HOME"
 
   if [[ "$#" == 0 ]]; then
-    echo "$(basename "$0"): up|destroy ssh|rsync|scp id rebuild build|remove|add"
+    echo "$(basename "$0"): up|destroy ssh|rsync|scp id media rebuild build|remove"
     return 0
   fi
 
@@ -27,14 +27,18 @@ function main {
     ssh|rsync|scp)
       parity "$nm_action" "$nm_guest" "$@"
       ;;
-    rebuild)
-      fga destroy -f || true
-      ${nm_provider} rebuild
-      fga up
-      fga0 rebuild
+    media)
+      "$nm_provider" rebuild
       ;;
-    build|remove|add)
-      ${nm_provider} "$nm_action" "$@"
+    rebuild)
+      $0 remove 2>&1 1>/dev/null || true
+      $0 build
+      ;;
+    remove)
+      $0 destroy -f
+      ;;
+    build)
+      $0 up
       ;;
     id)
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
