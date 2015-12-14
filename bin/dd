@@ -31,7 +31,7 @@ function main {
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
       ;;
     media)
-      "$nm_provider" build
+      env TMPDIR=/tmp/vagrant "$nm_provider" build # TODO share packer temporary files
       ;;
     rebuild)
       "$nm_guest" build
