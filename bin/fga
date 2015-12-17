@@ -31,7 +31,7 @@ function main {
       "$nm_provider" rebuild
       ;;
     rebuild)
-      $0 remove 2>&1 1>/dev/null || true
+      $0 remove >/dev/null 2>&1 || true
       $0 build
       ;;
     remove)

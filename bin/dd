@@ -35,7 +35,7 @@ function main {
       ;;
     rebuild)
       "$nm_guest" build
-      "$nm_guest" remove 2>&1 1>/dev/null|| true
+      "$nm_guest" remove >/dev/null 2>&1 || true
       "$nm_guest" add
       ;;
     build)

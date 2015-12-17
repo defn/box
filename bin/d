@@ -34,7 +34,7 @@ function main {
       fga0 rebuild
       ;;
     rebuild)
-      $nm_guest remove 2>&1 1>/dev/null || true
+      $nm_guest remove >/dev/null 2>&1 || true
       $nm_guest build
       ;;
     build)
