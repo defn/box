@@ -31,7 +31,7 @@ function main {
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
       ;;
     media)
-      fga0 rebuild
+      docker commit "$(fga0 id)" ubuntu:vagrant # TODO hardcoded fga
       ;;
     rebuild)
       $nm_guest remove >/dev/null 2>&1 || true
