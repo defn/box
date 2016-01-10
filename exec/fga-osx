@@ -8,11 +8,11 @@ function main {
 
   case "${1:-}" in
     build|rebuild)
-      (cd $APP_PATH/basebox-osx && osx "$@")
+      (cd $APP_PATH/basebox-osx && vmware "$@")
       ;;
 
     *)
-      osx "$@"
+      vmware "$@"
       ;;
   esac
 }
