@@ -1,6 +1,7 @@
 # vagrant
 /.vagrant.d
 /.vagrant
+/.ssh
 
 # bundler
 /.bundle
