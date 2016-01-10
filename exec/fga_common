@@ -16,10 +16,12 @@ function fga_main {
     vmware_fusion)
       local nm_guest='osx'
       local nm_basebox_build='osx'
+      local nm_rebuilder='vmware'
       ;;
     virtualbox)
       local nm_guest='fga'
       local nm_basebox_build='ubuntu'
+      local nm_rebuilder='virtualbox'
       ;;
   esac
 
@@ -34,7 +36,9 @@ function fga_main {
       parity "$nm_action" "$nm_guest" "$@"
       ;;
     media)
-      (cd "$APP_PATH/basebox-${nm_basebox_build}" && "$VAGRANT_DEFAULT_PROVIDER" rebuild)
+      (cd "$APP_PATH/basebox-${nm_basebox_build}" && "$nm_rebuilder" build "$nm_basebox_build")
+      $nm_rebuilder remove 2>&- || true
+      $nm_rebuilder add 
       ;;
     rebuild)
       $0 remove >/dev/null 2>&1 || true
