@@ -53,14 +53,14 @@ Vagrant.configure("2") do |config|
       v.memory = 4096
       v.cpus = 4
 
-      if File.exists?('cidata.iso')
+      if File.exists?("#{shome}/cidata.iso")
         v.customize [ 
           'storageattach', :id, 
           '--storagectl', 'SATA Controller', 
           '--port', 1, 
           '--device', 0, 
           '--type', 'dvddrive', 
-          '--medium', 'cidata.iso'
+          '--medium', "#{shome}/cidata.iso"
         ]
       end
 
@@ -123,7 +123,7 @@ Vagrant.configure("2") do |config|
         v.token = ENV['DIGITALOCEAN_API_TOKEN']
         v.size = '2gb'
         v.setup = false
-        v.user_data = "\n#cloud-config\nusers:\n - name: ubuntu\n   ssh-authorized-keys:\n    - #{File.read('cidata/user-data')}"
+        v.user_data = "\n#cloud-config\nusers:\n - name: ubuntu\n   ssh-authorized-keys:\n    - #{File.read("#{shome}/cidata/user-data")}"
       end
     end
   end
