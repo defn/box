@@ -6,7 +6,7 @@ function main {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
   source "$shome/script/profile"
 
-  export VAGRANT_CWD="$HOME"
+  export VAGRANT_CWD="$shome"
 
   if [[ "$#" == 0 ]]; then
     echo "$(basename "$0"): up|destroy ssh|rsync|scp id build"
