@@ -28,7 +28,7 @@ function main {
       parity "$nm_action" "$nm_guest" "$@"
       ;;
     media)
-      "$nm_provider" rebuild
+      (cd "$APP_PATH/basebox-ubuntu" && "$nm_provider" rebuild)
       ;;
     rebuild)
       $0 remove >/dev/null 2>&1 || true

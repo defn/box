@@ -6,7 +6,15 @@ function main {
 
   export VAGRANT_CWD="$shome"
 
-  exec osx "$@"
+  case "${1:-}" in
+    build|rebuild)
+      (cd $APP_PATH/basebox-osx && osx "$@")
+      ;;
+
+    *)
+      osx "$@"
+      ;;
+  esac
 }
 
 source sub "$BASH_SOURCE" "$@"
