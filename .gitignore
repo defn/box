@@ -1,3 +1,6 @@
 # vagrant
 /.vagrant.d
 /.vagrant
+
+# bundler
+/.bundle
