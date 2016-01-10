@@ -1,0 +1,59 @@
+
+jq -n \
+  --arg instance_id "vagrant-$(date +%s)-$$" \
+    '{"instance-id": $instance_id}' \
+    | ruby -rjson -ryaml -e 'puts JSON.load(STDIN.read).to_yaml' > cidata/meta-data
+
+jq -n \
+  --arg ssh_key "$(cat ~/.ssh/vagrant.pub)" \
+  --arg sudo "ALL=(ALL) NOPASSWD: ALL" \
+    '{users: [ {name: "ubuntu", "ssh-authorized-keys": [ $ssh_key ], sudo: $sudo }]}' \
+    | ruby -ryaml -rjson -e 'puts JSON.load(STDIN.read).to_yaml' | sed 's/^---/#cloud-config/' > cidata/user-data
+
+mkisofs -R -V cidata -o cidata.iso cidata
+
+mkdir -p /mnt/container
+mount -o bind / /mnt/container
+
+rm -f /tmp/meh.cid
+docker run -dti --cidfile=/tmp/meh.cid ubuntu:vagrant bash -c 'mkdir /var/run/sshd; exec /usr/sbin/sshd -D'
+cid=$(cat /tmp/meh.cid)
+cip="$(docker inspect "$cid" | jq -r '.[0].NetworkSettings.IPAddress')"
+
+rsync -ia --exclude etc/hostname --exclude etc/hosts --exclude etc/resolv.conf \
+  --exclude 'etc/ssh/*key' --exclude var/log --exclude var/lib/docker --exclude run \
+  --exclude sys --exclude proc --exclude tmp --exclude mnt --exclude dev \
+  --exclude etc/mtab \
+  /mnt/container/. root@$cip:/
+
+docker kill "$cid"
+rm -f /tmp/meh.cid
+
+docker commit "$cid" ubuntu:vagrant
+docker rm "$cid"
+
+docker exec "$cid" mkdir -p ~root/.ssh
+cat ~/.ssh/authorized_keys | docker exec -i "$cid" tee ~root/.ssh/authorized_keys
+
+mount | grep bind | awk '{print $3}' | sort -r | xargs umount
+
+VBoxManage guestproperty enumerate $(cat .vagrant/machines/local/virtualbox/id) --patterns '/VirtualBox/GuestInfo/Net/1/*' | sed 's#: #:#g; s#,##g' | talign
+
+ip route show | awk '$1 == "default" { print $3 }'
+
+ensure locale is utf8 in docker, elixir wants it that way
+
+1) fga rebuild
+
+2) fga up
+
+route add -net \
+  "$(echo $(VBoxManage guestproperty enumerate $(cat .vagrant/machines/fga/virtualbox/id) --patterns '/VirtualBox/GuestInfo/Net/2/V4/IP'  | awk '$3 == "value:" { gsub(", "," "); print $4}' | cut -d. -f1-2).0.0)" \
+  "$(VBoxManage guestproperty enumerate $(cat .vagrant/machines/fga/virtualbox/id) --patterns '/VirtualBox/GuestInfo/Net/1/V4/IP'  | awk '$3 == "value:" { gsub(", "," "); print $4}')" \
+  255.255.0.0
+
+3) fga0 up
+
+docker commit $(fga0 id) ubuntu:vagrant
+
+4) fga1 up
