@@ -1,18 +1,50 @@
 #!/usr/bin/env bash
 
+export VAGRANT_DEFAULT_PROVIDER="vmware_fusion"
+
 function main {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
   source "$shome/script/profile"
 
   export VAGRANT_CWD="$shome"
 
-  case "${1:-}" in
-    build|rebuild)
-      (cd $APP_PATH/basebox-osx && vmware "$@")
-      ;;
+  if [[ "$#" == 0 ]]; then
+    echo "$(basename "$0"): up|destroy ssh|rsync|scp id media rebuild build|remove"
+    return 0
+  fi
 
+  local nm_action="$1"; shift
+  local nm_guest='osx'
+  local nm_provider='vmware_fusion'
+
+  case "$nm_action" in
+    up)
+      parity "$nm_action" "$nm_guest" "$@"
+      ;;
+    destroy)
+      vagrant "$nm_action" "$nm_guest" "$@"
+      ;;
+    ssh|rsync|scp)
+      parity "$nm_action" "$nm_guest" "$@"
+      ;;
+    media)
+      (cd "$APP_PATH/basebox-osx" && "$nm_provider" rebuild)
+      ;;
+    rebuild)
+      $0 remove >/dev/null 2>&1 || true
+      $0 build
+      ;;
+    remove)
+      $0 destroy -f
+      ;;
+    build)
+      $0 up
+      ;;
+    id)
+      cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
+      ;;
     *)
-      vmware "$@"
+      vagrant "$nm_action" "$nm_guest" "$@"
       ;;
   esac
 }
