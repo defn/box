@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+
+function docker_stuff {
+  # ensure bind is listening on eth1
+  sudo aptitude install -y bind9
+  sudo service bind9 restart
+
+  # get docker0 up
+  cat | sudo tee -a /etc/default/docker <<"__EOF"
+DOCKER_OPTS="--dns $(ip route show | awk '$3 == "eth1" { print $NF }') -H tcp://0.0.0.0: --storage-driver=devicemapper"
+__EOF
+  sudo restart docker || sudo start docker
+  sleep 10
+
+  docker tag ubuntu:latest ubuntu:packer-input
+
+  # configure routing
+  echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward  
+  echo "net.ipv4.ip_forward=1" | sudo tee /etc/sysctl.d/60-ip-forward.conf
+}
+
+function osx_stuff {
+  return 0
+  local cmd_su="$(which softwareupdate 2>&- || true)"
+  if [[ -x "$cmd_su" ]]; then
+    "$cmd_su" -i -a -v
+  fi
+}
+
+function git_stuff {
+  # initialize new ssh hosts
+  ssh -oStrictHostKeyChecking=no github.com true
+  ssh -oStrictHostKeyChecking=no bitbucket.org true
+  ssh -oStrictHostKeyChecking=no localhost true
+}
+
+function home_stuff {
+  # clone home
+  if [[ ! -d .git ]]; then
+    git clone git@github.com:defn/home home
+    mv home/.git . || rm -rf home/.git
+  fi
+  
+  git reset --hard
+  git clean -fd
+}
+
+
+function app_stuff {
+  # bootstrap app
+  git clone git@github.com:defn/app work/app
+  pushd work/app
+  script/bootstrap
+  set +x; source script/profile; require; set -x
+  popd
+}
+
+function cache_stuff {
+  # link cache files
+  if [[ -d /vagrant ]]; then
+    for a in distfiles cache packages; do
+      if [[ ! -d ~/$a ]]; then
+        ln -nfs /vagrant/$a ~/
+      fi
+    done
+  fi
+}
+
+function main {
+  set -x; cd
+
+  cache_stuff
+  osx_stuff
+  git_stuff
+  home_stuff
+  app_stuff
+
+  # minimally source home
+  set +x; 
+  source .profile.d/packer.pre
+  source .profile.d/pkgsrc.pre
+  source .profile.d/ruby.pre
+  source script/profile
+  set -x
+
+  # bootstrap
+  app clone
+  app bootstrap
+
+  # fully source home
+  set +x; require; set -x
+
+  if docker pull ubuntu >/dev/null 2>&1; then
+    docker_stuff
+  fi
+}
+
+exec 2>&1
+main "$@" | tee -a cibuild.log
