@@ -2,8 +2,6 @@ require 'socket'
 
 shome=File.expand_path("..", __FILE__)
 
-Dir.mkdir("/tmp/vagrant") unless File.exists?("/tmp/vagrant") # TODO put this somewhere local
-
 Vagrant.configure("2") do |config|
   module Vagrant
     module Util
@@ -27,7 +25,6 @@ Vagrant.configure("2") do |config|
   config.vm.define "osx" do |region|
     region.vm.box = "ubuntu"
     region.ssh.insert_key = false
-    region.vm.synced_folder shome, '/vagrant', type: "nfs", nfs_export: false, nfs_udp: false
     region.vm.provision "shell", path: "script/cibuild", privileged: false
 
     region.vm.provider "vmware_fusion" do |v|
@@ -41,9 +38,6 @@ Vagrant.configure("2") do |config|
   config.vm.define "fga" do |region|
     region.vm.box = "ubuntu"
     region.ssh.private_key_path = ssh_key
-    region.vm.synced_folder shome, '/vagrant', type: "nfs", nfs_export: false, nfs_udp: false
-    region.vm.synced_folder shome, shome, type: "nfs", nfs_export: false, nfs_udp: false
-    region.vm.synced_folder "/tmp/vagrant", '/tmp/vagrant', type: "nfs", nfs_export: false, nfs_udp: false
     region.vm.provision "shell", path: "script/cibuild", privileged: false
     region.vm.network "private_network", ip: "172.28.128.3"
     region.vm.network "forwarded_port", guest: 2375, host: 2375
@@ -70,9 +64,6 @@ Vagrant.configure("2") do |config|
   (0..100).each do |nm_region|
     config.vm.define "fga#{nm_region}" do |region|
       region.ssh.insert_key = false
-      region.vm.synced_folder shome, '/vagrant'
-      region.vm.synced_folder shome, shome
-      region.vm.synced_folder "/tmp/vagrant", '/tmp/vagrant'
 
       if nm_region == 0
         region.vm.provision "shell", path: "script/cibuild", privileged: false
@@ -113,9 +104,6 @@ Vagrant.configure("2") do |config|
     config.vm.define nm_region do |region|
       region.vm.box = "ubuntu-#{nm_region}"
       region.ssh.private_key_path = ssh_key
-      region.vm.synced_folder 'cache', '/vagrant/cache'
-      region.vm.synced_folder 'distfiles', '/vagrant/distfiles'
-      region.vm.synced_folder 'packages', '/vagrant/packages'
       region.vm.provision "shell", path: "script/cibuild", privileged: false
 
       region.vm.provider "digital_ocean" do |v|
@@ -132,9 +120,6 @@ Vagrant.configure("2") do |config|
     config.vm.define nm_region do |region|
       region.vm.box = "ubuntu-#{nm_region}"
       region.ssh.private_key_path = ssh_key
-      region.vm.synced_folder 'cache', '/vagrant/cache'
-      region.vm.synced_folder 'distfiles', '/vagrant/distfiles'
-      region.vm.synced_folder 'packages', '/vagrant/packages'
       region.vm.provision "shell", path: "script/cibuild", privileged: false
 
       region.vm.provider "aws" do |v|
