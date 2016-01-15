@@ -51,8 +51,9 @@ function home_stuff {
 
 function app_stuff {
   # bootstrap app
-  git clone git@github.com:defn/app work/app
+  git clone git@github.com:defn/app work/app || true
   pushd work/app
+  git pull
   script/bootstrap
   set +x; source script/profile; require; set -x
   popd
