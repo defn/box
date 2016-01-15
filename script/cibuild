@@ -77,7 +77,7 @@ function main {
 
   # bootstrap
   app clone
-  app runmany 'cd $1 && git pull'
+  app runmany 8 'cd $1 && git pull'
   app bootstrap
 
   # fully source home
