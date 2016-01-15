@@ -32,15 +32,21 @@ function git_stuff {
 }
 
 function home_stuff {
+  local git_home="$1"; shift
+
   # clone home
   if [[ ! -d .git ]]; then
-    git clone git@github.com:defn/home home
+    git clone "$git_home" home
     mv home/.git . || rm -rf home/.git
   fi
   
   git reset --hard
   git clean -fd
   git pull
+
+  set +x; 
+  source script/ciprofile
+  set -x
 }
 
 function app_stuff {
@@ -56,14 +62,6 @@ function cache_stuff {
   export BASEBOX_CACHE="/vagrant"
 }
 
-function minimal_source {
-  set +x; 
-  source .profile.d/pkgsrc.pre
-  source .profile.d/ruby.pre
-  source script/profile
-  set -x
-}
-
 function fully_source {
   set +x; require; set -x
 }
@@ -74,11 +72,8 @@ function main {
   # setup
   cache_stuff
   git_stuff
-  home_stuff
+  home_stuff "$@"
   app_stuff
-
-  # minimally source home
-  minimal_source
 
   # bootstrap dependencies
   app clone

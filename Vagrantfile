@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "osx" do |region|
     region.vm.box = "ubuntu"
     region.ssh.insert_key = false
-    region.vm.provision "shell", path: "script/cibuild", privileged: false
+    region.vm.provision "shell", path: "script/cibuild", args: %w(git@github.com:defn/home), privileged: false
 
     region.vm.provider "vmware_fusion" do |v|
       v.gui = false
@@ -38,7 +38,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "fga" do |region|
     region.vm.box = "ubuntu"
     region.ssh.private_key_path = ssh_key
-    region.vm.provision "shell", path: "script/cibuild", privileged: false
+    region.vm.provision "shell", path: "script/cibuild", args: %w(git@github.com:defn/home), privileged: false
     region.vm.network "private_network", ip: "172.28.128.3"
     region.vm.network "forwarded_port", guest: 2375, host: 2375
 
@@ -66,7 +66,7 @@ Vagrant.configure("2") do |config|
       region.ssh.insert_key = false
 
       if nm_region == 0
-        region.vm.provision "shell", path: "script/cibuild", privileged: false
+        region.vm.provision "shell", path: "script/cibuild", args: %w(git@github.com:defn/home), privileged: false
       end
 
       region.vm.provider "docker" do |v|
@@ -104,7 +104,7 @@ Vagrant.configure("2") do |config|
     config.vm.define nm_region do |region|
       region.vm.box = "ubuntu-#{nm_region}"
       region.ssh.private_key_path = ssh_key
-      region.vm.provision "shell", path: "script/cibuild", privileged: false
+      region.vm.provision "shell", path: "script/cibuild", args: %w(git@github.com:defn/home), privileged: false
 
       region.vm.provider "digital_ocean" do |v|
         v.ssh_key_name = "vagrant-#{Digest::MD5.file(ssh_key).hexdigest}"
@@ -120,7 +120,7 @@ Vagrant.configure("2") do |config|
     config.vm.define nm_region do |region|
       region.vm.box = "ubuntu-#{nm_region}"
       region.ssh.private_key_path = ssh_key
-      region.vm.provision "shell", path: "script/cibuild", privileged: false
+      region.vm.provision "shell", path: "script/cibuild", args: %w(git@github.com:defn/home), privileged: false
 
       region.vm.provider "aws" do |v|
         v.keypair_name = "vagrant-#{Digest::MD5.file(ssh_key).hexdigest}"
