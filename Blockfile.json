@@ -3,7 +3,8 @@
     [ 
       "app",
       "jq",
-      "pkgsrc"
+      "pkgsrc",
+      "homebrew"
     ],
     [
       "basebox",
