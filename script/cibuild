@@ -55,21 +55,9 @@ function app_stuff {
   popd
 }
 
-function cache_stuff {
-  # link cache files
-  if [[ -d /vagrant ]]; then
-    for a in distfiles cache packages; do
-      if [[ ! -d ~/$a ]]; then
-        ln -nfs /vagrant/$a ~/
-      fi
-    done
-  fi
-}
-
 function main {
   set -x; cd
 
-  cache_stuff
   osx_stuff
   git_stuff
   home_stuff
