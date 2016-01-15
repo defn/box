@@ -70,7 +70,6 @@ function main {
 
   # minimally source home
   set +x; 
-  source .profile.d/packer.pre
   source .profile.d/pkgsrc.pre
   source .profile.d/ruby.pre
   source script/profile
