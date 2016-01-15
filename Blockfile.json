@@ -13,7 +13,8 @@
     ],
     [
       "consul",
-      "openvpn"
+      "openvpn",
+      "runit"
     ],
     [
       "mysql",
