@@ -18,7 +18,7 @@ Vagrant.configure("2") do |config|
   config.ssh.username = "ubuntu"
   config.ssh.forward_agent = true
 
-  config.vm.synced_folder shome, '/vagrant', disabled: true
+  config.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant', disabled: true
 
   ssh_key = "#{shome}/.ssh/vagrant"
   
