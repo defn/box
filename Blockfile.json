@@ -8,9 +8,7 @@
     [
       "basebox",
       "basebox-ubuntu",
-      "basebox-osx",
-      "basebox-vagrants",
-      "basebox-cache"
+      "basebox-osx"
     ],
     [
       "consul",
