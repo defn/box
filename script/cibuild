@@ -55,9 +55,14 @@ function app_stuff {
   popd
 }
 
+function cache_stuff {
+  export BASEBOX_CACHE="/vagrant"
+}
+
 function main {
   set -x; cd
 
+  cache_stuff
   osx_stuff
   git_stuff
   home_stuff
