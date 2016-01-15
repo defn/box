@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
 function docker_stuff {
+  if ! docker pull ubuntu >/dev/null 2>&1; then
+    return
+  fi
+
   # ensure bind is listening on eth1
   sudo aptitude install -y bind9
   sudo service bind9 restart
@@ -19,19 +23,12 @@ __EOF
   echo "net.ipv4.ip_forward=1" | sudo tee /etc/sysctl.d/60-ip-forward.conf
 }
 
-function osx_stuff {
-  return 0
-  local cmd_su="$(which softwareupdate 2>&- || true)"
-  if [[ -x "$cmd_su" ]]; then
-    "$cmd_su" -i -a -v
-  fi
-}
-
 function git_stuff {
   # initialize new ssh hosts
-  ssh -oStrictHostKeyChecking=no github.com true
-  ssh -oStrictHostKeyChecking=no bitbucket.org true
-  ssh -oStrictHostKeyChecking=no localhost true
+  ssh -oStrictHostKeyChecking=no github.com true &
+  ssh -oStrictHostKeyChecking=no bitbucket.org true &
+  ssh -oStrictHostKeyChecking=no localhost true &
+  wait
 }
 
 function home_stuff {
@@ -43,8 +40,8 @@ function home_stuff {
   
   git reset --hard
   git clean -fd
+  git pull
 }
-
 
 function app_stuff {
   # bootstrap app
@@ -59,35 +56,40 @@ function cache_stuff {
   export BASEBOX_CACHE="/vagrant"
 }
 
-function main {
-  set -x; cd
-
-  # setup
-  cache_stuff
-  osx_stuff
-  git_stuff
-  home_stuff
-  app_stuff
-
-  # minimally source home
+function minimal_source {
   set +x; 
   source .profile.d/pkgsrc.pre
   source .profile.d/ruby.pre
   source script/profile
   set -x
+}
 
-  # bootstrap
+function fully_source {
+  set +x; require; set -x
+}
+
+function main {
+  set -x; cd
+
+  # setup
+  cache_stuff
+  git_stuff
+  home_stuff
+  app_stuff
+
+  # minimally source home
+  minimal_source
+
+  # bootstrap dependencies
   app clone
-  git pull
   app runmany 8 'cd $1 && git pull'
   app bootstrap
 
   # fully source home
-  set +x; require; set -x
+  fully_source
 
-  if docker pull ubuntu >/dev/null 2>&1; then
-    docker_stuff
-  fi
+  # bootstrap docker
+  docker_stuff
 }
 
 exec 2>&1
