@@ -18,6 +18,9 @@ function main {
   local nm_provider='docker'
 
   case "$nm_action" in
+    remove)
+      "$nm_guest" destroy -f
+      ;;
     up)
       parity "$nm_action" "$nm_guest" "$@"
       ;;
@@ -34,17 +37,14 @@ function main {
       docker commit "$(fga0 id)" ubuntu:vagrant # TODO hardcoded fga
       ;;
     rebuild)
-      $nm_guest remove >/dev/null 2>&1 || true
-      $nm_guest build
+      "$nm_guest" remove >/dev/null 2>&1 || true
+      "$nm_guest" build
       ;;
     build)
       if [[ -n "${1:-}" ]]; then
         export IMAGE="$1"; shift
       fi
       "$nm_guest" up
-      ;;
-    remove)
-      "$nm_guest" destroy -f
       ;;
     *)
       vagrant "$nm_action" "$nm_guest" "$@"
