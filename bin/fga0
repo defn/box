@@ -24,9 +24,10 @@ function main {
           ;;
         *)
           fga ssh "source .bash_profile; require; $nm_guest $nm_action $*" # TODO remote doesn't load environment
-          return $?
           ;;
       esac
+      return $?
+      ;;
   esac
 
   local nm_provider='docker'
