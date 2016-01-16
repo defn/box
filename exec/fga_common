@@ -42,13 +42,11 @@ function fga_main {
       ;;
     export)
       { echo ubuntu; echo ubuntu; } | "$nm_guest" ssh sudo passwd ubuntu
-      if "$nm_guest" halt; then
-        VBoxManage export $(fga id) --ovf20 -o ${BASEBOX_CACHE}/box/vagrant.ovf
-      else
-        VBoxManage export $(fga id) --ovf20 -o ${BASEBOX_CACHE}/box/vagrant.ovf # TODO DRY
-        "$nm_guest" up
-        "$nm_guest" ssh sudo passwd -l ubuntu
-      fi
+      "$nm_guest" halt
+      VBoxManage export $(fga id) --ovf20 -o ${BASEBOX_CACHE}/box/vagrant.ovf
+      "$nm_guest" up
+      "$nm_guest" ssh sudo passwd -l ubuntu
+      "$nm_guest" halt
       ;;
     rebuild)
       $0 remove >/dev/null 2>&1 || true
