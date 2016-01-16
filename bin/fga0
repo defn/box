@@ -14,15 +14,21 @@ function main {
   fi
 
   local nm_guest="$(basename "$0")"
+  local nm_action="$1"; shift
 
   case "$(uname -s)" in
     Darwin)
-      fga ssh "source .bash_profile; require; $nm_guest $*" # TODO remote doesn't load environment
-      return $?
-      ;;
+      case "$nm_action" in
+        ssh)
+          fga ssh -t "$nm_guest $nm_action $*"
+          ;;
+        *)
+          fga ssh "source .bash_profile; require; $nm_guest $nm_action $*" # TODO remote doesn't load environment
+          return $?
+          ;;
+      esac
   esac
 
-  local nm_action="$1"; shift
   local nm_provider='docker'
 
   case "$nm_action" in
