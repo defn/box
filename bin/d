@@ -13,8 +13,16 @@ function main {
     return 0
   fi
 
-  local nm_action="$1"; shift
   local nm_guest="$(basename "$0")"
+
+  case "$(uname -s)" in
+    Darwin)
+      fga ssh "source .bash_profile; require; $nm_guest $*" # TODO remote doesn't load environment
+      return $?
+      ;;
+  esac
+
+  local nm_action="$1"; shift
   local nm_provider='docker'
 
   case "$nm_action" in
