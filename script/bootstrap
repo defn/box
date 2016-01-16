@@ -14,8 +14,6 @@ function bootstrap {
   pkg ensure misc/tmux
   pkg ensure editors/vim
   pkg ensure devel/git
-  
-  pkg ensure net/dnsmasq
 }
 
 bootstrap

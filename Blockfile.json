@@ -15,6 +15,7 @@
     [
       "consul",
       "openvpn",
+      "dnsmasq",
       "runit"
     ],
     [
