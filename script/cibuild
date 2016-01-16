@@ -23,6 +23,7 @@ __EOF
 
 function git_stuff {
   # initialize new ssh hosts
+  rm -f ~/.ssh/known_hosts
   ssh -oStrictHostKeyChecking=no github.com true &
   ssh -oStrictHostKeyChecking=no bitbucket.org true &
   ssh -oStrictHostKeyChecking=no localhost true &
