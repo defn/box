@@ -42,14 +42,14 @@ function fga_main {
       ;;
     export)
       { echo ubuntu; echo ubuntu; } | vagrant "$nm_guest" ssh sudo passwd ubuntu
-      "$nm_guest" halt
+      vagrant halt "$nm_guest" halt
 
       case "$nm_rebuilder" in
         virtualbox)
           VBoxManage export $(fga id) --ovf20 -o ${BASEBOX_CACHE}/box/vagrant.ovf
-          "$nm_guest" up
-          "$nm_guest" ssh sudo passwd -l ubuntu
-          "$nm_guest" halt
+          vagrant up "$nm_guest"
+          vagrant ssh "$nm_guest" -- sudo passwd -l ubuntu
+          vagrant halt "$nm_guest"
           ;;
       esac
       ;;
