@@ -100,22 +100,6 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  (ENV['DIGITALOCEAN_REGIONS']||"").split(" ").each do |nm_region|
-    config.vm.define nm_region do |region|
-      region.vm.box = "ubuntu-#{nm_region}"
-      region.ssh.private_key_path = ssh_key
-      region.vm.provision "shell", path: "script/cibuild", args: %w(git@github.com:defn/home), privileged: false
-
-      region.vm.provider "digital_ocean" do |v|
-        v.ssh_key_name = "vagrant-#{Digest::MD5.file(ssh_key).hexdigest}"
-        v.token = ENV['DIGITALOCEAN_API_TOKEN']
-        v.size = '2gb'
-        v.setup = false
-        v.user_data = "\n#cloud-config\nusers:\n - name: ubuntu\n   ssh-authorized-keys:\n    - #{File.read("#{shome}/cidata/user-data")}"
-      end
-    end
-  end
-
   (ENV['AWS_REGIONS']||"").split(" ").each do |nm_region|
     config.vm.define nm_region do |region|
       region.vm.box = "ubuntu-#{nm_region}"
