@@ -45,7 +45,7 @@ Vagrant.configure("2") do |config|
     region.vm.provider "virtualbox" do |v|
       v.linked_clone = true
       v.memory = 4096
-      v.cpus = 4
+      v.cpus = 2
 
       if File.exists?("#{shome}/cidata.iso")
         v.customize [ 
