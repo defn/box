@@ -41,12 +41,17 @@ function fga_main {
       $nm_rebuilder add 
       ;;
     export)
-      { echo ubuntu; echo ubuntu; } | "$nm_guest" ssh sudo passwd ubuntu
+      { echo ubuntu; echo ubuntu; } | vagrant "$nm_guest" ssh sudo passwd ubuntu
       "$nm_guest" halt
-      VBoxManage export $(fga id) --ovf20 -o ${BASEBOX_CACHE}/box/vagrant.ovf
-      "$nm_guest" up
-      "$nm_guest" ssh sudo passwd -l ubuntu
-      "$nm_guest" halt
+
+      case "$nm_rebuilder" in
+        virtualbox)
+          VBoxManage export $(fga id) --ovf20 -o ${BASEBOX_CACHE}/box/vagrant.ovf
+          "$nm_guest" up
+          "$nm_guest" ssh sudo passwd -l ubuntu
+          "$nm_guest" halt
+          ;;
+      esac
       ;;
     rebuild)
       $0 remove >/dev/null 2>&1 || true
