@@ -42,7 +42,7 @@ function fga_main {
       ;;
     export)
       { echo ubuntu; echo ubuntu; } | vagrant "$nm_guest" ssh sudo passwd ubuntu
-      vagrant halt "$nm_guest" halt
+      vagrant halt "$nm_guest"
 
       case "$nm_rebuilder" in
         virtualbox)
