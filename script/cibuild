@@ -5,17 +5,6 @@ function docker_stuff {
     return
   fi
 
-  # ensure bind is listening on eth1
-  sudo aptitude install -y bind9
-  sudo service bind9 restart
-
-  # get docker0 up
-  cat | sudo tee -a /etc/default/docker <<"__EOF"
-DOCKER_OPTS="--dns $(ip route show | awk '$3 == "eth1" { print $NF }') -H tcp://0.0.0.0: --storage-driver=devicemapper"
-__EOF
-  sudo restart docker || sudo start docker
-  sleep 10
-
   # configure routing
   echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward  
   echo "net.ipv4.ip_forward=1" | sudo tee /etc/sysctl.d/60-ip-forward.conf
