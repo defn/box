@@ -18,6 +18,12 @@ function main {
   local nm_provider='docker'
 
   case "$nm_action" in
+    add)
+      docker commit $($nm_guest id) ubuntu:vagrant
+      ;;
+    remove)
+      docker rmi ubuntu:vagrant
+      ;;
     up)
       parity "$nm_action" "$nm_guest" "$@"
       ;;
@@ -31,11 +37,11 @@ function main {
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
       ;;
     media)
-      env TMPDIR=/tmp/vagrant "$nm_provider" build # TODO share packer temporary files
+      "$nm_provider" build # TODO share packer temporary files
       ;;
     rebuild)
-      "$nm_guest" build
       "$nm_guest" remove >/dev/null 2>&1 || true
+      "$nm_guest" build
       "$nm_guest" add
       ;;
     build)
@@ -44,12 +50,6 @@ function main {
         export IMAGE="$1"; shift
       fi
       "$nm_guest" up
-      ;;
-    remove)
-      docker rmi ubuntu:vagrant
-      ;;
-    add)
-      docker commit $($nm_guest id) ubuntu:vagrant
       ;;
     *)
       vagrant "$nm_action" "$nm_guest" "$@"
