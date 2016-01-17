@@ -55,9 +55,9 @@ function fga_main {
       ;;
     rebuild)
       $nm_guest export
-      vagrant destroy -f $nm_guest
 
       $nm_rebuilder build osx vmx "$(fga osx id)" # TODO osx specific
+      vagrant destroy -f $nm_guest
       $nm_rebuilder remove >/dev/null 2>&1 || true
       $nm_rebuilder build
 
