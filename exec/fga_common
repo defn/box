@@ -43,15 +43,15 @@ function fga_main {
       $nm_rebuilder add 
       ;;
     export)
-      { echo ubuntu; echo ubuntu; } | "$cmd_guest" ssh sudo passwd ubuntu
-      "$cmd_guest" halt
+      { echo ubuntu; echo ubuntu; } | $cmd_guest ssh sudo passwd ubuntu
+      $cmd_guest halt
 
       case "$nm_rebuilder" in
         virtualbox)
           VBoxManage export $(fga id) --ovf20 -o ${BASEBOX_CACHE}/box/vagrant.ovf
-          "$cmd_guest" up
-          "$cmd_guest" ssh sudo passwd -l ubuntu
-          "$cmd_guest" halt
+          $cmd_guest up
+          $cmd_guest ssh sudo passwd -l ubuntu
+          $cmd_guest halt
           ;;
       esac
       ;;
