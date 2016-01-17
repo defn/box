@@ -51,9 +51,6 @@ function fga_main {
       case "$nm_rebuilder" in
         virtualbox)
           VBoxManage export $(fga id) --ovf20 -o ${BASEBOX_CACHE}/box/vagrant.ovf
-          $cmd_guest up
-          $cmd_guest ssh sudo passwd -l ubuntu
-          $cmd_guest halt
           ;;
       esac
       ;;
