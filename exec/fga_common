@@ -56,8 +56,6 @@ function fga_main {
       esac
       ;;
     rebuild)
-      $cmd_guest export
-
       $nm_rebuilder build osx vmx "$($cmd_guest id)" # TODO osx specific
       $cmd_guest destroy -f
       $nm_rebuilder remove >/dev/null 2>&1 || true
