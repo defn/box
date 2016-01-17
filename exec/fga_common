@@ -15,11 +15,13 @@ function fga_main {
   case "$VAGRANT_DEFAULT_PROVIDER" in
     vmware_fusion)
       local nm_guest='osx'
+      local cmd_guest='fga osx'
       local nm_basebox_build='osx'
       local nm_rebuilder='vmware'
       ;;
     virtualbox)
       local nm_guest='fga'
+      local cmd_guest='fga'
       local nm_basebox_build='ubuntu'
       local nm_rebuilder='virtualbox'
       ;;
@@ -41,27 +43,27 @@ function fga_main {
       $nm_rebuilder add 
       ;;
     export)
-      { echo ubuntu; echo ubuntu; } | vagrant "$nm_guest" ssh sudo passwd ubuntu
-      vagrant halt "$nm_guest"
+      { echo ubuntu; echo ubuntu; } | "$cmd_guest" ssh sudo passwd ubuntu
+      "$cmd_guest" halt
 
       case "$nm_rebuilder" in
         virtualbox)
           VBoxManage export $(fga id) --ovf20 -o ${BASEBOX_CACHE}/box/vagrant.ovf
-          vagrant up "$nm_guest"
-          vagrant ssh "$nm_guest" -- sudo passwd -l ubuntu
-          vagrant halt "$nm_guest"
+          "$cmd_guest" up
+          "$cmd_guest" ssh sudo passwd -l ubuntu
+          "$cmd_guest" halt
           ;;
       esac
       ;;
     rebuild)
-      $nm_guest export
+      $cmd_guest export
 
-      $nm_rebuilder build osx vmx "$(fga osx id)" # TODO osx specific
-      vagrant destroy -f $nm_guest
+      $nm_rebuilder build osx vmx "$($cmd_guest id)" # TODO osx specific
+      $cmd_guest destroy -f
       $nm_rebuilder remove >/dev/null 2>&1 || true
       $nm_rebuilder build
 
-      vagrant up $nm_guest
+      $cmd_guest up
       ;;
     remove)
       $0 destroy -f
