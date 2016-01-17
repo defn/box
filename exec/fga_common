@@ -54,8 +54,14 @@ function fga_main {
       esac
       ;;
     rebuild)
-      $0 remove >/dev/null 2>&1 || true
-      $0 build
+      $nm_guest export
+      vagrant destroy -f $nm_guest
+
+      $nm_rebuilder build osx vmx "$(fga osx id)" # TODO osx specific
+      $nm_rebuilder remove >/dev/null 2>&1 || true
+      $nm_rebuilder build
+
+      vagrant up $nm_guest
       ;;
     remove)
       $0 destroy -f
