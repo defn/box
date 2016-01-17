@@ -71,6 +71,8 @@ function fga_main {
       $nm_rebuilder remove >/dev/null 2>&1 || true
       $nm_rebuilder add
 
+      rm -f "$shome/cidata/meta-data"
+      (cd $shome && make)
       $cmd_guest up
       ;;
     remove)
