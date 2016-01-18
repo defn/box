@@ -4,7 +4,7 @@ function main {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
   source "$shome/script/profile"
 
-  box0 "$@"
+  ${BOX_NAME}0 "$@"
 }
 
 source sub "$BASH_SOURCE" "$@"

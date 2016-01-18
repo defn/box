@@ -20,10 +20,10 @@ function main {
     Darwin)
       case "$nm_action" in
         ssh)
-          box ssh -t "$nm_guest $nm_action $*"
+          ${BOX_NAME} ssh -t "$nm_guest $nm_action $*"
           ;;
         *)
-          box ssh "source .bash_profile; require; $nm_guest $nm_action $*"
+          ${BOX_NAME} ssh "source .bash_profile; require; $nm_guest $nm_action $*"
           ;;
       esac
       return $?
@@ -34,21 +34,21 @@ function main {
 
   case "$nm_action" in
     media)
-      if [[ "$nm_guest" == "box0" ]]; then
+      if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
         "$nm_provider" build
       else
-        docker commit "$(box0 id)" ubuntu:vagrant
+        docker commit "$(${BOX_NAME}0 id)" ubuntu:vagrant
       fi
       ;;
     add)
-      if [[ "$nm_guest" == "box0" ]]; then
+      if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
         docker commit $($nm_guest id) ubuntu:vagrant
       else
         true
       fi
       ;;
     remove)
-      if [[ "$nm_guest" == "box0" ]]; then
+      if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
         docker rmi ubuntu:vagrant
       else
       "$nm_guest" destroy -f

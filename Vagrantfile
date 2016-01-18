@@ -39,7 +39,7 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  nm_box="box"
+  nm_box=ENV['BOX_NAME']
 
   config.vm.define nm_box do |region|
     region.vm.box = "ubuntu"

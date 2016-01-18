@@ -15,14 +15,14 @@ function box_main {
   case "$VAGRANT_DEFAULT_PROVIDER" in
     vmware_fusion)
       local nm_guest='osx'
-      local cmd_guest='box osx'
+      local cmd_guest="${BOX_NAME} osx"
       local nm_basebox_build='osx'
       local nm_rebuilder='vmware'
       local basebox_type='vmx'
       ;;
     virtualbox)
-      local nm_guest='box'
-      local cmd_guest='box'
+      local nm_guest="${BOX_NAME}"
+      local cmd_guest="${BOX_NAME}"
       local nm_basebox_build='ubuntu'
       local nm_rebuilder='virtualbox'
       local basebox_type='ovf'
