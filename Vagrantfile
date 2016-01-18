@@ -30,8 +30,12 @@ Vagrant.configure("2") do |config|
     region.vm.provider "vmware_fusion" do |v|
       v.gui = false
       v.linked_clone = true
+      v.verify_vmnet = true
       v.vmx["memsize"] = "4096"
       v.vmx["numvcpus"] = "2"
+
+      v.vmx["ethernet0.present"] = "TRUE"
+      v.vmx["ethernet0.connectionType"] = "nat"
     end
   end
 
