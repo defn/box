@@ -40,7 +40,8 @@ function box_main {
       parity "$nm_action" "$nm_guest" "$@"
       ;;
     media)
-      (cd "$APP_PATH/basebox-${nm_basebox_build}" && "$nm_rebuilder" build "$nm_basebox_build")
+      $cmd_guest destroy -f
+      $nm_rebuilder build "$nm_basebox_build"
       $nm_rebuilder remove 2>&- || true
       $nm_rebuilder add 
       ;;
@@ -68,7 +69,7 @@ function box_main {
     rebuild)
       $cmd_guest destroy -f
       $nm_rebuilder build "$nm_basebox_build" "$basebox_type" "$($cmd_guest id)"
-      $nm_rebuilder remove >/dev/null 2>&1 || true
+      $nm_rebuilder remove 2>&- || true
       $nm_rebuilder add
 
       rm -f "$shome/cidata/meta-data"
