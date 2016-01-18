@@ -51,6 +51,18 @@ function cache_stuff {
   export BASEBOX_CACHE="/vagrant"
 }
 
+function update_stuff {
+  case "$(uname -s)" in
+    Darwin)
+      sudo softwareupdate -i -v -a
+      ;;
+    Linux)
+      sudo aptitude update
+      sudo aptitude upgrade -y
+      ;;
+  esac
+}
+
 function fully_source {
   set +x; require; set -x
 }
@@ -74,6 +86,9 @@ function main {
 
   # bootstrap docker
   docker_stuff
+
+  # update packages
+  update_stuff
 }
 
 exec 2>&1
