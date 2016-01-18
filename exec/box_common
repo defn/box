@@ -66,8 +66,8 @@ function box_main {
       esac
       ;;
     rebuild)
-      $nm_rebuilder build "$nm_basebox_build" "$basebox_type" "$($cmd_guest id)"
       $cmd_guest destroy -f
+      $nm_rebuilder build "$nm_basebox_build" "$basebox_type" "$($cmd_guest id)"
       $nm_rebuilder remove >/dev/null 2>&1 || true
       $nm_rebuilder add
 
