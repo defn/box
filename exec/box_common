@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-function fga_main {
+function box_main {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
   source "$shome/script/profile"
 
@@ -15,14 +15,14 @@ function fga_main {
   case "$VAGRANT_DEFAULT_PROVIDER" in
     vmware_fusion)
       local nm_guest='osx'
-      local cmd_guest='fga osx'
+      local cmd_guest='box osx'
       local nm_basebox_build='osx'
       local nm_rebuilder='vmware'
       local basebox_type='vmx'
       ;;
     virtualbox)
-      local nm_guest='fga'
-      local cmd_guest='fga'
+      local nm_guest='box'
+      local cmd_guest='box'
       local nm_basebox_build='ubuntu'
       local nm_rebuilder='virtualbox'
       local basebox_type='ovf'
@@ -56,7 +56,7 @@ function fga_main {
           $cmd_guest halt
 
           rm -f "${BASEBOX_CACHE}/box/vagrant.ovf" "${BASEBOX_CACHE}/box/vagrant-disk1.vmdk"
-          VBoxManage export $(fga id) --ovf20 -o ${BASEBOX_CACHE}/box/vagrant.ovf
+          VBoxManage export $($cmd_guest id) --ovf20 -o ${BASEBOX_CACHE}/box/vagrant.ovf
           ;;
 
         vmware)

@@ -39,7 +39,9 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  config.vm.define "fga" do |region|
+  nm_box="box"
+
+  config.vm.define nm_box do |region|
     region.vm.box = "ubuntu"
     region.ssh.private_key_path = ssh_key
     region.vm.provision "shell", path: "script/cibuild", args: %w(git@github.com:defn/home), privileged: false
@@ -66,7 +68,7 @@ Vagrant.configure("2") do |config|
   end
 
   (0..100).each do |nm_region|
-    config.vm.define "fga#{nm_region}" do |region|
+    config.vm.define "#{nm_box}#{nm_region}" do |region|
       region.ssh.insert_key = false
 
       if nm_region == 0

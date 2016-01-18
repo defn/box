@@ -20,10 +20,10 @@ function main {
     Darwin)
       case "$nm_action" in
         ssh)
-          fga ssh -t "$nm_guest $nm_action $*"
+          box ssh -t "$nm_guest $nm_action $*"
           ;;
         *)
-          fga ssh "source .bash_profile; require; $nm_guest $nm_action $*" # TODO remote doesn't load environment
+          box ssh "source .bash_profile; require; $nm_guest $nm_action $*"
           ;;
       esac
       return $?
@@ -34,21 +34,21 @@ function main {
 
   case "$nm_action" in
     media)
-      if [[ "$nm_guest" == "fga0" ]]; then
-        "$nm_provider" build # TODO share packer temporary files
+      if [[ "$nm_guest" == "box0" ]]; then
+        "$nm_provider" build
       else
-        docker commit "$(fga0 id)" ubuntu:vagrant # TODO hardcoded fga
+        docker commit "$(box0 id)" ubuntu:vagrant
       fi
       ;;
     add)
-      if [[ "$nm_guest" == "fga0" ]]; then
+      if [[ "$nm_guest" == "box0" ]]; then
         docker commit $($nm_guest id) ubuntu:vagrant
       else
         true
       fi
       ;;
     remove)
-      if [[ "$nm_guest" == "fga0" ]]; then
+      if [[ "$nm_guest" == "box0" ]]; then
         docker rmi ubuntu:vagrant
       else
       "$nm_guest" destroy -f
