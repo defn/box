@@ -61,7 +61,14 @@ function main {
         local nm_dockr_image="ubuntu:vagrant-${nm_guest}"
       fi
       docker commit "$($nm_guest id)" "${nm_docker_image}" ubuntu:vagrant
-      docker save -o "${BASEBOX_CACHE}/box/${nm_docker_image/:/-}.docker" "${nm_docker_image}"
+      ;;
+    rebuild)
+      if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
+        export BASEBOX_DOCKER_IMAGE="ubuntu:vagrant"
+      else
+        export BASEBOX_DOCKER_IMAGE="ubuntu:vagrant-${nm_guest}"
+      fi
+      docker build
       ;;
     up)
       parity "$nm_action" "$nm_guest" "$@"
@@ -74,11 +81,6 @@ function main {
       ;;
     id)
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
-      ;;
-    rebuild)
-      "$nm_guest" remove >/dev/null 2>&1 || true
-      "$nm_guest" build
-      "$nm_guest" add
       ;;
     build)
       "$nm_guest" destroy -f
