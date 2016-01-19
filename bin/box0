@@ -40,20 +40,6 @@ function main {
         docker commit "$(${BOX_NAME}0 id)" ubuntu:vagrant
       fi
       ;;
-    add)
-      if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
-        docker commit $($nm_guest id) ubuntu:vagrant
-      else
-        true
-      fi
-      ;;
-    remove)
-      if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
-        docker rmi ubuntu:vagrant
-      else
-      "$nm_guest" destroy -f
-      fi
-      ;;
     export)
       if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
         local nm_docker_image="ubuntu:vagrant"
@@ -71,6 +57,8 @@ function main {
         export BASEBOX_DOCKER_TAG="vagrant-${nm_guest}"
       fi
       docker build
+      "$nm_guest" destroy -f
+      "$nm_guest" up
       ;;
     up)
       parity "$nm_action" "$nm_guest" "$@"
