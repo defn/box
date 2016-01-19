@@ -57,8 +57,7 @@ function main {
         export BASEBOX_DOCKER_TAG="vagrant"
         docker build
       else
-        export BASEBOX_DOCKER_IMAGE="ubuntu:vagrant-${nm_guest}"
-        export BASEBOX_DOCKER_TAG="vagrant-${nm_guest}"
+        export BASEBOX_DOCKER_IMAGE="ubuntu:vagrant"
       fi
       "$nm_guest" destroy -f
       "$nm_guest" up
