@@ -69,8 +69,8 @@ function box_main {
     rebuild)
       $cmd_guest destroy -f
       $nm_rebuilder build "$nm_basebox_build" "$basebox_type" "$($cmd_guest id)" "$@"
-      $nm_rebuilder remove 2>&- || true
-      $nm_rebuilder add
+      $nm_rebuilder remove "$@" 2>&- || true
+      $nm_rebuilder add "$@"
 
       rm -f "$shome/cidata/meta-data"
       (cd $shome && make)
