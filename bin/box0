@@ -35,9 +35,12 @@ function main {
   case "$nm_action" in
     media)
       if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
+        export BASEBOX_DOCKER_IMAGE="ubuntu:latest"
+        export BASEBOX_DOCKER_TAG="packer"
         docker build
       else
-        docker commit "$(${BOX_NAME}0 id)" ubuntu:vagrant
+        export BASEBOX_DOCKER_TAG="vagrant"
+        docker commit "$(${BOX_NAME}0 id)" "ubuntu:${BASEBOX_DOCKER_TAG}"
       fi
       ;;
     export)
