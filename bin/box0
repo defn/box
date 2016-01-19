@@ -65,8 +65,10 @@ function main {
     rebuild)
       if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
         export BASEBOX_DOCKER_IMAGE="ubuntu:vagrant"
+        export BASEBOX_DOCKER_TAG="vagrant"
       else
         export BASEBOX_DOCKER_IMAGE="ubuntu:vagrant-${nm_guest}"
+        export BASEBOX_DOCKER_TAG="vagrant-${nm_guest}"
       fi
       docker build
       ;;
