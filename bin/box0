@@ -35,7 +35,7 @@ function main {
   case "$nm_action" in
     media)
       if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
-        docker pull ubuntu:latest
+        docker build
       else
         docker commit "$(${BOX_NAME}0 id)" ubuntu:vagrant
       fi
