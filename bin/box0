@@ -60,7 +60,7 @@ function main {
       else
         local nm_docker_image="ubuntu:vagrant-${nm_guest}"
       fi
-      docker commit "$($nm_guest id)" "${nm_docker_image}" ubuntu:vagrant
+      docker commit "$($nm_guest id)" "${nm_docker_image}"
       ;;
     rebuild)
       if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
