@@ -84,9 +84,6 @@ function main {
       ;;
     build)
       "$nm_guest" destroy -f
-      if [[ -n "${1:-}" ]]; then
-        export IMAGE="$1"; shift
-      fi
       "$nm_guest" up
       ;;
     *)
