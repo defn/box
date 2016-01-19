@@ -54,6 +54,15 @@ function main {
       "$nm_guest" destroy -f
       fi
       ;;
+    export)
+      if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
+        local nm_dockr_image="ubuntu:vagrant"
+      else
+        local nm_dockr_image="ubuntu:vagrant-${nm_guest}"
+      fi
+      docker commit "$($nm_guest id)" "${nm_docker_image}" ubuntu:vagrant
+      docker save -o "${BASEBOX_CACHE}/box/${nm_docker_image/:/-}.docker" "${nm_docker_image}"
+      ;;
     up)
       parity "$nm_action" "$nm_guest" "$@"
       ;;
