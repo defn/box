@@ -118,6 +118,7 @@ function box_main {
       case "$nm_rebuilder" in
         virtualbox|vmware)
           $nm_rebuilder build "$nm_basebox_build" "$basebox_type" "$($cmd_guest id)" "$@"
+          $cmd_guest destroy -f
           $nm_rebuilder remove "$@" 2>&- || true
           $nm_rebuilder add "$@"
 
