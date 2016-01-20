@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+function main {
+  local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
+  source "$shome/script/profile"
+
+  box media 2>&1 | tee box-media.log
+  box build 2>&1 | tee box-build.log
+  box docker media 2>&1 | tee box-docker-media.log
+  box docker build 2>&1 | tee box-docker-build.log
+  box docker export 2>&1 | tee box-docker-export.log
+  box export 2>&1 | tee box-export.log
+  box rebuild 2>&1 | tee box-rebuild.log
+  box docker rebuild 2>&1 | tee box-docker-rebuild.log
+}
+
+set -efxu
+source sub "$BASH_SOURCE" "$@"
