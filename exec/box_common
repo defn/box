@@ -49,6 +49,10 @@ function box_main {
           ;;
       esac
       ;;
+    *)
+      echo "ERROR: unknown provider $VAGRANT_DEFAULT_PROVIER" 1>&2
+      return 1
+      ;;
   esac
 
   case "$nm_action" in
@@ -64,7 +68,7 @@ function box_main {
           if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
             export BASEBOX_DOCKER_IMAGE="ubuntu:latest"
             export BASEBOX_DOCKER_TAG="packer"
-            "$nm_builder" build
+            $nm_rebuilder build
           else
             export BASEBOX_DOCKER_TAG="vagrant"
             docker commit "$(${BOX_NAME}0 id)" "ubuntu:${BASEBOX_DOCKER_TAG}"
