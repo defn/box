@@ -16,24 +16,31 @@ function box_main {
   local cmd_guest=
   local nm_rebuilder=
 
+  local nm_basebox_build=
+  local basebox_type=
+
   case "$VAGRANT_DEFAULT_PROVIDER" in
     vmware_fusion)
       nm_guest='osx'
       cmd_guest="${BOX_NAME} osx"
       nm_rebuilder='vmware'
-      local nm_basebox_build='osx'
-      local basebox_type='vmx'
+      nm_basebox_build='osx'
+      basebox_type='vmx'
       ;;
     virtualbox)
       nm_guest="${BOX_NAME}"
       cmd_guest="${BOX_NAME}"
       nm_rebuilder='virtualbox'
-      local nm_basebox_build='ubuntu'
-      local basebox_type='ovf'
+      nm_basebox_build='ubuntu'
+      basebox_type='ovf'
       ;;
     docker)
       nm_guest="$(basename "$0")"
-      cmd_guest="$nm_guest"
+      if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
+        cmd_guest="${BOX_NAME} docker"
+      else
+        cmd_guest="$nm_guest"
+      fi
       nm_rebuilder='docker'
       case "$(uname -s)" in
         Darwin)
