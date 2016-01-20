@@ -13,56 +13,118 @@ function main {
     return 0
   fi
 
-  local nm_guest="$(basename "$0")"
   local nm_action="$1"; shift
+  local nm_guest=
+  local cmd_guest=
+  local nm_rebuilder=
 
-  case "$(uname -s)" in
-    Darwin)
-      case "$nm_action" in
-        ssh)
-          ${BOX_NAME} ssh -t "$nm_guest $nm_action $*"
-          ;;
-        *)
-          ${BOX_NAME} ssh "source .bash_profile; require; $nm_guest $nm_action $*"
+  case "$VAGRANT_DEFAULT_PROVIDER" in
+    vmware_fusion)
+      nm_guest='osx'
+      cmd_guest="${BOX_NAME} osx"
+      nm_rebuilder='vmware'
+      local nm_basebox_build='osx'
+      local basebox_type='vmx'
+      ;;
+    virtualbox)
+      nm_guest="${BOX_NAME}"
+      cmd_guest="${BOX_NAME}"
+      nm_rebuilder='virtualbox'
+      local nm_basebox_build='ubuntu'
+      local basebox_type='ovf'
+      ;;
+    docker)
+      nm_guest="$(basename "$0")"
+      cmd_guest="$nm_guest"
+      nm_rebuilder='docker'
+      case "$(uname -s)" in
+        Darwin)
+          case "$nm_action" in
+            ssh)
+              ${BOX_NAME} ssh -t "$nm_guest $nm_action $*"
+              ;;
+            *)
+              ${BOX_NAME} ssh "source .bash_profile; require; $nm_guest $nm_action $*"
+              ;;
+          esac
+          return $?
           ;;
       esac
-      return $?
       ;;
   esac
 
-  local nm_provider='docker'
-
   case "$nm_action" in
     media)
-      if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
-        export BASEBOX_DOCKER_IMAGE="ubuntu:latest"
-        export BASEBOX_DOCKER_TAG="packer"
-        docker build
-      else
-        export BASEBOX_DOCKER_TAG="vagrant"
-        docker commit "$(${BOX_NAME}0 id)" "ubuntu:${BASEBOX_DOCKER_TAG}"
-      fi
+      case "$nm_rebuilder" in
+        virtualbox|vmware)
+          $cmd_guest destroy -f
+          $nm_rebuilder build "$nm_basebox_build"
+          $nm_rebuilder remove 2>&- || true
+          $nm_rebuilder add 
+        docker)
+          if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
+            export BASEBOX_DOCKER_IMAGE="ubuntu:latest"
+            export BASEBOX_DOCKER_TAG="packer"
+            "$nm_builder" build
+          else
+            export BASEBOX_DOCKER_TAG="vagrant"
+            docker commit "$(${BOX_NAME}0 id)" "ubuntu:${BASEBOX_DOCKER_TAG}"
+          fi
+          ;;
+      esac
       ;;
     export)
-      if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
-        local nm_docker_image="ubuntu:vagrant"
-        docker commit "$($nm_guest id)" "${nm_docker_image}" # TODO DRY
-        docker save -o ${BASEBOX_CACHE}/box/vagrant.docker "${nm_docker_image}"
-      else
-        local nm_docker_image="ubuntu:vagrant-${nm_guest}"
-        docker commit "$($nm_guest id)" "${nm_docker_image}"
-      fi
+      case "$nm_rebuilder" in
+        virtualbox)
+          $cmd_guest ssh sudo passwd -u ubuntu
+          { echo ubuntu; echo ubuntu; } | $cmd_guest ssh sudo passwd ubuntu
+          $cmd_guest ssh sudo rm -rf /dev/.udev
+          $cmd_guest ssh sudo rm -f /lib/udev/rules.d/75-persistent-net-generator.rules
+          $cmd_guest ssh sudo rm -rf /var/lib/dhcp # TODO assumes only leases are here
+          $cmd_guest ssh sudo mkdir -p /var/lib/dhcp
+          $cmd_guest halt
+
+          rm -f "${BASEBOX_CACHE}/box/vagrant.ovf" "${BASEBOX_CACHE}/box/vagrant-disk1.vmdk"
+          VBoxManage export $($cmd_guest id) --ovf20 -o ${BASEBOX_CACHE}/box/vagrant.ovf
+          ;;
+        vmware)
+          { echo ubuntu; echo ubuntu; } | $cmd_guest ssh sudo passwd ubuntu
+          $cmd_guest halt
+          ;;
+        docker)
+          if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
+            local nm_docker_image="ubuntu:vagrant"
+            docker commit "$($cmd_guest id)" "${nm_docker_image}" # TODO DRY
+            docker save -o ${BASEBOX_CACHE}/box/vagrant.docker "${nm_docker_image}"
+          else
+            local nm_docker_image="ubuntu:vagrant-${nm_guest}"
+            docker commit "$($cmd_guest id)" "${nm_docker_image}"
+          fi
+          ;;
+      esac
       ;;
     rebuild)
-      if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
-        export BASEBOX_DOCKER_IMAGE="ubuntu:vagrant"
-        export BASEBOX_DOCKER_TAG="vagrant"
-        docker build
-      else
-        export BASEBOX_DOCKER_IMAGE="ubuntu:vagrant"
-      fi
-      "$nm_guest" destroy -f
-      "$nm_guest" up
+      case "$nm_rebuilder" in
+        virtualbox|vmware)
+          $nm_rebuilder build "$nm_basebox_build" "$basebox_type" "$($cmd_guest id)" "$@"
+          $nm_rebuilder remove "$@" 2>&- || true
+          $nm_rebuilder add "$@"
+
+          rm -f "$shome/cidata/meta-data"
+          (cd $shome && make)
+          ;;
+        docker)
+          if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
+            export BASEBOX_DOCKER_IMAGE="ubuntu:vagrant"
+            export BASEBOX_DOCKER_TAG="vagrant"
+            "$nm_builder" build
+          else
+            export BASEBOX_DOCKER_IMAGE="ubuntu:vagrant"
+          fi
+          ;;
+      esac
+      $cmd_guest destroy -f
+      $cmd_guest up
       ;;
     up)
       parity "$nm_action" "$nm_guest" "$@"
@@ -77,8 +139,7 @@ function main {
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
       ;;
     build)
-      "$nm_guest" destroy -f
-      "$nm_guest" up
+      $cmd_guest up
       ;;
     *)
       vagrant "$nm_action" "$nm_guest" "$@"
