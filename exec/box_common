@@ -42,7 +42,7 @@ function box_main {
               ${BOX_NAME} ssh -t "$nm_guest $nm_action $*"
               ;;
             *)
-              ${BOX_NAME} ssh "source .bash_profile; require; $nm_guest $nm_action $*"
+              ${BOX_NAME} ssh "source .bash_profile; require; env VAGRANT_DEFAULT_PROVIDER=$VAGRANT_DEFAULT_PROVIDER http_proxy=$http_proxy https_proxy=$https_proxy $nm_guest $nm_action $*"
               ;;
           esac
           return $?
