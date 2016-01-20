@@ -46,10 +46,12 @@ function main {
     export)
       if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
         local nm_docker_image="ubuntu:vagrant"
+        docker commit "$($nm_guest id)" "${nm_docker_image}" # TODO DRY
+        docker save -o ${BASEBOX_CACHE}/box/vagrant.docker "${nm_docker_image}"
       else
         local nm_docker_image="ubuntu:vagrant-${nm_guest}"
+        docker commit "$($nm_guest id)" "${nm_docker_image}"
       fi
-      docker commit "$($nm_guest id)" "${nm_docker_image}"
       ;;
     rebuild)
       if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
