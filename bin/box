@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
-export VAGRANT_DEFAULT_PROVIDER="virtualbox"
-
 function main {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
   source "$shome/script/profile"
   source box_common
 
+  export VAGRANT_DEFAULT_PROVIDER="virtualbox"
   box_main "$@"
 }
 
