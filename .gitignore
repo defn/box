@@ -8,3 +8,6 @@
 
 # virtualbox
 /cidata*
+
+# logs
+/*.log
