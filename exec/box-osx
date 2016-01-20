@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
-export VAGRANT_DEFAULT_PROVIDER="vmware_fusion"
-
 function main {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
   source "$shome/script/profile"
   source box_common
 
+  export VAGRANT_DEFAULT_PROVIDER="vmware_fusion"
   box_main "$@"
 }
 
