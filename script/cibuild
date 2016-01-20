@@ -52,6 +52,8 @@ function cache_stuff {
   export http_proxy="http://172.28.128.1:3128"
   export https_proxy="http://172.28.128.1:3128"
   export ftp_proxy="http://172.28.128.1:3128"
+
+  echo "Acquire::http::Proxy \"$http_proxy\";" | sudo tee /etc/apt/apt.conf.d/99boxcache
 }
 
 function update_stuff {
@@ -64,6 +66,10 @@ function update_stuff {
       sudo aptitude upgrade -y
       ;;
   esac
+}
+
+function clean_stuff {
+  sudo rm -f /etc/apt/apt.conf.d/99boxcache
 }
 
 function fully_source {
@@ -92,6 +98,9 @@ function main {
 
   # update packages
   update_stuff
+
+  # cleanup
+  clean_stuff
 }
 
 exec 2>&1
