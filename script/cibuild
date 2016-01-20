@@ -49,6 +49,9 @@ function app_stuff {
 
 function cache_stuff {
   export BASEBOX_CACHE="/vagrant"
+  export http_proxy="http://172.28.128.1:3128"
+  export https_proxy="http://172.28.128.1:3128"
+  export ftp_proxy="http://172.28.128.1:3128"
 }
 
 function update_stuff {
