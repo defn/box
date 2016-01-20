@@ -32,8 +32,6 @@ function main {
       local basebox_type='ovf'
       ;;
     docker)
-      export VAGRANT_DEFAULT_PROVIDER="docker"
-
       nm_guest="$(basename "$0")"
       cmd_guest="$nm_guest"
       nm_rebuilder='docker'
