@@ -85,6 +85,7 @@ function box_main {
       esac
       ;;
     export)
+      local nm_export="${1:-}"
       case "$nm_rebuilder" in
         virtualbox)
           $cmd_guest ssh sudo passwd -u ubuntu
@@ -96,7 +97,7 @@ function box_main {
           $cmd_guest halt
 
           rm -f "${BASEBOX_CACHE}/box/vagrant.ovf" "${BASEBOX_CACHE}/box/vagrant-disk1.vmdk"
-          VBoxManage export $($cmd_guest id) --ovf20 -o ${BASEBOX_CACHE}/box/vagrant.ovf
+          VBoxManage export $($cmd_guest id) --ovf20 -o ${BASEBOX_CACHE}/box/vagrant"${nm_export:+-${nm_export}}".ovf
           ;;
         vmware)
           { echo ubuntu; echo ubuntu; } | $cmd_guest ssh sudo passwd ubuntu
@@ -106,7 +107,7 @@ function box_main {
           if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
             local nm_docker_image="ubuntu:vagrant"
             docker commit "$($cmd_guest id)" "${nm_docker_image}" # TODO DRY
-            docker save -o ${BASEBOX_CACHE}/box/vagrant.docker "${nm_docker_image}"
+            docker save -o ${BASEBOX_CACHE}/box/vagrant"${nm_export:+-${nm_export}}".docker "${nm_docker_image}"
           else
             local nm_docker_image="ubuntu:vagrant-${nm_guest}"
             docker commit "$($cmd_guest id)" "${nm_docker_image}"
