@@ -10,7 +10,7 @@ function main {
   box docker build 2>&1 | tee box-docker-build.log
   box docker export test 2>&1 | tee box-docker-export.log
   box export test 2>&1 | tee box-export.log
-  box rebuild 2>&1 | tee box-rebuild.log
+  box rebuild test 2>&1 | tee box-rebuild.log
   box docker rebuild 2>&1 | tee box-docker-rebuild.log
 }
 
