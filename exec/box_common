@@ -116,9 +116,10 @@ function box_main {
       esac
       ;;
     rebuild)
+      local nm_export="${1:-}"
       case "$nm_rebuilder" in
         virtualbox|vmware)
-          $nm_rebuilder build "$nm_basebox_build" "$basebox_type" "$($cmd_guest id)" "$@"
+          $nm_rebuilder build "$nm_basebox_build" "$basebox_type" "$nm_export" "$@"
           $cmd_guest destroy -f
           $nm_rebuilder remove "$@" 2>&- || true
           $nm_rebuilder add "$@"
