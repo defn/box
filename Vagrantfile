@@ -116,7 +116,7 @@ Vagrant.configure("2") do |config|
 
       region.vm.provider "aws" do |v|
         v.keypair_name = "vagrant-#{Digest::MD5.file(ssh_key).hexdigest}"
-        v.instance_type = 't2.nano'
+        v.instance_type = 'c3.large'
         v.region = nm_region
       end
     end
