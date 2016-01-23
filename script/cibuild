@@ -49,15 +49,21 @@ function app_stuff {
 
 function cache_stuff {
   export BASEBOX_CACHE="/vagrant"
-  export http_proxy="http://172.28.128.1:3128"
-  export https_proxy="http://172.28.128.1:3128"
-  export ftp_proxy="http://172.28.128.1:3128"
 
   {
-    echo "Acquire::http::Proxy \"$http_proxy\";"
     echo "Acquire::Languages { \"en\"; };"
     echo "Acquire::http { Pipeline-Depth \"200\"; }"
   } | sudo tee /etc/apt/apt.conf.d/99boxcache
+
+  if [[ -z "${NO_PROXY:-}" ]]; then
+    export http_proxy="http://172.28.128.1:3128"
+    export https_proxy="http://172.28.128.1:3128"
+    export ftp_proxy="http://172.28.128.1:3128"
+
+    {
+      echo "Acquire::http::Proxy \"$http_proxy\";"
+    } | sudo tee -a /etc/apt/apt.conf.d/99boxcache
+  fi
 }
 
 function update_stuff {
@@ -82,11 +88,18 @@ function fully_source {
 
 function main {
   set -x; cd
+  # setup
+  local nm_repo="$1"; shift
+  case "${1:-}" in
+    no_proxy)
+      NO_PROXY=1
+      ;;
+  esac
 
   # setup
   cache_stuff
   git_stuff
-  home_stuff "$@"
+  home_stuff "$nm_repo"
   app_stuff
 
   # bootstrap dependencies

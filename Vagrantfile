@@ -108,13 +108,14 @@ Vagrant.configure("2") do |config|
 
   (ENV['AWS_REGIONS']||"").split(" ").each do |nm_region|
     config.vm.define nm_region do |region|
+      region.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant', disabled: true
       region.vm.box = "ubuntu-#{nm_region}"
       region.ssh.private_key_path = ssh_key
-      region.vm.provision "shell", path: "script/cibuild", args: %w(git@github.com:defn/home), privileged: false
+      region.vm.provision "shell", path: "script/cibuild", args: %w(git@github.com:defn/home no_proxy), privileged: false
 
       region.vm.provider "aws" do |v|
         v.keypair_name = "vagrant-#{Digest::MD5.file(ssh_key).hexdigest}"
-        v.instance_type = 'c4.large'
+        v.instance_type = 't2.nano'
         v.region = nm_region
       end
     end
