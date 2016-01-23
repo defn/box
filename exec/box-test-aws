@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+function main {
+  local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
+  source "$shome/script/profile"
+
+  runmany 'aws with $1 aws build' $(aws regions)
+}
+
+set -efxu
+source sub "$BASH_SOURCE" "$@"
