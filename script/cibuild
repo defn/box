@@ -50,6 +50,14 @@ function app_stuff {
 function cache_stuff {
   export BASEBOX_CACHE="/vagrant"
 
+  if [[ ! -d "$BASEBOX_CACHE" ]]; then
+    sudo install -d -o ubuntu -g ubuntu -m 0755  "$BASEBOX_CACHE"
+    sudo install -d -o ubuntu -g ubuntu -m 0755  "$BASEBOX_CACHE/cache"
+    sudo install -d -o ubuntu -g ubuntu -m 0755  "$BASEBOX_CACHE/box"
+    sudo install -d -o ubuntu -g ubuntu -m 0755  "$BASEBOX_CACHE/distfiles"
+    sudo install -d -o ubuntu -g ubuntu -m 0755  "$BASEBOX_CACHE/packages"
+  fi
+
   {
     echo "Acquire::Languages { \"en\"; };"
     echo "Acquire::http { Pipeline-Depth \"200\"; }"
