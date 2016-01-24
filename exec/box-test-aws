@@ -8,7 +8,8 @@ function main {
     set -- $(aws regions)
   fi
 
-  runmany 10 'aws with $1 aws build 2>&1 | tee box-aws-$1.log' "$@"
+  cd "$shome"
+  runmany 10 'aws with $1 aws build 2>&1 | tee log/box-aws-$1.log' "$@"
 }
 
 set -efu

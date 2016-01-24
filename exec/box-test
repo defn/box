@@ -4,14 +4,14 @@ function main {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
   source "$shome/script/profile"
 
-  box media 2>&1 | tee box-media.log
-  box build 2>&1 | tee box-build.log
-  box docker media 2>&1 | tee box-docker-media.log
-  box docker build 2>&1 | tee box-docker-build.log
-  box docker export test 2>&1 | tee box-docker-export.log
-  box export test 2>&1 | tee box-export.log
-  box rebuild test 2>&1 | tee box-rebuild.log
-  box docker rebuild 2>&1 | tee box-docker-rebuild.log
+  box media 2>&1 | tee "$shome/log/box-media.log"
+  box build 2>&1 | tee "$shome/log/box-build.log"
+  box docker media 2>&1 | tee "$shome/log/box-docker-media.log"
+  box docker build 2>&1 | tee "$shome/log/box-docker-build.log"
+  box docker export test 2>&1 | tee "$shome/log/box-docker-export.log"
+  box export test 2>&1 | tee "$shome/log/box-export.log"
+  box rebuild test 2>&1 | tee "$shome/log/box-rebuild.log"
+  box docker rebuild 2>&1 | tee "$shome/log/box-docker-rebuild.log"
 }
 
 set -efu
