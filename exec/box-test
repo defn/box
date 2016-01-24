@@ -14,5 +14,5 @@ function main {
   box docker rebuild 2>&1 | tee box-docker-rebuild.log
 }
 
-set -efxu
+set -efu
 source sub "$BASH_SOURCE" "$@"

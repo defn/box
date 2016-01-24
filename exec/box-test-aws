@@ -4,8 +4,8 @@ function main {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
   source "$shome/script/profile"
 
-  runmany 10 'echo $(( RANDOM % 30 ))aws with $1 aws build 2>&1 | tee box-aws-$1.log' $(aws regions)
+  runmany 10 'echo $(( RANDOM % 60 )) aws with $1 aws build 2>&1 | tee box-aws-$1.log' $(aws regions)
 }
 
-set -efxu
+set -efu
 source sub "$BASH_SOURCE" "$@"
