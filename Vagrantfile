@@ -15,6 +15,11 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  cibuild_args = %w(git@github.com:defn/home)
+  if ENV['http_proxy'].empty?
+    cibuild_args << "no_proxy"
+  end
+
   config.ssh.username = "ubuntu"
   config.ssh.forward_agent = true
 
@@ -25,7 +30,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "osx" do |region|
     region.vm.box = "ubuntu"
     region.ssh.insert_key = false
-    region.vm.provision "shell", path: "script/cibuild", args: %w(git@github.com:defn/home), privileged: false
+    region.vm.provision "shell", path: "script/cibuild", args: cibuild_args, privileged: false
 
     region.vm.provider "vmware_fusion" do |v|
       v.gui = false
@@ -44,7 +49,7 @@ Vagrant.configure("2") do |config|
   config.vm.define nm_box do |region|
     region.vm.box = "ubuntu"
     region.ssh.private_key_path = ssh_key
-    region.vm.provision "shell", path: "script/cibuild", args: %w(git@github.com:defn/home), privileged: false
+    region.vm.provision "shell", path: "script/cibuild", args: cibuild_args, privileged: false
     region.vm.network "private_network", ip: "172.28.128.3"
     region.vm.network "forwarded_port", guest: 2375, host: 2375
 
@@ -72,7 +77,7 @@ Vagrant.configure("2") do |config|
       region.ssh.insert_key = false
 
       if nm_region == 0
-        region.vm.provision "shell", path: "script/cibuild", args: %w(git@github.com:defn/home), privileged: false
+        region.vm.provision "shell", path: "script/cibuild", args: cibuild_args, privileged: false
       end
 
       region.vm.provider "docker" do |v|
@@ -112,7 +117,7 @@ Vagrant.configure("2") do |config|
 
       region.vm.box = "ubuntu-#{nm_region}"
       region.ssh.private_key_path = ssh_key
-      region.vm.provision "shell", path: "script/cibuild", args: %w(git@github.com:defn/home no_proxy), privileged: false
+      region.vm.provision "shell", path: "script/cibuild", args: cibuild_args, privileged: false
 
       region.vm.provider "aws" do |v|
         v.block_device_mapping = [
