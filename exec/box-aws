@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+function main {
+  local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
+  source "$shome/script/profile"
+
+  export VAGRANT_DEFAULT_PROVIDER="aws"
+  ${BOX_NAME}-aws0 "$@"
+}
+
+source sub "$BASH_SOURCE" "$@"

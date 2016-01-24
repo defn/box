@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+function main {
+  local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
+  source "$shome/script/profile"
+  source box_common
+
+  export VAGRANT_DEFAULT_PROVIDER="aws"
+  export AWS_DEFAULT_PROFILE="$(basename "$0")"
+  box_main "$@"
+}
+
+source sub "$BASH_SOURCE" "$@"

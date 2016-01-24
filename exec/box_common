@@ -4,6 +4,8 @@ function box_main {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
   source "$shome/script/profile"
 
+  set -x
+
   export VAGRANT_CWD="$shome"
 
   if [[ "$#" == 0 ]]; then
@@ -33,6 +35,11 @@ function box_main {
       nm_rebuilder='virtualbox'
       nm_basebox_build='ubuntu'
       basebox_type='ovf'
+      ;;
+    aws)
+      nm_guest="$AWS_DEFAULT_PROFILE"
+      cmd_guest="${BOX_NAME} aws $nm_guest"
+      nm_rebuilder="aws"
       ;;
     docker)
       nm_guest="$(basename "$0")"
