@@ -7,7 +7,7 @@ function box_main {
   export VAGRANT_CWD="$shome"
 
   if [[ "$#" == 0 ]]; then
-    echo "$(basename "$0"): up|destroy ssh|rsync|scp id media rebuild build|remove"
+    echo "$(basename "$0"): up|destroy ssh|rsync|scp id media build export rebuild"
     return 0
   fi
 
