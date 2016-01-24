@@ -4,8 +4,6 @@ function box_main {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
   source "$shome/script/profile"
 
-  set -x
-
   export VAGRANT_CWD="$shome"
 
   if [[ "$#" == 0 ]]; then
@@ -56,7 +54,6 @@ function box_main {
               ${BOX_NAME} ssh -t "$nm_guest $nm_action $*"
               ;;
             *)
-              set -x
               ${BOX_NAME} ssh "source .bash_profile; require; env VAGRANT_DEFAULT_PROVIDER=$VAGRANT_DEFAULT_PROVIDER http_proxy=$http_proxy https_proxy=$https_proxy $nm_guest $nm_action $*"
               ;;
           esac
