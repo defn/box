@@ -100,7 +100,7 @@ function main {
   local nm_repo="$1"; shift
   case "${1:-}" in
     no_proxy)
-      http_proxy=1
+      http_proxy=
       ;;
   esac
 
