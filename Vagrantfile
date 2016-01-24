@@ -108,8 +108,8 @@ Vagrant.configure("2") do |config|
 
   (ENV['AWS_REGIONS']||"").split(" ").each do |nm_region|
     config.vm.define nm_region do |region|
-      #region.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/cache/git/github.com/jsonn/pkgsrc", '/vagrant/cache/git/github.com/jsonn/pkgsrc', type: "rsync"
-      
+      region.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant', disabled: true
+
       region.vm.box = "ubuntu-#{nm_region}"
       region.ssh.private_key_path = ssh_key
       region.vm.provision "shell", path: "script/cibuild", args: %w(git@github.com:defn/home no_proxy), privileged: false
