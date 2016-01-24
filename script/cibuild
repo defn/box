@@ -63,10 +63,10 @@ function cache_stuff {
     echo "Acquire::http { Pipeline-Depth \"200\"; }"
   } | sudo tee /etc/apt/apt.conf.d/99boxcache
 
-  if [[ -z "${NO_PROXY:-}" ]]; then
-    export http_proxy="http://172.28.128.1:3128"
-    export https_proxy="http://172.28.128.1:3128"
-    export ftp_proxy="http://172.28.128.1:3128"
+  if [[ -n "${http_proxy:-}" ]]; then
+    export http_proxy
+    export https_proxy="$http_proxy"
+    export ftp_proxy="$http_proxy"
 
     {
       echo "Acquire::http::Proxy \"$http_proxy\";"
@@ -100,7 +100,7 @@ function main {
   local nm_repo="$1"; shift
   case "${1:-}" in
     no_proxy)
-      NO_PROXY=1
+      http_proxy=1
       ;;
   esac
 
