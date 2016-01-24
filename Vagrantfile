@@ -118,9 +118,9 @@ Vagrant.configure("2") do |config|
         v.block_device_mapping = [
           { 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 50 },
           { 'DeviceName' => '/dev/sdb', 'VirtualName' => 'ephemeral0', },
-          { 'DeviceName' => '/dev/sdc', 'VirtualName' => 'ephemeral1', }
-          { 'DeviceName' => '/dev/sdd', 'VirtualName' => 'ephemeral2', }
-          { 'DeviceName' => '/dev/sd3', 'VirtualName' => 'ephemeral3', }
+          { 'DeviceName' => '/dev/sdc', 'VirtualName' => 'ephemeral1', },
+          { 'DeviceName' => '/dev/sdd', 'VirtualName' => 'ephemeral2', },
+          { 'DeviceName' => '/dev/sde', 'VirtualName' => 'ephemeral3', }
         ]
         v.keypair_name = "vagrant-#{Digest::MD5.file(ssh_key).hexdigest}"
         v.instance_type = 'c3.large'
