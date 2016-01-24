@@ -115,6 +115,13 @@ Vagrant.configure("2") do |config|
       region.vm.provision "shell", path: "script/cibuild", args: %w(git@github.com:defn/home no_proxy), privileged: false
 
       region.vm.provider "aws" do |v|
+        v.block_device_mapping = [
+          { 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 50 },
+          { 'DeviceName' => '/dev/sdb', 'VirtualName' => 'ephemeral0', },
+          { 'DeviceName' => '/dev/sdc', 'VirtualName' => 'ephemeral1', }
+          { 'DeviceName' => '/dev/sdd', 'VirtualName' => 'ephemeral2', }
+          { 'DeviceName' => '/dev/sd3', 'VirtualName' => 'ephemeral3', }
+        ]
         v.keypair_name = "vagrant-#{Digest::MD5.file(ssh_key).hexdigest}"
         v.instance_type = 'c3.large'
         v.region = nm_region
