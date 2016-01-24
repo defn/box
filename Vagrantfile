@@ -16,7 +16,7 @@ Vagrant.configure("2") do |config|
   end
 
   cibuild_args = %w(git@github.com:defn/home)
-  if ENV['http_proxy'].empty?
+  if ENV['http_proxy'].nil? || ENV['http_proxy'].empty?
     cibuild_args << "no_proxy"
   end
 
