@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant'
 
-  ssh_key = "#{shome}/.ssh/vagrant"
+  ssh_key = "#{ENV['HOME']}/.ssh/ssh-vagrant"
   
   config.vm.define "osx" do |region|
     region.vm.box = "ubuntu"
