@@ -36,7 +36,7 @@ function box_main {
       ;;
     aws)
       nm_guest="$AWS_DEFAULT_PROFILE"
-      cmd_guest="${BOX_NAME} aws $nm_guest"
+      cmd_guest="$nm_guest"
       nm_rebuilder="aws"
       ;;
     docker)
