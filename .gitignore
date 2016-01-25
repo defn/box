@@ -2,6 +2,7 @@
 /.vagrant.d
 /.vagrant
 /.ssh
+/remote
 
 # bundler
 /.bundle

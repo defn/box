@@ -114,6 +114,7 @@ Vagrant.configure("2") do |config|
   (ENV['AWS_REGIONS']||"").split(" ").each do |nm_region|
     config.vm.define nm_region do |region|
       region.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant', disabled: true
+      region.vm.synced_folder "#{shome}/remote/#{nm_region}/.", '/vagrant/', type: "rsync"
 
       region.vm.box = "ubuntu-#{nm_region}"
       region.ssh.private_key_path = ssh_key
@@ -128,7 +129,7 @@ Vagrant.configure("2") do |config|
           { 'DeviceName' => '/dev/sde', 'VirtualName' => 'ephemeral3', }
         ]
         v.keypair_name = "vagrant-#{Digest::MD5.file(ssh_key).hexdigest}"
-        v.instance_type = 'c3.large'
+        v.instance_type = 't2.small' # 'c3.large'
         v.region = nm_region
       end
     end
