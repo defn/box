@@ -114,7 +114,7 @@ Vagrant.configure("2") do |config|
   (ENV['AWS_REGIONS']||"").split(" ").each do |nm_region|
     config.vm.define nm_region do |region|
       region.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant', disabled: true
-      region.vm.synced_folder "#{shome}/remote/#{nm_region}/.", '/vagrant/', type: "rsync"
+      region.vm.synced_folder "#{shome}/remote/#{nm_region}/.", '/vagrant/', type: "rsync" if File.exists?("#{shome}/remote/#{nm_region}/.")
 
       region.vm.box = "ubuntu-#{nm_region}"
       region.ssh.private_key_path = ssh_key
