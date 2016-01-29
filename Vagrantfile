@@ -50,7 +50,7 @@ Vagrant.configure("2") do |config|
     region.vm.box = "ubuntu"
     region.ssh.private_key_path = ssh_key
     region.vm.provision "shell", path: "script/cibuild", args: cibuild_args, privileged: false
-    region.vm.network "private_network", ip: "172.28.128.3"
+    region.vm.network "private_network", ip: "172.28.128.3" # VBoxManage hostonlyif ipconfig vboxnet0 --ip 172.28.128.1 --netmask 255.255.255.0
     region.vm.network "forwarded_port", guest: 2375, host: 2375
 
     region.vm.provider "virtualbox" do |v|
