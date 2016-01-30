@@ -2,7 +2,7 @@
   "require": [
     [ 
       "app",
-      "jq",
+      "build-essential",
       "homebrew",
       "pkgsrc"
     ],
