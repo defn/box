@@ -95,14 +95,12 @@ function fully_source {
 }
 
 function main {
-  set -x; cd
   # setup
+  set -x; cd
   local nm_repo="$1"; shift
-  case "${1:-}" in
-    no_proxy)
-      http_proxy=
-      ;;
-  esac
+  if [[ -n "${1:-}" ]]; then
+    http_proxy="$1"; shift
+  fi
 
   # setup
   cache_stuff
