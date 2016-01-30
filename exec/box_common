@@ -77,6 +77,7 @@ function box_main {
           $nm_rebuilder add 
           ;;
         aws)
+          $cmd_guest destroy -f
           $nm_rebuilder build "$AWS_DEFAULT_PROFILE"
           $nm_rebuilder remove "$AWS_DEFAULT_PROFILE" 2>&- || true
           $nm_rebuilder add "$AWS_DEFAULT_PROFILE"
