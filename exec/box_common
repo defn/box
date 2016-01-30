@@ -76,6 +76,11 @@ function box_main {
           $nm_rebuilder remove 2>&- || true
           $nm_rebuilder add 
           ;;
+        aws)
+          $nm_rebuild build "$AWS_DEFAULT_PROFILE"
+          $nm_rebuilder remove "$AWS_DEFAULT_PROFILE" 2>&- || true
+          $nm_rebuilder add "$AWS_DEFAULT_PROFILE"
+          ;;
         docker)
           if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
             export BASEBOX_DOCKER_IMAGE="ubuntu:latest"
