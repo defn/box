@@ -102,7 +102,7 @@ function main {
     http_proxy="$1"; shift
   fi
 
-  aptitude -y install git vim unzip curl language-pack-en # mirror basebox-ubuntu/site.sh
+  sudo aptitude -y install git vim unzip curl language-pack-en # mirror basebox-ubuntu/site.sh
 
   # setup
   cache_stuff
