@@ -82,6 +82,7 @@ Vagrant.configure("2") do |config|
       region.vm.provider "docker" do |v|
         if nm_region == 0
           v.image = ENV['BASEBOX_DOCKER_IMAGE'] || "ubuntu:packer"
+          v.create_args(['--privileged'])
           v.cmd = [ "bash", "-c", "install -d -m 0755 -o root -g root /var/run/sshd; exec /usr/sbin/sshd -D" ]
         else
           v.image = ENV['BASEBOX_DOCKER_IMAGE'] || "ubuntu:vagrant"
