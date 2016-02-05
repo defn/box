@@ -86,6 +86,7 @@ Vagrant.configure("2") do |config|
         elsif nm_region == 100
           v.image = ENV['BASEBOX_DOCKER_IMAGE'] || "ubuntu:vagrant"
           v.create_args = ['--privileged']
+          v.volumes = ['/var/lib/docker']
           v.cmd = [ "/usr/sbin/sshd", "-D" ]
         else
           v.image = ENV['BASEBOX_DOCKER_IMAGE'] || "ubuntu:vagrant"
