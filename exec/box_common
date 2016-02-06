@@ -129,6 +129,9 @@ function box_main {
       local nm_export="${1:-}"
       case "$nm_rebuilder" in
         virtualbox|vmware)
+          if [[ "$nm_rebuilder" == "vmware" ]]; then
+            export VMX="$($cmd_guest id)"
+          fi
           $nm_rebuilder build "$nm_basebox_build" "$basebox_type" "$nm_export" "$@"
           $cmd_guest destroy -f
           $nm_rebuilder remove "$@" 2>&- || true
