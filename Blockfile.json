@@ -1,6 +1,7 @@
 {
   "require": [
     [ 
+      "cache",
       "build-essential",
       "homebrew",
       "pkgsrc"
@@ -8,8 +9,7 @@
     [
       "basebox",
       "basebox-ubuntu",
-      "basebox-osx",
-      "basebox-cache"
+      "basebox-osx"
     ],
     [
       "consul",
