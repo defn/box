@@ -9,7 +9,8 @@
     [
       "basebox",
       "basebox-ubuntu",
-      "basebox-osx"
+      "basebox-osx",
+      "vagrant-shell"
     ],
     [
       "consul",
