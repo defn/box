@@ -39,8 +39,8 @@ function home_stuff {
 
 function app_stuff {
   # bootstrap app
-  git clone git@github.com:defn/app work/app || true
-  pushd work/app
+  git clone git@github.com:defn/block work/block || true
+  pushd work/block
   git pull
   script/bootstrap
   set +x; source script/profile; require; set -x
