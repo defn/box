@@ -38,9 +38,11 @@ function home_stuff {
 }
 
 function app_stuff {
+  export APP_PATH="$(pwd)/work"
+
   # bootstrap app
-  git clone git@github.com:defn/block work/block || true
-  pushd work/block
+  git clone git@github.com:defn/block "$APP_PATH/block" || true
+  pushd "$APP_PATH/block"
   git pull
   script/bootstrap
   set +x; source script/profile; require; set -x
