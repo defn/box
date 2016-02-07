@@ -1,7 +1,6 @@
 {
   "require": [
     [ 
-      "app",
       "build-essential",
       "homebrew",
       "pkgsrc"
