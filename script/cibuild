@@ -98,7 +98,6 @@ function fully_source {
 
 function main {
   # setup
-  set -x; cd
   local nm_repo="$1"; shift
   if [[ -n "${1:-}" ]]; then
     http_proxy="$1"; shift
@@ -131,5 +130,7 @@ function main {
   clean_stuff
 }
 
+set -exfu
 exec 2>&1
+cd
 main "$@" | tee -a cibuild.log
