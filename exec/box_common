@@ -160,7 +160,7 @@ function box_main {
       vagrant "$nm_action" "$nm_guest" "$@"
       ;;
     ssh|rsync|scp)
-      parity "$nm_action" "$nm_guest" "$@"
+      exec parity "$nm_action" "$nm_guest" "$@"
       ;;
     id)
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
