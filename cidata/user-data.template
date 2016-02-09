@@ -1,0 +1,6 @@
+#cloud-config
+users:
+- name: ubuntu
+  ssh-authorized-keys:
+  - ssh-rsa TODO
+  sudo: 'ALL=(ALL) NOPASSWD: ALL'
