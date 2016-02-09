@@ -114,7 +114,6 @@ function main {
   # bootstrap dependencies
   app clone
   app runmany 8 'cd $1 && git pull' || true
-  app clone
   app bootstrap
 
   # fully source home
