@@ -1,17 +1,16 @@
-Setup
-=====
+# Limbo
 
-For bash, source `script/profile` to expose the `limbo` command.  Requires the
-`defn/app` project installed and sourced.
+Endless dreams or circles of hell?
 
 Builds
 ======
 
-    box media
-    box build
-    box docker media
-    box docker build
-    box docker export
-    box export
-    box rebuild
-    box docker rebuild
+    limbo media
+    limbo build
+    limbo docker media
+    limbo docker build
+    limbo docker export
+    limbo docker rebuild
+    limbo export
+    limbo rebuild
+
