@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+function main {
+  # start docker
+  sudo service docker start
+  sleep 5
+
+  # load ubuntu:vagrant image
+  export DOCKER_HOST='tcp://127.0.0.1:2375'
+  time docker load -i /vagrant/box/vagrant.docker
+
+  # bring up box1
+  box1 up
+  box1 ssh uname -a
+}
+
+set -exfu
+exec 2>&1
+cd
+main "$@" | tee -a cibuild.log

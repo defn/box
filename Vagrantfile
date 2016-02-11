@@ -88,9 +88,11 @@ Vagrant.configure("2") do |config|
 
       if nm_region == 0
         region.vm.provision "shell", path: "script/cibuild", args: cibuild_args, privileged: false
+      elsif nm_region == 100
+        region.vm.provision "shell", path: "script/dind", privileged: false
       end
 
-      region.vm.provider "docker" do |v|
+      region.vm.provider "docker" do |v, override|
         if nm_region == 0
           v.image = ENV['BASEBOX_DOCKER_IMAGE'] || "ubuntu:packer"
           v.cmd = [ "bash", "-c", "install -d -m 0755 -o root -g root /var/run/sshd; exec /usr/sbin/sshd -D" ]
