@@ -2,6 +2,7 @@
   "require": [
     [ 
       "cache",
+      "artifacts",
       "build-essential",
       "homebrew",
       "pkgsrc"
