@@ -19,6 +19,7 @@
     [
       "consul",
       "vault",
+      "ansible",
       "openvpn",
       "dnsmasq",
       "runit"
