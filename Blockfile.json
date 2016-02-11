@@ -3,6 +3,9 @@
     [ 
       "cache",
       "artifacts",
+      "launch-config"
+    ],
+    [
       "build-essential",
       "homebrew",
       "pkgsrc"
