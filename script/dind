@@ -6,6 +6,7 @@ function main {
   sleep 5
 
   # load ubuntu:vagrant image
+  export DOCKER_HOST='tcp://127.0.0.1:2375'
   time docker load -i /vagrant/box/vagrant.docker
 
   # bring up box1
