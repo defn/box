@@ -162,6 +162,18 @@ function box_main {
     ssh|rsync|scp)
       exec parity "$nm_action" "$nm_guest" "$@"
       ;;
+    remote)
+      local quoted=()
+      while [[ "$#" -gt 0 ]]; do
+        if [[ -n "$1" ]]; then
+          quoted+=($(printf '%q' "$1"))
+        else
+          quoted+=("''")
+        fi
+        shift
+      done
+      exec parity ssh "$nm_guest" "${quoted[@]}"
+      ;;
     id)
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
       ;;
