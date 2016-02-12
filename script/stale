@@ -4,7 +4,11 @@ function main {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
   source "$shome/script/profile"
 
-  true
+  if [[ -x "$(type -P tmux)" ]]; then
+    return 1
+  fi
+
+  return 0
 }
 
 source sub "$0" "$@"
