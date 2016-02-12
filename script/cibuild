@@ -86,14 +86,8 @@ function update_stuff {
       sudo aptitude upgrade -y
       ;;
   esac
-}
 
-function clean_stuff {
-  sudo rm -f /etc/apt/apt.conf.d/99boxcache
-}
-
-function fully_source {
-  set +x; require; set -x
+  facts cache
 }
 
 function main {
@@ -117,7 +111,7 @@ function main {
   app bootstrap
 
   # fully source home
-  fully_source
+  set +x; require; set -x
 
   # bootstrap docker
   docker_stuff
@@ -126,7 +120,7 @@ function main {
   update_stuff
 
   # cleanup
-  clean_stuff
+  sudo rm -f /etc/apt/apt.conf.d/99boxcache
 }
 
 set -exfu
