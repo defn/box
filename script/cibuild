@@ -86,7 +86,6 @@ function update_stuff {
       sudo softwareupdate -i -v -a
       ;;
     Linux)
-      sudo aptitude update > /dev/null
       sudo aptitude upgrade -y
       ;;
   esac
@@ -103,6 +102,7 @@ function main {
 
   case "$(uname -s)" in
     Linux)
+      sudo aptitude update
       sudo aptitude -y install git vim unzip curl language-pack-en # mirror basebox-ubuntu/site.sh
       ;;
   esac
