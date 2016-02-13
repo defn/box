@@ -60,20 +60,24 @@ function cache_stuff {
     sudo install -d -o ubuntu -g ubuntu -m 0755  "$BASEBOX_CACHE/packages"
   fi
 
-  {
-    echo "Acquire::Languages { \"en\"; };"
-    echo "Acquire::http { Pipeline-Depth \"200\"; }"
-  } | sudo tee /etc/apt/apt.conf.d/99boxcache
+  case "$(uname -s)" in
+    Linux)
+      {
+        echo "Acquire::Languages { \"en\"; };"
+        echo "Acquire::http { Pipeline-Depth \"200\"; }"
+      } | sudo tee /etc/apt/apt.conf.d/99boxcache
 
-  if [[ -n "${http_proxy:-}" ]]; then
-    export http_proxy
-    export https_proxy="$http_proxy"
-    export ftp_proxy="$http_proxy"
+      if [[ -n "${http_proxy:-}" ]]; then
+        export http_proxy
+        export https_proxy="$http_proxy"
+        export ftp_proxy="$http_proxy"
 
-    {
-      echo "Acquire::http::Proxy \"$http_proxy\";"
-    } | sudo tee -a /etc/apt/apt.conf.d/99boxcache
-  fi
+        {
+          echo "Acquire::http::Proxy \"$http_proxy\";"
+        } | sudo tee -a /etc/apt/apt.conf.d/99boxcache
+      fi
+      ;;
+  esac
 }
 
 function update_stuff {
@@ -124,7 +128,11 @@ function main {
   update_stuff
 
   # cleanup
-  sudo rm -f /etc/apt/apt.conf.d/99boxcache
+  case "$(uname -s)" in
+    Linux)
+      sudo rm -f /etc/apt/apt.conf.d/99boxcache
+      ;;
+  esac
 }
 
 set -exfu
