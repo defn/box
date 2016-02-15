@@ -107,6 +107,7 @@ function box_main {
           $cmd_guest halt
 
           rm -f "${BASEBOX_CACHE}/box/vagrant${nm_export:+-${nm_export}}.ovf" "${BASEBOX_CACHE}/box/vagrant${nm_export:+-${nm_export}}-disk1.vmdk"
+          set -x
           VBoxManage export $($cmd_guest id) --ovf20 -o ${BASEBOX_CACHE}/box/vagrant"${nm_export:+-${nm_export}}".ovf
           ;;
         vmware)
