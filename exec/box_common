@@ -129,9 +129,14 @@ function box_main {
       local nm_export="${1:-}"
       case "$nm_rebuilder" in
         virtualbox|vmware)
-          if [[ "$nm_rebuilder" == "vmware" ]]; then
-            export VMX="$($cmd_guest id)"
-          fi
+          case "$nm_rebuilder" in
+            vmware)
+              export BASEBOX_SOURCE="$($cmd_guest id)"
+              ;;
+            virtualbox)
+              export BASEBOX_SOURCE="${BASEBOX_CACHE}/box/vagrant${nm_export}.ovf"
+              ;;
+          esac
           $nm_rebuilder build "$nm_basebox_build" "$basebox_type" "$nm_export" "$@"
           $cmd_guest destroy -f
           $nm_rebuilder remove "$@" 2>&- || true
