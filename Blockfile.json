@@ -19,6 +19,7 @@
     [
       "consul",
       "vault",
+      "terraform",
       "facts",
       "openvpn",
       "dnsmasq",
