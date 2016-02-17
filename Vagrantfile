@@ -82,13 +82,13 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  (0..100).each do |nm_region|
+  (0..102).each do |nm_region|
     config.vm.define "#{nm_box}#{nm_region}" do |region|
       region.ssh.insert_key = false
 
       if nm_region == 0
         region.vm.provision "shell", path: "script/cibuild", args: cibuild_args, privileged: false
-      elsif nm_region == 100
+      elsif nm_region >= 100
         region.vm.provision "shell", path: "script/dind", privileged: false
       end
 
@@ -96,7 +96,7 @@ Vagrant.configure("2") do |config|
         if nm_region == 0
           v.image = "ubuntu:packer"
           v.cmd = [ "bash", "-c", "install -d -m 0755 -o root -g root /var/run/sshd; exec /usr/sbin/sshd -D" ]
-        elsif nm_region == 100
+        elsif nm_region >= 100
           v.image = "ubuntu:vagrant"
           v.create_args = ['--privileged']
           v.volumes = ['/var/lib/docker']
