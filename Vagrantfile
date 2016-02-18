@@ -108,7 +108,6 @@ Vagrant.configure("2") do |config|
           v.create_args = []
           v.cmd = [ "/usr/sbin/sshd", "-D" ]
           v.volumes = []
-        else
         end
         
         v.has_ssh = true
