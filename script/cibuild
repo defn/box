@@ -103,7 +103,7 @@ function main {
   case "$(uname -s)" in
     Linux)
       sudo aptitude update
-      sudo aptitude -y install git vim unzip curl language-pack-en # mirror basebox-ubuntu/site.sh
+      sudo aptitude -y install git vim unzip curl language-pack-en lvm2 # mirror basebox-ubuntu/site.sh
       ;;
   esac
 
