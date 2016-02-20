@@ -143,7 +143,7 @@ Vagrant.configure("2") do |config|
 
       region.vm.provider "aws" do |v|
         v.block_device_mapping = [
-          { 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 50 },
+          { 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 100 },
           { 'DeviceName' => '/dev/sdb', 'VirtualName' => 'ephemeral0', },
           { 'DeviceName' => '/dev/sdc', 'VirtualName' => 'ephemeral1', },
           { 'DeviceName' => '/dev/sdd', 'VirtualName' => 'ephemeral2', },
