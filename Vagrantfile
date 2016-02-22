@@ -96,18 +96,18 @@ Vagrant.configure("2") do |config|
         if nm_region == 0
           v.image = "ubuntu:packer"
           v.create_args = ['--privileged']
+          v.volumes = ['/var/lib/docker']
           v.cmd = [ "bash", "-c", "install -d -m 0755 -o root -g root /var/run/sshd; exec /usr/sbin/sshd -D" ]
-          v.volumes = []
         elsif nm_region >= 100
           v.image = "ubuntu:vagrant"
           v.create_args = ['--privileged']
-          v.cmd = [ "/usr/sbin/sshd", "-D" ]
           v.volumes = ['/var/lib/docker']
+          v.cmd = [ "/usr/sbin/sshd", "-D" ]
         else
           v.image = "ubuntu:vagrant"
           v.create_args = []
-          v.cmd = [ "/usr/sbin/sshd", "-D" ]
           v.volumes = []
+          v.cmd = [ "/usr/sbin/sshd", "-D" ]
         end
         
         v.has_ssh = true
