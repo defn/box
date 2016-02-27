@@ -68,16 +68,17 @@ Vagrant.configure("2") do |config|
         ]
       end
 
-      file_to_disk="#{shome}/.#{nm_box}.vdi"
-      v.customize ['createhd', '--filename', file_to_disk, '--size', 500 * 1024] unless File.exists? file_to_disk
-      v.customize [
-          'storageattach', :id, 
-          '--storagectl', 'SATA Controller', 
-          '--port', 2, 
-          '--device', 0, 
-          '--type', 'hdd', 
-          '--medium', file_to_disk
-      ]
+#      TODO pain when exporting
+#      file_to_disk="#{shome}/.#{nm_box}.vdi"
+#      v.customize ['createhd', '--filename', file_to_disk, '--size', 500 * 1024] unless File.exists? file_to_disk
+#      v.customize [
+#          'storageattach', :id, 
+#          '--storagectl', 'SATA Controller', 
+#          '--port', 2, 
+#          '--device', 0, 
+#          '--type', 'hdd', 
+#          '--medium', file_to_disk
+#      ]
 
     end
   end
