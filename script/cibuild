@@ -22,9 +22,7 @@ function home_stuff {
   git clean -fd
   git pull
 
-  set +x; 
-  source script/ciprofile
-  set -x
+  set +x; source script/ciprofile; set -x
 }
 
 function app_stuff {
@@ -34,7 +32,9 @@ function app_stuff {
   git clone git@github.com:defn/block "$APP_PATH/block" || true
   pushd "$APP_PATH/block"
   git pull
-  script/bootstrap
+  set +x; source script/profile; require; set -x
+  app clone
+  app bootstrap
   set +x; source script/profile; require; set -x
   popd
 }
