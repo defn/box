@@ -49,14 +49,13 @@ function box_main {
       nm_rebuilder='docker'
       case "$(uname -s)" in
         Darwin)
+          local opt_interactive=
           case "$nm_action" in
             ssh)
-              ${BOX_NAME} ssh -t "$nm_guest $nm_action $*"
-              ;;
-            *)
-              ${BOX_NAME} ssh "source .bash_profile; require; env VAGRANT_DEFAULT_PROVIDER=$VAGRANT_DEFAULT_PROVIDER http_proxy=$http_proxy https_proxy=$https_proxy $nm_guest $nm_action $*"
+              opt_interactive="-t"
               ;;
           esac
+          ${BOX_NAME} ssh ${opt_interactive:-} "source .bash_profile; require; env VAGRANT_DEFAULT_PROVIDER=$VAGRANT_DEFAULT_PROVIDER http_proxy=$http_proxy https_proxy=$https_proxy ssh_proxy=${ssh_proxy:-} $nm_guest $nm_action $*"
           return $?
           ;;
       esac
