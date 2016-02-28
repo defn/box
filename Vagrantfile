@@ -110,7 +110,7 @@ Vagrant.configure("2") do |config|
           v.image = ENV['BASEBOX_DOCKER_IMAGE'] || "ubuntu:vagrant"
           v.create_args = []
           v.volumes = []
-          v.cmd = [ "/usr/sbin/sshd", "-D", "-o", "#{nm_box}#{nm_region}" ]
+          v.cmd = [ "/usr/sbin/sshd", "-D", "-o", "VersionAddendum=#{nm_box}#{nm_region}" ]
         end
         
         v.has_ssh = true
