@@ -15,6 +15,7 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  cibuild_script = %x{which block-cibuild 2>/dev/null}.strip
   cibuild_args = %w(git@github.com:defn/home)
   unless ENV['http_proxy'].nil? || ENV['http_proxy'].empty?
     cibuild_args << ENV['http_proxy']
@@ -30,7 +31,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "osx" do |region|
     region.vm.box = "ubuntu"
     region.ssh.insert_key = false
-    region.vm.provision "shell", path: "script/cibuild", args: cibuild_args, privileged: false
+    region.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
 
     region.vm.provider "vmware_fusion" do |v|
       v.gui = false
@@ -49,7 +50,7 @@ Vagrant.configure("2") do |config|
   config.vm.define nm_box do |region|
     region.vm.box = "ubuntu"
     region.ssh.private_key_path = ssh_key
-    region.vm.provision "shell", path: "script/cibuild", args: cibuild_args, privileged: false
+    region.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
     region.vm.network "private_network", ip: "172.28.128.3" # VBoxManage hostonlyif ipconfig vboxnet0 --ip 172.28.128.1 --netmask 255.255.255.0
 
     region.vm.provider "virtualbox" do |v|
@@ -89,7 +90,7 @@ Vagrant.configure("2") do |config|
 
       region.vm.provider "docker" do |v, override|
         if nm_region == 0
-          region.vm.provision "shell", path: "script/cibuild", args: cibuild_args, privileged: false
+          region.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
           v.image = ENV['BASEBOX_DOCKER_IMAGE'] || "ubuntu:packer"
           v.create_args = []
           v.volumes = []
@@ -136,7 +137,7 @@ Vagrant.configure("2") do |config|
 
       region.vm.box = "ubuntu-#{nm_region}"
       region.ssh.private_key_path = ssh_key
-      region.vm.provision "shell", path: "script/cibuild", args: cibuild_args, privileged: false
+      region.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
 
       region.vm.provider "aws" do |v|
         v.block_device_mapping = [

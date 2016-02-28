@@ -13,4 +13,4 @@ function main {
 set -exfu
 exec 2>&1
 cd
-main "$@" | tee -a cibuild.log
+main "$@"
