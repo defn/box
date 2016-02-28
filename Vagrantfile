@@ -99,18 +99,18 @@ Vagrant.configure("2") do |config|
           v.image = ENV['BASEBOX_DOCKER_IMAGE'] || "ubuntu:packer"
           v.create_args = []
           v.volumes = []
-          v.cmd = [ "bash", "-c", "install -d -m 0755 -o root -g root /var/run/sshd; exec /usr/sbin/sshd -D" ]
+          v.cmd = [ "bash", "-c", "install -d -m 0755 -o root -g root /var/run/sshd; exec /usr/sbin/sshd -D -o VersionAddendum=#{nm_box}#{nm_region}" ]
         elsif (nm_region % 100) == 0
           region.vm.provision "shell", path: "script/dind", args: [], privileged: false
           v.image = ENV['BASEBOX_DOCKER_IMAGE'] || "ubuntu:vagrant"
           v.create_args = ['--privileged']
           v.volumes = ['/var/lib/docker']
-          v.cmd = [ "/usr/sbin/sshd", "-D" ]
+          v.cmd = [ "/usr/sbin/sshd", "-D", "-o", "VersionAddendum=#{nm_box}#{nm_region}" ]
         else
           v.image = ENV['BASEBOX_DOCKER_IMAGE'] || "ubuntu:vagrant"
           v.create_args = []
           v.volumes = []
-          v.cmd = [ "/usr/sbin/sshd", "-D" ]
+          v.cmd = [ "/usr/sbin/sshd", "-D", "-o", "#{nm_box}#{nm_region}" ]
         end
         
         v.has_ssh = true
