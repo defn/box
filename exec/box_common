@@ -115,12 +115,7 @@ function box_main {
           ;;
         docker)
           if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
-            local nm_docker_image="ubuntu:vagrant"
-            docker commit "$($cmd_guest id)" "${nm_docker_image}" # TODO DRY
-            docker save -o ${BASEBOX_CACHE}/box/vagrant"${nm_export:+-${nm_export}}".docker "${nm_docker_image}"
-          else
-            local nm_docker_image="ubuntu:vagrant-${nm_guest}"
-            docker commit "$($cmd_guest id)" "${nm_docker_image}"
+            docker commit "$($cmd_guest id)" "ubuntu:vagrant"
           fi
           ;;
       esac
@@ -150,6 +145,7 @@ function box_main {
             export BASEBOX_DOCKER_IMAGE="ubuntu:vagrant"
             export BASEBOX_DOCKER_TAG="vagrant"
             "$nm_rebuilder" build
+            docker save -o ${BASEBOX_CACHE}/box/vagrant"${nm_export:+-${nm_export}}".docker "ubuntu:vagrant"
           else
             export BASEBOX_DOCKER_IMAGE="ubuntu:vagrant"
           fi
