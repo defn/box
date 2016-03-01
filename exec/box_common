@@ -145,7 +145,10 @@ function box_main {
             export BASEBOX_DOCKER_IMAGE="ubuntu:vagrant"
             export BASEBOX_DOCKER_TAG="vagrant"
             "$nm_rebuilder" build
+            docker images -a
+            docker history ubuntu:vagrant || true
             docker save -o ${BASEBOX_CACHE}/box/vagrant"${nm_export:+-${nm_export}}".docker "ubuntu:vagrant"
+            docker history ubuntu:vagrant
           else
             export BASEBOX_DOCKER_IMAGE="ubuntu:vagrant"
           fi
