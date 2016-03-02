@@ -73,7 +73,7 @@ function box_main {
           $cmd_guest destroy -f
           $nm_rebuilder build "$nm_basebox_build"
           $nm_rebuilder remove 2>&- || true
-          $nm_rebuilder add 
+          $nm_rebuilder add
           ;;
         aws)
           $cmd_guest destroy -f
@@ -83,18 +83,19 @@ function box_main {
           ;;
         docker)
           if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
-            export BASEBOX_DOCKER_IMAGE="ubuntu:latest"
-            export BASEBOX_DOCKER_TAG="packer"
+            export BASEBOX_SOURCE="ubuntu:latest"
+            export BASEBOX_TAG="packer"
             $nm_rebuilder build
           else
-            export BASEBOX_DOCKER_TAG="vagrant"
-            docker commit "$(${BOX_NAME}0 id)" "ubuntu:${BASEBOX_DOCKER_TAG}"
+            export BASEBOX_TAG="vagrant"
+            docker commit "$(${BOX_NAME}0 id)" "ubuntu:${BASEBOX_TAG}"
           fi
           ;;
       esac
       ;;
     export)
       local nm_export="${1:-}"
+      local nm_suffix="${nm_export:+-${nm_export}}"
       case "$nm_rebuilder" in
         virtualbox)
           $cmd_guest ssh sudo passwd -u ubuntu
@@ -105,9 +106,8 @@ function box_main {
           $cmd_guest ssh sudo mkdir -p /var/lib/dhcp
           $cmd_guest halt
 
-          rm -f "${BASEBOX_CACHE}/box/vagrant${nm_export:+-${nm_export}}.ovf" "${BASEBOX_CACHE}/box/vagrant${nm_export:+-${nm_export}}-disk1.vmdk"
-          set -x
-          VBoxManage export $($cmd_guest id) --ovf20 -o ${BASEBOX_CACHE}/box/vagrant"${nm_export:+-${nm_export}}".ovf
+          rm -f "${BASEBOX_CACHE}/box/vagrant${nm_suffix}.ovf" "${BASEBOX_CACHE}/box/vagrant${nm_suffix}-disk1.vmdk"
+          (set -x; VBoxManage export $($cmd_guest id) --ovf20 -o "${BASEBOX_CACHE}/box/vagrant${nm_suffix}.ovf")
           ;;
         vmware)
           { echo ubuntu; echo ubuntu; } | $cmd_guest ssh sudo passwd ubuntu
@@ -122,6 +122,7 @@ function box_main {
       ;;
     rebuild)
       local nm_export="${1:-}"
+      local nm_suffix="${nm_export:+-${nm_export}}"
       case "$nm_rebuilder" in
         virtualbox|vmware)
           case "$nm_rebuilder" in
@@ -129,28 +130,27 @@ function box_main {
               export BASEBOX_SOURCE="$($cmd_guest id)"
               ;;
             virtualbox)
-              export BASEBOX_SOURCE="${BASEBOX_CACHE}/box/vagrant${nm_export}.ovf"
+              export BASEBOX_SOURCE="${BASEBOX_CACHE}/box/vagrant${nm_suffix}.ovf"
               ;;
           esac
+
           $nm_rebuilder build "$nm_basebox_build" "$basebox_type" "$nm_export" "$@"
           $cmd_guest destroy -f
-          $nm_rebuilder remove "$@" 2>&- || true
-          $nm_rebuilder add "$@"
+          $nm_rebuilder remove 2>&- || true
+          $nm_rebuilder add
 
           rm -f "$shome/cidata/meta-data"
           (cd $shome && make)
           ;;
         docker)
+          export BASEBOX_SOURCE="ubuntu:vagrant"
           if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
-            export BASEBOX_DOCKER_IMAGE="ubuntu:vagrant"
-            export BASEBOX_DOCKER_TAG="vagrant"
-            "$nm_rebuilder" build
+            export BASEBOX_TAG="vagrant"
+            $nm_rebuilder build
             docker images -a
-            docker history ubuntu:vagrant || true
-            docker save -o ${BASEBOX_CACHE}/box/vagrant"${nm_export:+-${nm_export}}".docker "ubuntu:vagrant"
-            docker history ubuntu:vagrant
-          else
-            export BASEBOX_DOCKER_IMAGE="ubuntu:vagrant"
+            docker history "$BASEBOX_SOURCE" || true
+            docker save -o "${BASEBOX_CACHE}/box/vagrant${nm_suffix}.docker" "$BASEBOX_SOURCE"
+            docker history "$BASEBOX_SOURCE"
           fi
           ;;
       esac

@@ -96,18 +96,18 @@ Vagrant.configure("2") do |config|
       region.vm.provider "docker" do |v, override|
         if nm_region == 0
           region.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
-          v.image = ENV['BASEBOX_DOCKER_IMAGE'] || "ubuntu:packer"
+          v.image = ENV['BASEBOX_SOURCE'] || "ubuntu:packer"
           v.create_args = []
           v.volumes = []
           v.cmd = [ "bash", "-c", "install -d -m 0755 -o root -g root /var/run/sshd; exec /usr/sbin/sshd -D -o VersionAddendum=#{nm_box}#{nm_region}" ]
         elsif (nm_region % 100) == 0
           region.vm.provision "shell", path: "script/dind", args: [], privileged: false
-          v.image = ENV['BASEBOX_DOCKER_IMAGE'] || "ubuntu:vagrant"
+          v.image = ENV['BASEBOX_SOURCE'] || "ubuntu:vagrant"
           v.create_args = ['--privileged']
           v.volumes = ['/var/lib/docker']
           v.cmd = [ "/usr/sbin/sshd", "-D", "-o", "VersionAddendum=#{nm_box}#{nm_region}" ]
         else
-          v.image = ENV['BASEBOX_DOCKER_IMAGE'] || "ubuntu:vagrant"
+          v.image = ENV['BASEBOX_SOURCE'] || "ubuntu:vagrant"
           v.create_args = []
           v.volumes = []
           v.cmd = [ "/usr/sbin/sshd", "-D", "-o", "VersionAddendum=#{nm_box}#{nm_region}" ]
