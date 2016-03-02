@@ -106,7 +106,7 @@ function box_main {
           $cmd_guest ssh sudo mkdir -p /var/lib/dhcp
           $cmd_guest halt
 
-          rm -f "${BASEBOX_CACHE}/box/vagrant${nm_suffix}.ovf" "${BASEBOX_CACHE}/box/vagrant${nm_suffix}-disk1.vmdk"
+          (set +f; rm -f "${BASEBOX_CACHE}/box/vagrant${nm_suffix}.ovf" ${BASEBOX_CACHE}/box/vagrant${nm_suffix}-disk*.vmdk)
           (set -x; VBoxManage export $($cmd_guest id) --ovf20 -o "${BASEBOX_CACHE}/box/vagrant${nm_suffix}.ovf")
           ;;
         vmware)
