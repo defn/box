@@ -7,10 +7,16 @@ Builds
 
     limbo media
     limbo build
+    limbo export
+    limbo rebuild
     limbo docker media
     limbo docker build
     limbo docker export
     limbo docker rebuild
-    limbo export
-    limbo rebuild
+    limbo export dind
+    limbo rebuild dind
 
+    limbo osx media
+    limbo osx build
+    limbo osx export
+    limbo osx rebuild
