@@ -15,7 +15,7 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  cibuild_script = %x{which app-cibuild 2>/dev/null}.strip
+  cibuild_script = %x{which block-cibuild 2>/dev/null}.strip
   cibuild_args = %w(git@github.com:defn/home) # TODO how to pass args into vagrant
 
   unless ENV['http_proxy'].nil? || ENV['http_proxy'].empty?
