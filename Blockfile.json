@@ -19,18 +19,10 @@
     [
       "consul",
       "vault",
-      "terraform",
       "facts",
       "openvpn",
       "dnsmasq",
       "runit"
-    ],
-    [
-      "mysql",
-      "postgresql",
-      "sqlite",
-      "redis",
-      "memcached"
     ]
   ]
 }
