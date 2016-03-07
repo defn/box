@@ -88,7 +88,7 @@ function box_main {
             $nm_rebuilder build
           else
             export BASEBOX_TAG="vagrant"
-            docker commit "$(${BOX_NAME}0 id)" "ubuntu:${BASEBOX_TAG}"
+            docker commit "$(${BOX_NAME}0 id)" "${BASEBOX_NAME}:${BASEBOX_TAG}"
           fi
           ;;
       esac
@@ -115,7 +115,7 @@ function box_main {
           ;;
         docker)
           if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
-            docker commit "$($cmd_guest id)" "ubuntu:vagrant"
+            docker commit "$($cmd_guest id)" "${BASEBOX_NAME}:vagrant"
           fi
           ;;
       esac

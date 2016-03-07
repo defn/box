@@ -5,12 +5,11 @@ function main {
   sudo service docker start
   sleep 5
 
-  # load ubuntu:vagrant image
   export DOCKER_HOST='tcp://127.0.0.1:2375'
   docker images -a
   time docker load -i /vagrant/box/vagrant.docker
   docker images -a
-  docker history ubuntu:vagrant
+  docker history ${BASEBOX_NAME}:vagrant
 }
 
 set -exfu

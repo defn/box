@@ -16,7 +16,7 @@ Vagrant.configure("2") do |config|
   end
 
   cibuild_script = %x{which block-cibuild 2>/dev/null}.strip
-  cibuild_args = %w(git@github.com:defn/home) # TODO how to pass args into vagrant
+  cibuild_args = [ ENV['BASEBOX_HOME_URL'] ]
 
   unless ENV['http_proxy'].nil? || ENV['http_proxy'].empty?
     cibuild_args << ENV['http_proxy']
@@ -34,7 +34,7 @@ Vagrant.configure("2") do |config|
   ssh_key = "#{ENV['HOME']}/.ssh/ssh-vagrant"
   
   config.vm.define "osx" do |region|
-    region.vm.box = "ubuntu"
+    region.vm.box = ENV['BASEBOX_NAME']
     region.ssh.insert_key = false
     region.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
 
@@ -53,7 +53,7 @@ Vagrant.configure("2") do |config|
   nm_box=ENV['BOX_NAME']
 
   config.vm.define nm_box do |region|
-    region.vm.box = "ubuntu"
+    region.vm.box = ENV['BASEBOX_NAME']
     region.ssh.private_key_path = ssh_key
     region.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
     region.vm.network "private_network", ip: "172.28.128.3" # VBoxManage hostonlyif ipconfig vboxnet0 --ip 172.28.128.1 --netmask 255.255.255.0
@@ -96,18 +96,18 @@ Vagrant.configure("2") do |config|
       region.vm.provider "docker" do |v, override|
         if nm_region == 0
           region.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
-          v.image = ENV['BASEBOX_SOURCE'] || "ubuntu:packer"
+          v.image = ENV['BASEBOX_SOURCE'] || "#{ENV['BASEBOX_NAME']}:packer"
           v.create_args = []
           v.volumes = []
           v.cmd = [ "bash", "-c", "install -d -m 0755 -o root -g root /var/run/sshd; exec /usr/sbin/sshd -D -o VersionAddendum=#{nm_box}#{nm_region}" ]
         elsif (nm_region % 100) == 0
           region.vm.provision "shell", path: "script/dind", args: [], privileged: false
-          v.image = ENV['BASEBOX_SOURCE'] || "ubuntu:vagrant"
+          v.image = ENV['BASEBOX_SOURCE'] || "#{ENV['BASEBOX_NAME']}:vagrant"
           v.create_args = ['--privileged']
           v.volumes = ['/var/lib/docker']
           v.cmd = [ "/usr/sbin/sshd", "-D", "-o", "VersionAddendum=#{nm_box}#{nm_region}" ]
         else
-          v.image = ENV['BASEBOX_SOURCE'] || "ubuntu:vagrant"
+          v.image = ENV['BASEBOX_SOURCE'] || "#{ENV['BASEBOX_NAME']}:vagrant"
           v.create_args = []
           v.volumes = []
           v.cmd = [ "/usr/sbin/sshd", "-D", "-o", "VersionAddendum=#{nm_box}#{nm_region}" ]
@@ -140,7 +140,7 @@ Vagrant.configure("2") do |config|
       region.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant', disabled: true
       region.vm.synced_folder "#{shome}/remote/#{nm_region}/.", '/vagrant/', type: "rsync" if File.exists?("#{shome}/remote/#{nm_region}/.")
 
-      region.vm.box = "ubuntu-#{nm_region}"
+      region.vm.box = "#{ENV['BASEBOX_NAME']}-#{nm_region}"
       region.ssh.private_key_path = ssh_key
       region.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
 
