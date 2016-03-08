@@ -1,5 +1,19 @@
+require 'socket'
+
+shome=File.expand_path("..", __FILE__)
+
 Vagrant.configure("2") do |config|
-  shome=File.expand_path("..", __FILE__)
+  module Vagrant
+    module Util
+      class Platform
+        class << self
+          def solaris?
+            true
+          end
+        end
+      end
+    end
+  end
 
   cibuild_script = %x{which block-cibuild 2>/dev/null}.strip
   cibuild_args = [ ENV['BASEBOX_HOME_URL'] ]
@@ -59,6 +73,19 @@ Vagrant.configure("2") do |config|
           '--medium', "#{shome}/cidata.iso"
         ]
       end
+
+#      TODO pain when exporting
+#      file_to_disk="#{shome}/.#{nm_box}.vdi"
+#      v.customize ['createhd', '--filename', file_to_disk, '--size', 500 * 1024] unless File.exists? file_to_disk
+#      v.customize [
+#          'storageattach', :id, 
+#          '--storagectl', 'SATA Controller', 
+#          '--port', 2, 
+#          '--device', 0, 
+#          '--type', 'hdd', 
+#          '--medium', file_to_disk
+#      ]
+
     end
   end
 
