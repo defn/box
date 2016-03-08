@@ -14,6 +14,7 @@ Vagrant.configure("2") do |config|
 
   config.ssh.username = "ubuntu"
   config.ssh.forward_agent = true
+  config.ssh.insert_key = false
 
   config.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant'
 
@@ -24,7 +25,6 @@ Vagrant.configure("2") do |config|
   
   config.vm.define "osx" do |region|
     region.vm.box = ENV['BASEBOX_NAME']
-    region.ssh.insert_key = false
     region.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
 
     region.vm.provider "vmware_fusion" do |v|
@@ -67,7 +67,6 @@ Vagrant.configure("2") do |config|
 
   (0..399).each do |nm_region|
     config.vm.define "#{nm_box}#{nm_region}" do |region|
-      region.ssh.insert_key = false
       region.ssh.private_key_path = ssh_keys
 
       region.vm.provider "docker" do |v, override|
