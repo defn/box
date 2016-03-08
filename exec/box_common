@@ -55,13 +55,13 @@ function box_main {
               opt_interactive="-t"
               ;;
           esac
-          ${BOX_NAME} ssh ${opt_interactive:-} "source .bash_profile; require; env VAGRANT_DEFAULT_PROVIDER=$VAGRANT_DEFAULT_PROVIDER http_proxy=$http_proxy https_proxy=$https_proxy ssh_proxy=${ssh_proxy:-} $nm_guest $nm_action $*"
+          ${BOX_NAME} ssh ${opt_interactive:-} "source .bash_profile; require; env VAGRANT_DEFAULT_PROVIDER=$VAGRANT_DEFAULT_PROVIDER http_proxy=$http_proxy https_proxy=$https_proxy ssh_gateway=${ssh_gateway:-} $nm_guest $nm_action $*"
           return $?
           ;;
       esac
       ;;
     *)
-      echo "ERROR: unknown provider $VAGRANT_DEFAULT_PROVIER" 1>&2
+      echo "ERROR: unknown provider $VAGRANT_DEFAULT_PROVIDER" 1>&2
       return 1
       ;;
   esac

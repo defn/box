@@ -22,8 +22,8 @@ Vagrant.configure("2") do |config|
     cibuild_args << ENV['http_proxy']
   end
 
-  unless ENV['ssh_proxy'].nil? || ENV['ssh_proxy'].empty?
-    cibuild_args << ENV['ssh_proxy']
+  unless ENV['ssh_gateway'].nil? || ENV['ssh_gateway'].empty?
+    cibuild_args << ENV['ssh_gateway']
   end
 
   config.ssh.username = "ubuntu"
