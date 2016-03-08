@@ -143,7 +143,7 @@ function box_main {
           (cd $shome && make)
           ;;
         docker)
-          export BASEBOX_SOURCE="ubuntu:vagrant"
+          export BASEBOX_SOURCE="${BASEBOX_NAME}:vagrant"
           if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
             export BASEBOX_TAG="vagrant"
             $nm_rebuilder build
