@@ -1,19 +1,5 @@
-require 'socket'
-
-shome=File.expand_path("..", __FILE__)
-
 Vagrant.configure("2") do |config|
-  module Vagrant
-    module Util
-      class Platform
-        class << self
-          def solaris?
-            true
-          end
-        end
-      end
-    end
-  end
+  shome=File.expand_path("..", __FILE__)
 
   cibuild_script = %x{which block-cibuild 2>/dev/null}.strip
   cibuild_args = [ ENV['BASEBOX_HOME_URL'] ]
@@ -31,7 +17,10 @@ Vagrant.configure("2") do |config|
 
   config.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant'
 
-  ssh_key = "#{ENV['HOME']}/.ssh/ssh-vagrant"
+  ssh_keys = [
+    "#{ENV['BASEBOX_CACHE']}/.ssh/ssh-vagrant",
+    "#{ENV['BASEBOX_CACHE']}/.ssh/ssh-vagrant-insecure"
+  ]
   
   config.vm.define "osx" do |region|
     region.vm.box = ENV['BASEBOX_NAME']
@@ -54,7 +43,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define nm_box do |region|
     region.vm.box = ENV['BASEBOX_NAME']
-    region.ssh.private_key_path = ssh_key
+    region.ssh.private_key_path = ssh_keys
     region.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
     region.vm.network "private_network", ip: "172.28.128.3" # VBoxManage hostonlyif ipconfig vboxnet0 --ip 172.28.128.1 --netmask 255.255.255.0
 
@@ -73,25 +62,13 @@ Vagrant.configure("2") do |config|
           '--medium', "#{shome}/cidata.iso"
         ]
       end
-
-#      TODO pain when exporting
-#      file_to_disk="#{shome}/.#{nm_box}.vdi"
-#      v.customize ['createhd', '--filename', file_to_disk, '--size', 500 * 1024] unless File.exists? file_to_disk
-#      v.customize [
-#          'storageattach', :id, 
-#          '--storagectl', 'SATA Controller', 
-#          '--port', 2, 
-#          '--device', 0, 
-#          '--type', 'hdd', 
-#          '--medium', file_to_disk
-#      ]
-
     end
   end
 
   (0..399).each do |nm_region|
     config.vm.define "#{nm_box}#{nm_region}" do |region|
       region.ssh.insert_key = false
+      region.ssh.private_key_path = ssh_keys
 
       region.vm.provider "docker" do |v, override|
         if nm_region == 0
@@ -141,7 +118,7 @@ Vagrant.configure("2") do |config|
       region.vm.synced_folder "#{shome}/remote/#{nm_region}/.", '/vagrant/', type: "rsync" if File.exists?("#{shome}/remote/#{nm_region}/.")
 
       region.vm.box = "#{ENV['BASEBOX_NAME']}-#{nm_region}"
-      region.ssh.private_key_path = ssh_key
+      region.ssh.private_key_path = ssh_keys
       region.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
 
       region.vm.provider "aws" do |v|
@@ -152,7 +129,7 @@ Vagrant.configure("2") do |config|
           { 'DeviceName' => '/dev/sdd', 'VirtualName' => 'ephemeral2', },
           { 'DeviceName' => '/dev/sde', 'VirtualName' => 'ephemeral3', }
         ]
-        v.keypair_name = "vagrant-#{Digest::MD5.file(ssh_key).hexdigest}"
+        v.keypair_name = "vagrant-#{Digest::MD5.file(ssh_keys).hexdigest}"
         v.instance_type = 't2.small' # 'c3.large'
         v.region = nm_region
       end
