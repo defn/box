@@ -118,6 +118,19 @@ function box_main {
           ;;
       esac
       ;;
+    import)
+      local nm_import="${1:-}"
+      local nm_suffix="${nm_import:+-${nm_import}}"
+      case "$nm_rebuilder" in
+        docker)
+          docker load -i "${BASEBOX_CACHE}/box/${BASEBOX_NAME}.docker"
+          ;;
+        virtualbox)
+          $nm_rebuilder remove 2>&- || true
+          $nm_rebuilder add
+          ;;
+      esac
+      ;;
     rebuild)
       local nm_export="${1:-}"
       local nm_suffix="${nm_export:+-${nm_export}}"
