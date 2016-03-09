@@ -182,6 +182,9 @@ function box_main {
     build)
       $cmd_guest up
       ;;
+    box*)
+      "$nm_action" "$@"
+      ;;
     *)
       vagrant "$nm_action" "$nm_guest" "$@"
       ;;
