@@ -98,8 +98,6 @@ function box_main {
       local nm_suffix="${nm_export:+-${nm_export}}"
       case "$nm_rebuilder" in
         virtualbox)
-          $cmd_guest ssh sudo passwd -u ubuntu
-          { echo ubuntu; echo ubuntu; } | $cmd_guest ssh sudo passwd ubuntu
           $cmd_guest ssh sudo rm -rf /dev/.udev
           $cmd_guest ssh sudo rm -f /lib/udev/rules.d/75-persistent-net-generator.rules
           $cmd_guest ssh sudo rm -rf /var/lib/dhcp # TODO assumes only leases are here
@@ -110,7 +108,6 @@ function box_main {
           (set -x; VBoxManage export $($cmd_guest id) --ovf20 -o "${BASEBOX_CACHE}/box/${BASEBOX_NAME}${nm_suffix}.ovf")
           ;;
         vmware)
-          { echo ubuntu; echo ubuntu; } | $cmd_guest ssh sudo passwd ubuntu
           $cmd_guest halt
           ;;
         docker)
