@@ -7,7 +7,7 @@ function main {
 
   export DOCKER_HOST='tcp://127.0.0.1:2375'
   docker images -a
-  time docker load -i /vagrant/box/vagrant.docker
+  time docker load -i /vagrant/box/${BASEBOX_NAME}.docker
   docker images -a
   docker history ${BASEBOX_NAME}:vagrant
 }
