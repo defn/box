@@ -22,7 +22,8 @@
       "facts",
       "openvpn",
       "dnsmasq",
-      "runit"
+      "runit",
+      "linkerd"
     ]
   ]
 }
