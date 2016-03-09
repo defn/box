@@ -83,7 +83,7 @@ function box_main {
           ;;
         docker)
           if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
-            export BASEBOX_SOURCE="ubuntu:latest"
+            export BASEBOX_SOURCE="ubuntu:trusty"
             export BASEBOX_TAG="packer"
             $nm_rebuilder build
           else
