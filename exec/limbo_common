@@ -85,7 +85,7 @@ function box_main {
           if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
             export BASEBOX_SOURCE="ubuntu:trusty"
             export BASEBOX_TAG="packer"
-            $nm_rebuilder build
+            $nm_rebuilder build "$BASEBOX_SOURCE"
           else
             export BASEBOX_TAG="vagrant"
             docker commit "$(${BOX_NAME}0 id)" "${BASEBOX_NAME}:${BASEBOX_TAG}"
