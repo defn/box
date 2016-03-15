@@ -4,8 +4,7 @@ function profile {
   local shome="$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
   PATH="$shome/bin:$shome/exec:$PATH"
 
-  export BASEBOX_NAME='expedite'
-  export BASEBOX_HOME_URL='git@github.com:expedite/exp-home'
+  export BOX_NAME='box'
 }
 
 profile
