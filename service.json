@@ -1,7 +1,7 @@
 {
   "services": {
     "squid": {
-      "run": "squid -N -f ~/work/limbo/etc/squid.conf",
+      "run": "squid -N -d 1 -f ~/work/limbo/etc/squid.conf",
       "env": {
         "PORT": "3128"
       }
