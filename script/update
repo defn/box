@@ -13,7 +13,7 @@ function bootstrap {
   fi
   VBoxManage hostonlyif ipconfig vboxnet0 --ip 172.28.128.1 --netmask 255.255.255.0
 
-  squid
+  block compile service
 }
 
 bootstrap

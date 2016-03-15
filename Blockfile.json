@@ -2,6 +2,7 @@
   "require": [
     [ 
       "cache",
+      "squid",
       "artifacts",
       "launch-config"
     ],
