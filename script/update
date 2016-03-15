@@ -8,6 +8,9 @@ function bootstrap {
     "$shome/script/bootstrap"
   fi
 
+  if ! VBoxManage list hostonlyifs | grep vboxnet0; then
+    VBoxManage hostonlyif create
+  fi
   VBoxManage hostonlyif ipconfig vboxnet0 --ip 172.28.128.1 --netmask 255.255.255.0
 
   squid
