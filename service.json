@@ -1,0 +1,10 @@
+{
+  "services": {
+    "squid": {
+      "run": "squid -N -f ~/work/limbo/etc/squid.conf",
+      "env": {
+        "PORT": "3128"
+      }
+    }
+  }
+}
