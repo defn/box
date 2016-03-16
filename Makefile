@@ -7,8 +7,8 @@ cidata/meta-data: .ssh/ssh-vagrant
 	@echo instance-id: vagrant-$(shell date +%s) | tee -a $@.tmp
 	mv $@.tmp $@
 
-cidata/user-data:
-	@libexec/gen-user-data > cidata/user-data.tmp
+cidata/user-data: .ssh/ssh-vagrant
+	libexec/gen-user-data > cidata/user-data.tmp
 	mv cidata/user-data.tmp cidata/user-data
 
 .ssh/ssh-vagrant:
