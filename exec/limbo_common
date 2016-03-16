@@ -98,7 +98,7 @@ function box_main {
       local nm_suffix="${nm_export:+-${nm_export}}"
       case "$nm_rebuilder" in
         virtualbox)
-          cat "${BASEBOX_CACHE}/.ssh/ssh-vagrant.pub" | $cmd_guest ssh tee -a '~ubuntu/.ssh/authorized_keys'
+          cat "${shome}/.ssh/ssh-vagrant.pub" | $cmd_guest ssh tee -a '~ubuntu/.ssh/authorized_keys'
           $cmd_guest ssh sudo rm -rf /dev/.udev
           $cmd_guest ssh sudo rm -f /lib/udev/rules.d/75-persistent-net-generator.rules
           $cmd_guest ssh sudo rm -rf /var/lib/dhcp # TODO assumes only leases are here
