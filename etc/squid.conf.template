@@ -3361,7 +3361,7 @@ maximum_object_size 100000 MB
 #
 
 # Uncomment and adjust the following to add a disk cache directory.
-cache_dir ufs ${shome}/var/squid/cache/squid 100000 16 256
+cache_dir ufs ${BASEBOX_CACHE}/cache/squid 100000 16 256
 
 #  TAG: store_dir_select_algorithm
 #	How Squid selects which cache_dir to use when the response
@@ -4133,7 +4133,7 @@ cache_dir ufs ${shome}/var/squid/cache/squid 100000 16 256
 #
 
 # Leave coredumps in the first cache dir
-coredump_dir ${shome}/var/squid/cache/squid
+coredump_dir ${BASEBOX_CACHE}/cache/squid
 
 # OPTIONS FOR FTP GATEWAYING
 # -----------------------------------------------------------------------------
