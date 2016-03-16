@@ -14,7 +14,7 @@ function bootstrap {
   VBoxManage hostonlyif ipconfig vboxnet0 --ip 172.28.128.1 --netmask 255.255.255.0
 
   cat "$shome/etc/squid.conf.template" | envsubst '${BASEBOX_CACHE}' > "$shome/etc/squid.conf"
-  mkdir -p "$shome/var/squid/cache/squid"
+  mkdir -p "${BASEBOX_CACHE}/cache/squid"
   squid -f "$shome/etc/squid.conf" -zN
   block compile service
 
