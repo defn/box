@@ -6,3 +6,6 @@ cidata/meta-data:
 	@echo --- | tee $@.tmp
 	@echo instance-id: vagrant-$(shell date +%s) | tee -a $@.tmp
 	mv $@.tmp $@
+
+.ssh/ssh-vagrant:
+	@ssh-keygen -f .ssh/ssh-vagrant -P ''

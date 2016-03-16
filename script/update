@@ -17,6 +17,8 @@ function bootstrap {
   mkdir -p "$shome/var/squid/cache/squid"
   squid -f "$shome/etc/squid.conf" -zN
   block compile service
+
+  make
 }
 
 bootstrap
