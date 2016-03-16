@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+function main {
+  local shome="$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
+  source "$shome/script/profile"
+
+  jq -n \
+    --arg ssh_key "$(cat "$shome/.ssh/ssh-vagrant.pub")" \
+    --arg sudo "ALL=(ALL) NOPASSWD: ALL" \
+    '{users: [ {name: "ubuntu", "ssh-authorized-keys": [ $ssh_key ], sudo: $sudo }]}' \
+      | ruby -ryaml -rjson -e 'puts JSON.load(STDIN.read).to_yaml' | sed 's/^---/#cloud-config/'
+}
+
+main "$@"
