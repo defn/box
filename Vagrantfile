@@ -17,13 +17,11 @@ Vagrant.configure("2") do |config|
   cibuild_script = %x{which block-cibuild 2>/dev/null}.strip
   cibuild_args = [ ENV['BASEBOX_HOME_URL'] ]
 
-  unless ENV['http_proxy'].nil? || ENV['http_proxy'].empty?
-    cibuild_args << ENV['http_proxy']
-  end
-
-  unless ENV['ssh_gateway'].nil? || ENV['ssh_gateway'].empty?
-    cibuild_args << ENV['ssh_gateway']
-  end
+  %w(http_proxy ssh_gateway ssh_gateway_user).each {|ele|
+    unless ENV[ele].nil? || ENV[ele].empty?
+      cibuild_args << ENV[ele]
+    end
+  done
 
   config.ssh.username = "ubuntu"
   config.ssh.forward_agent = true
