@@ -21,7 +21,7 @@ Vagrant.configure("2") do |config|
     unless ENV[ele].nil? || ENV[ele].empty?
       cibuild_args << ENV[ele]
     end
-  done
+  }
 
   config.ssh.username = "ubuntu"
   config.ssh.forward_agent = true
