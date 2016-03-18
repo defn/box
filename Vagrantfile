@@ -90,7 +90,7 @@ Vagrant.configure("2") do |config|
         elsif (nm_region % 100) == 0
           region.vm.provision "shell", path: "script/dind", args: [], privileged: false
           v.image = ENV['BASEBOX_SOURCE'] || "#{ENV['BASEBOX_NAME']}:vagrant"
-          v.create_args = ['--privileged']
+          v.create_args = ['--privileged', "--bip=172.#{17+(nm_region/100)}.0.0/16"]
           v.volumes = ['/var/lib/docker']
           v.cmd = [ "/usr/sbin/sshd", "-D", "-o", "VersionAddendum=#{nm_box}#{nm_region}" ]
         else
