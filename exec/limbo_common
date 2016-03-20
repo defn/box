@@ -55,7 +55,7 @@ function box_main {
               opt_interactive="-t"
               ;;
           esac
-          ${BOX_NAME} ssh ${opt_interactive:-} "source .bash_profile; require; env VAGRANT_DEFAULT_PROVIDER=$VAGRANT_DEFAULT_PROVIDER http_proxy=$http_proxy https_proxy=$https_proxy ssh_gateway=${ssh_gateway:-} ssh_gateway_user=${ssh_gateway_user:=${USER:-${LOGNAME}}} $nm_guest $nm_action $*"
+          ${BOX_NAME} ssh ${opt_interactive:-} "source .bash_profile; require; exec env VAGRANT_DEFAULT_PROVIDER=$VAGRANT_DEFAULT_PROVIDER http_proxy=$http_proxy https_proxy=$https_proxy ssh_gateway=${ssh_gateway:-} ssh_gateway_user=${ssh_gateway_user:=${USER:-${LOGNAME}}} $nm_guest $nm_action $*"
           return $?
           ;;
       esac
@@ -166,16 +166,25 @@ function box_main {
           ;;
       esac
       $cmd_guest destroy -f
-      $cmd_guest up
+      exec $cmd_guest up
       ;;
     up)
-      parity "$nm_action" "$nm_guest" "$@"
+      exec parity "$nm_action" "$nm_guest" "$@"
       ;;
     destroy)
-      vagrant "$nm_action" "$nm_guest" "$@"
+      exec vagrant "$nm_action" "$nm_guest" "$@"
       ;;
     ssh|rsync|scp)
       exec parity "$nm_action" "$nm_guest" "$@"
+      ;;
+    id)
+      cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
+      ;;
+    build)
+      exec $cmd_guest up
+      ;;
+    box*)
+      exec "$nm_action" "$@"
       ;;
     remote)
       local quoted=()
@@ -189,17 +198,8 @@ function box_main {
       done
       exec parity ssh "$nm_guest" "${quoted[@]}"
       ;;
-    id)
-      cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
-      ;;
-    build)
-      $cmd_guest up
-      ;;
-    box*)
-      "$nm_action" "$@"
-      ;;
     *)
-      vagrant "$nm_action" "$nm_guest" "$@"
+      exec vagrant "$nm_action" "$nm_guest" "$@"
       ;;
   esac
 }
