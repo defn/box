@@ -28,6 +28,7 @@ Vagrant.configure("2") do |config|
   config.ssh.insert_key = false
 
   config.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant'
+  config.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer'
 
   ssh_keys = [
     "#{shome}/.ssh/ssh-vagrant",
