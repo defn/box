@@ -19,6 +19,14 @@ function bootstrap {
   block compile service
 
   make
+
+  case "$(uname -s)" in
+    Darwin)
+      if ! netstat -rn | grep '172.17[ ]*172.28.128.3'; then
+        sudo route add -net 172.17.0.0 172.28.128.3 255.255.0.0
+      fi
+      ;;
+  esac
 }
 
 bootstrap
