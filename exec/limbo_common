@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+TMPDIR="${BASEBOX_CACHE}/tmp"
+mkdir -p "$TMPDIR"
+
 function box_main {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
   source "$shome/script/profile"
@@ -24,6 +27,7 @@ function box_main {
       nm_guest='osx'
       cmd_guest="${BOX_NAME} osx"
       nm_rebuilder='vmware'
+
       nm_basebox_build='osx'
       basebox_type='vmx'
       ;;
@@ -31,6 +35,7 @@ function box_main {
       nm_guest="${BOX_NAME}"
       cmd_guest="${BOX_NAME}"
       nm_rebuilder='virtualbox'
+
       nm_basebox_build='ubuntu'
       basebox_type='ovf'
       ;;
@@ -41,24 +46,12 @@ function box_main {
       ;;
     docker)
       nm_guest="$(basename "$0")"
+      cmd_guest="$nm_guest"
+      nm_rebuilder='docker'
+
       if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
         cmd_guest="${BOX_NAME} docker"
-      else
-        cmd_guest="$nm_guest"
       fi
-      nm_rebuilder='docker'
-      case "$(uname -s)" in
-        Darwin)
-          local opt_interactive=
-          case "$nm_action" in
-            ssh)
-              opt_interactive="-t"
-              ;;
-          esac
-          ${BOX_NAME} ssh ${opt_interactive:-} "source .bash_profile; require; exec env VAGRANT_DEFAULT_PROVIDER=$VAGRANT_DEFAULT_PROVIDER http_proxy=$http_proxy https_proxy=$https_proxy ssh_gateway=${ssh_gateway:-} ssh_gateway_user=${ssh_gateway_user:=${USER:-${LOGNAME}}} $nm_guest $nm_action $*"
-          return $?
-          ;;
-      esac
       ;;
     *)
       echo "ERROR: unknown provider $VAGRANT_DEFAULT_PROVIDER" 1>&2

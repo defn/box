@@ -85,12 +85,12 @@ Vagrant.configure("2") do |config|
           region.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
           v.image = ENV['BASEBOX_SOURCE'] || "#{ENV['BASEBOX_NAME']}:packer"
           v.create_args = []
-          v.volumes = []
+          v.volumes = [ ]
           v.cmd = [ "bash", "-c", "install -d -m 0755 -o root -g root /var/run/sshd; exec /usr/sbin/sshd -D -o VersionAddendum=#{nm_box}#{nm_region}" ]
         elsif (nm_region % 100) == 0
           region.vm.provision "shell", path: "script/dind", args: [], privileged: false
           v.image = ENV['BASEBOX_SOURCE'] || "#{ENV['BASEBOX_NAME']}:vagrant"
-          v.create_args = ['--privileged', "--bip=172.#{17+(nm_region/100)}.0.0/16"]
+          v.create_args = ['--privileged' ]
           v.volumes = ['/var/lib/docker']
           v.cmd = [ "/usr/sbin/sshd", "-D", "-o", "VersionAddendum=#{nm_box}#{nm_region}" ]
         else
