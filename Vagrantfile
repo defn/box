@@ -77,7 +77,7 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  (0..399).each do |nm_region|
+  (0..99).each do |nm_region|
     config.vm.define "#{nm_box}#{nm_region}" do |region|
       region.ssh.private_key_path = ssh_keys
 
@@ -86,13 +86,7 @@ Vagrant.configure("2") do |config|
           region.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
           v.image = ENV['BASEBOX_SOURCE'] || "#{ENV['BASEBOX_NAME']}:packer"
           v.create_args = []
-          v.volumes = [ ]
-          v.cmd = [ "bash", "-c", "install -d -m 0755 -o root -g root /var/run/sshd; exec /usr/sbin/sshd -D -o VersionAddendum=#{nm_box}#{nm_region}" ]
-        elsif (nm_region % 100) == 0
-          region.vm.provision "shell", path: "script/dind", args: [], privileged: false
-          v.image = ENV['BASEBOX_SOURCE'] || "#{ENV['BASEBOX_NAME']}:vagrant"
-          v.create_args = ['--privileged' ]
-          v.volumes = ['/var/lib/docker']
+          v.volumes = [ "/var/run/sshd" ]
           v.cmd = [ "/usr/sbin/sshd", "-D", "-o", "VersionAddendum=#{nm_box}#{nm_region}" ]
         else
           v.image = ENV['BASEBOX_SOURCE'] || "#{ENV['BASEBOX_NAME']}:vagrant"
