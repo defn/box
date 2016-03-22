@@ -22,6 +22,13 @@ function box_main {
   local nm_basebox_build=
   local basebox_type=
 
+  if [[ "$nm_action" =~ ^"${BOX_NAME}"[0-9]+ ]]; then
+    export VAGRANT_DEFAULT_PROVIDER="docker"
+    nm_guest="$nm_action"
+    nm_action="$1"; shift
+    set -- "$nm_guest" "$@"
+  fi 
+
   case "$VAGRANT_DEFAULT_PROVIDER" in
     vmware_fusion)
       nm_guest='osx'
@@ -39,19 +46,15 @@ function box_main {
       nm_basebox_build='ubuntu'
       basebox_type='ovf'
       ;;
+    docker)
+      nm_guest="$1"
+      cmd_guest="limbo $nm_guest"
+      nm_rebuilder='docker'
+      ;;
     aws)
       nm_guest="$AWS_DEFAULT_PROFILE"
       cmd_guest="$nm_guest"
       nm_rebuilder="aws"
-      ;;
-    docker)
-      nm_guest="$(basename "$0")"
-      cmd_guest="$nm_guest"
-      nm_rebuilder='docker'
-
-      if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
-        cmd_guest="${BASEBOX_NAME} docker"
-      fi
       ;;
     *)
       echo "ERROR: unknown provider $VAGRANT_DEFAULT_PROVIDER" 1>&2
@@ -59,6 +62,7 @@ function box_main {
       ;;
   esac
 
+  set -x
   case "$nm_action" in
     media)
       case "$nm_rebuilder" in
@@ -81,7 +85,7 @@ function box_main {
             $nm_rebuilder build "$BASEBOX_SOURCE"
           else
             export BASEBOX_TAG="vagrant"
-            docker commit "$(${BOX_NAME}0 id)" "${BASEBOX_NAME}:${BASEBOX_TAG}"
+            docker commit "$(limbo ${BOX_NAME}0 id)" "${BASEBOX_NAME}:${BASEBOX_TAG}"
           fi
           ;;
       esac
@@ -171,15 +175,11 @@ function box_main {
       exec parity "$nm_action" "$nm_guest" "$@"
       ;;
     id)
+      set -x
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
       ;;
     build)
       exec $cmd_guest up
-      ;;
-    ${BOX_NAME}[0-9]*)
-      source limbo_common
-      export VAGRANT_DEFAULT_PROVIDER="docker"
-      box_main "$@"
       ;;
     remote)
       local quoted=()
