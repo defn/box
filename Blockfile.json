@@ -9,7 +9,8 @@
     [
       "build-essential",
       "homebrew",
-      "pkgsrc"
+      "pkgsrc",
+      "apt-mirror"
     ],
     [
       "basebox",
