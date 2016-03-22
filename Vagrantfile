@@ -77,7 +77,7 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  (0..99).each do |nm_region|
+  ([''] + (0..99)).each do |nm_region|
     config.vm.define "#{nm_box}#{nm_region}" do |region|
       region.ssh.private_key_path = ssh_keys
 
