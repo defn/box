@@ -47,7 +47,7 @@ function box_main {
       basebox_type='ovf'
       ;;
     docker)
-      nm_guest="$1"
+      nm_guest="$1"; shift
       cmd_guest="limbo $nm_guest"
       nm_rebuilder='docker'
       ;;
