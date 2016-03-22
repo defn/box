@@ -77,12 +77,12 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  ([''] + (0..99)).each do |nm_region|
+  ([''] + (0..99).to_a).each do |nm_region|
     config.vm.define "#{nm_box}#{nm_region}" do |region|
       region.ssh.private_key_path = ssh_keys
 
       region.vm.provider "docker" do |v, override|
-        if nm_region == 0
+        if nm_region.is_empty?
           region.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
           v.image = ENV['BASEBOX_SOURCE'] || "#{ENV['BASEBOX_NAME']}:packer"
           v.create_args = []

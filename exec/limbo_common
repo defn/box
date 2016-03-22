@@ -62,7 +62,6 @@ function box_main {
       ;;
   esac
 
-  set -x
   case "$nm_action" in
     media)
       case "$nm_rebuilder" in
@@ -175,7 +174,6 @@ function box_main {
       exec parity "$nm_action" "$nm_guest" "$@"
       ;;
     id)
-      set -x
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
       ;;
     build)
