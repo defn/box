@@ -53,7 +53,7 @@ Vagrant.configure("2") do |config|
 
   nm_box=ENV['BOX_NAME']
 
-  config.vm.define nm_box do |region|
+  config.vm.define ENV['BASEBOX_NAME'] do |region|
     region.vm.box = ENV['BASEBOX_NAME']
     region.ssh.private_key_path = ssh_keys
     region.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false

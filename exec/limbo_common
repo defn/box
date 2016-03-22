@@ -25,15 +25,15 @@ function box_main {
   case "$VAGRANT_DEFAULT_PROVIDER" in
     vmware_fusion)
       nm_guest='osx'
-      cmd_guest="${BOX_NAME} osx"
+      cmd_guest="limbo osx"
       nm_rebuilder='vmware'
 
       nm_basebox_build='osx'
       basebox_type='vmx'
       ;;
     virtualbox)
-      nm_guest="${BOX_NAME}"
-      cmd_guest="${BOX_NAME}"
+      nm_guest="${BASEBOX_NAME}"
+      cmd_guest="limbo"
       nm_rebuilder='virtualbox'
 
       nm_basebox_build='ubuntu'
@@ -50,7 +50,7 @@ function box_main {
       nm_rebuilder='docker'
 
       if [[ "$nm_guest" == "${BOX_NAME}0" ]]; then
-        cmd_guest="${BOX_NAME} docker"
+        cmd_guest="${BASEBOX_NAME} docker"
       fi
       ;;
     *)
@@ -63,6 +63,7 @@ function box_main {
     media)
       case "$nm_rebuilder" in
         virtualbox|vmware)
+          set -x
           $cmd_guest destroy -f
           $nm_rebuilder build "$nm_basebox_build"
           $nm_rebuilder remove 2>&- || true
@@ -176,8 +177,10 @@ function box_main {
     build)
       exec $cmd_guest up
       ;;
-    box*)
-      exec "$nm_action" "$@"
+    ${BOX_NAME}[0-9]*)
+      source limbo_common
+      export VAGRANT_DEFAULT_PROVIDER="docker"
+      box_main "$@"
       ;;
     remote)
       local quoted=()
