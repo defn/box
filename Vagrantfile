@@ -57,7 +57,9 @@ Vagrant.configure("2") do |config|
     region.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
     region.vm.network "private_network", ip: ENV['BASEBOX_IP']
 
-    region.vm.provider "virtualbox" do |v|
+    region.vm.provider "virtualbox" do |v, override|
+      override.vm.network "forwarded_port", guest: 2375, host: 2375
+
       v.linked_clone = true
       v.memory = 4096
       v.cpus = 2
