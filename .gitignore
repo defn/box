@@ -3,6 +3,7 @@
 /.vagrant
 /remote
 /.ssh
+/instance
 
 # bundler
 /.bundle

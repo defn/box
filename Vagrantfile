@@ -12,8 +12,6 @@ module Net::SSH
 end 
 
 Vagrant.configure("2") do |config|
-  shome=File.expand_path("..", __FILE__)
-
   cibuild_script = %x{which block-cibuild 2>/dev/null}.strip
   cibuild_args = [ ENV['BASEBOX_HOME_URL'] ]
 
@@ -31,8 +29,8 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer'
 
   ssh_keys = [
-    "#{shome}/.ssh/ssh-vagrant",
-    "#{shome}/.ssh/ssh-vagrant-insecure"
+    "#{ENV['BASEBOX_CACHE']}/.ssh/ssh-vagrant",
+    "#{ENV['BASEBOX_CACHE']}/.ssh/ssh-vagrant-insecure"
   ]
   
   config.vm.define "osx" do |region|
@@ -64,14 +62,14 @@ Vagrant.configure("2") do |config|
       v.memory = 4096
       v.cpus = 2
 
-      if File.exists?("#{shome}/cidata.iso")
+      if File.exists?("#{ENV['LIMBO_HOME']}/cidata.iso")
         v.customize [ 
           'storageattach', :id, 
           '--storagectl', 'SATA Controller', 
           '--port', 1, 
           '--device', 0, 
           '--type', 'dvddrive', 
-          '--medium', "#{shome}/cidata.iso"
+          '--medium', "#{ENV['LIMBO_HOME']}/cidata.iso"
         ]
       end
     end

@@ -3,6 +3,8 @@
 function profile {
   local shome="$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
   PATH="$shome/bin:$shome/exec:$PATH"
+
+  export LIMBO_HOME="$shome"
 }
 
 profile
