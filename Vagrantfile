@@ -55,7 +55,7 @@ Vagrant.configure("2") do |config|
     region.vm.box = ENV['BASEBOX_NAME']
     region.ssh.private_key_path = ssh_keys
     region.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
-    region.vm.network "private_network", ip: "172.28.128.3" # VBoxManage hostonlyif ipconfig vboxnet0 --ip 172.28.128.1 --netmask 255.255.255.0
+    region.vm.network "private_network", ip: (ENV['BASEBOX_IP'] || "172.28.128.3")
 
     region.vm.provider "virtualbox" do |v|
       v.linked_clone = true

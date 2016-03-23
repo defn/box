@@ -3,3 +3,7 @@ VBoxManage guestproperty enumerate $(cat .vagrant/machines/local/virtualbox/id) 
 ip route show | awk '$1 == "default" { print $3 }'
 
 ensure locale is utf8 in docker, elixir wants it that way
+
+if ! netstat -rn | grep '172.17[ ]*172.28.128.3'; then
+	sudo route add -net 172.17.0.0 172.28.128.3 255.255.0.0
+fi
