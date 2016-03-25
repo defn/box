@@ -12,6 +12,7 @@ function box_main {
   if [[ "$VAGRANT_CWD" != "$shome" ]]; then
     mkdir -p "$VAGRANT_CWD"
     ln -nfs "$shome/Vagrantfile" "$VAGRANT_CWD/"
+    ln -nfs "$shome/script" "$VAGRANT_CWD/"
   fi 
 
   if [[ "$#" == 0 ]]; then

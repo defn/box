@@ -12,8 +12,13 @@ module Net::SSH
 end 
 
 Vagrant.configure("2") do |config|
+  shome=File.expand_path("..", __FILE__)
+
   cibuild_script = %x{which block-cibuild 2>/dev/null}.strip
   cibuild_args = [ ENV['BASEBOX_HOME_URL'] ]
+
+  brbuild_script = "#{shome}/script/docker-bootstrap"
+  brbuild_args = [ ENV['BASEBOX_DOCKER_NETWORK_PREFIX'] ]
 
   %w(http_proxy ssh_gateway ssh_gateway_user).each {|ele|
     unless ENV[ele].nil? || ENV[ele].empty?
@@ -58,6 +63,7 @@ Vagrant.configure("2") do |config|
     region.vm.network "private_network", ip: ENV['BASEBOX_IP']
 
     region.vm.provider "virtualbox" do |v, override|
+      override.vm.provision "shell", path: brbuild_script, args: brbuild_args, privileged: false
       v.linked_clone = true
       v.memory = 4096
       v.cpus = 2
