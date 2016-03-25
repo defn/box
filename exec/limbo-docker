@@ -4,7 +4,7 @@ function limbo_docker {
   local shome="$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
   source "$shome/script/profile"
 
-  export DOCKER_HOST="tcp://${BASEBOX_IP}:2375"
+  export DOCKER_HOST="tcp://${BASEBOX_DOCKER_NETWORK_PREFIX}.1:2375"
   
   exec docker "$@"
 }
