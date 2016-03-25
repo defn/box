@@ -35,7 +35,7 @@ Vagrant.configure("2") do |config|
 
   ssh_keys = [
     "#{ENV['BASEBOX_CACHE']}/.ssh/ssh-vagrant",
-    "#{ENV['BASEBOX_CACHE']}/.ssh/ssh-vagrant-insecure"
+    "#{shome}/.ssh/ssh-vagrant-insecure"
   ]
   
   config.vm.define "osx" do |region|
