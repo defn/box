@@ -58,7 +58,7 @@ function box_main {
       cmd_guest="limbo $nm_guest"
       nm_rebuilder='docker'
 
-      export DOCKER_HOST="tcp://${BASEBOX_IP}:2375"
+      export DOCKER_HOST="tcp://${BASEBOX_DOCKER_NETWORK_PREFIX}.${BASEBOX_DOCKER_OCTET:-1}:2375"
       ;;
     aws)
       nm_guest="$AWS_DEFAULT_PROFILE"
