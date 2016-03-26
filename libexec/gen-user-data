@@ -6,9 +6,23 @@ function main {
 
   jq -n \
     --arg ssh_key "$(cat "${BASEBOX_CACHE}/.ssh/ssh-vagrant.pub")" \
-    --arg sudo "ALL=(ALL) NOPASSWD: ALL" \
-    '{users: [ {name: "ubuntu", "ssh-authorized-keys": [ $ssh_key ], sudo: $sudo }]}' \
-      | ruby -ryaml -rjson -e 'puts JSON.load(STDIN.read).to_yaml' | sed 's/^---/#cloud-config/'
+    --arg sudo "ALL=(ALL) NOPASSWD: ALL" '{
+			users: [ {name: "ubuntu", "ssh-authorized-keys": [ $ssh_key ], sudo: $sudo } ],
+			apt_mirror: http://172.28.128.1:3000/ubuntu/,
+			system_info: {
+				package_mirrors: [
+					{ arches: [i386, amd64],
+         		failsafe: {
+							primary: http://172.28.128.1:3000/ubuntu/,
+       				security: http://172.28.128.1:3000/ubuntu/
+						},
+						search: {
+							primary: [],
+							security: []
+						}
+					}
+				}
+			}' | ruby -ryaml -rjson -e 'puts JSON.load(STDIN.read).to_yaml' | sed 's/^---/#cloud-config/'
 }
 
 main "$@"
