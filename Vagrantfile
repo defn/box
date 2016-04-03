@@ -58,7 +58,7 @@ Vagrant.configure("2") do |config|
     when "virtualbox"
       region.ssh.private_key_path = ssh_keys
 
-      region.vm.network "private_network", ip: ENV['BASEBOX_IP']
+      region.vm.network "private_network", ip: ENV['BASEBOX_IP'], nic_type: "virtio"
 
       region.vm.provider "virtualbox" do |v, override|
         override.vm.provision "shell", path: brbuild_script, args: brbuild_args, privileged: false
@@ -73,7 +73,6 @@ Vagrant.configure("2") do |config|
         end
 
 				v.customize [ 'modifyvm', :id, '--nictype1', 'virtio' ]
-				v.customize [ 'modifyvm', :id, '--nictype2', 'virtio' ]
         v.customize [ 
           'storageattach', :id, 
           '--storagectl', 'SATA Controller', 
