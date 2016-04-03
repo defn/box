@@ -200,6 +200,9 @@ function box_main {
       done
       exec parity ssh "$nm_guest" "${quoted[@]}"
       ;;
+    snapshot)
+      exec vagrant "$nm_action" "$@"
+      ;;
     *)
       exec vagrant "$nm_action" "$nm_guest" "$@"
       ;;
