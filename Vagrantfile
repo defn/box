@@ -72,6 +72,8 @@ Vagrant.configure("2") do |config|
           end
         end
 
+				v.customize [ 'modifyvm', :id, '--nictype1', 'virtio' ]
+				v.customize [ 'modifyvm', :id, '--nictype2', 'virtio' ]
         v.customize [ 
           'storageattach', :id, 
           '--storagectl', 'SATA Controller', 
