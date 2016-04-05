@@ -12,5 +12,5 @@ cidata/user-data: $(BASEBOX_CACHE)/.ssh/ssh-vagrant
 	mv cidata/user-data.tmp cidata/user-data
 
 $(BASEBOX_CACHE)/.ssh/ssh-vagrant:
-	@mkdir -p $@
+	@mkdir -p $(shell dirname $@)
 	@ssh-keygen -f $@ -P ''
