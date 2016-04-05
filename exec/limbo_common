@@ -203,6 +203,9 @@ function box_main {
     snapshot)
       exec vagrant "$nm_action" "$@"
       ;;
+    env)
+      env
+      ;;
     *)
       exec vagrant "$nm_action" "$nm_guest" "$@"
       ;;
