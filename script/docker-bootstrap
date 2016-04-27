@@ -7,6 +7,10 @@ function main {
 
   sudo aptitude install -y bridge-utils
 
+  if [[ ! -x "$(which docker 2>&- || true)" ]]; then
+    return 0
+  fi
+
   if ifconfig br0 2>/dev/null; then
     return 0
   fi
