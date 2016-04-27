@@ -21,6 +21,8 @@ function box_main {
     return 0
   fi
 
+  set -x
+
   local nm_action="$1"; shift
   local nm_guest=
   local cmd_guest=
@@ -28,13 +30,6 @@ function box_main {
 
   local nm_basebox_build=
   local basebox_type=
-
-  if [[ "$nm_action" =~ ^"${BOX_NAME}"[0-9]*$ ]]; then
-    export VAGRANT_DEFAULT_PROVIDER="docker"
-    nm_guest="$nm_action"
-    nm_action="$1"; shift
-    set -- "$nm_guest" "$@"
-  fi 
 
   case "$VAGRANT_DEFAULT_PROVIDER" in
     vmware_fusion)
@@ -47,7 +42,7 @@ function box_main {
       ;;
     virtualbox)
       nm_guest="${BASEBOX_NAME}"
-      cmd_guest="limbo"
+      cmd_guest="limbo virtualbox"
       nm_rebuilder='virtualbox'
 
       nm_basebox_build='ubuntu'
@@ -55,14 +50,12 @@ function box_main {
       ;;
     docker)
       nm_guest="$1"; shift
-      cmd_guest="limbo $nm_guest"
+      cmd_guest="limbo docker"
       nm_rebuilder='docker'
-
-      export DOCKER_HOST="tcp://${BASEBOX_DOCKER_NETWORK_PREFIX}.${BASEBOX_DOCKER_OCTET:-1}:2375"
       ;;
     aws)
-      nm_guest="$AWS_DEFAULT_PROFILE"
-      cmd_guest="$nm_guest"
+      nm_guest="${BASEBOX_NAME}"
+      cmd_guest="limbo aws"
       nm_rebuilder="aws"
       ;;
     *)
@@ -82,9 +75,9 @@ function box_main {
           ;;
         aws)
           $cmd_guest destroy -f
-          $nm_rebuilder build "$AWS_DEFAULT_PROFILE"
-          $nm_rebuilder remove "$AWS_DEFAULT_PROFILE" 2>&- || true
-          $nm_rebuilder add "$AWS_DEFAULT_PROFILE"
+          $nm_rebuilder build
+          $nm_rebuilder remove 2>&- || true
+          $nm_rebuilder add
           ;;
         docker)
           if [[ "$nm_guest" == "${BOX_NAME}" ]]; then

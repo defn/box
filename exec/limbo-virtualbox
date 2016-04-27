@@ -4,8 +4,7 @@ function limbo_docker {
   local shome="$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
   source "$shome/script/profile"
 
-  export VAGRANT_DEFAULT_PROVIDER='docker'
-  export DOCKER_HOST="tcp://${BASEBOX_DOCKER_NETWORK_PREFIX}.${BASEBOX_DOCKER_OCTET:-1}:2375"
+  export VAGRANT_DEFAULT_PROVIDER='virtualbox'
 
   exec limbo "$@"
 }

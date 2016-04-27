@@ -90,7 +90,10 @@ Vagrant.configure("2") do |config|
 
         v.keypair_name = "vagrant-#{Digest::MD5.file(ssh_keys[0]).hexdigest}"
         v.instance_type = 't2.medium'
-        v.region = %x{configure get region}.chomp
+        v.region = ENV['AWS_REGION'] || %x{aws configure get region}.chomp
+        v.access_key_id = ENV['AWS_ACCESS_KEY_ID'] || %x{aws configure get aws_access_key_id}.chomp
+        v.secret_access_key= ENV['AWS_SECRET_ACCESS_KEY'] || %x{aws configure get aws_secret_access_key}.chomp
+        v.ami = ENV['EC2_SOURCE_AMI']
         v.block_device_mapping = [
           { 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 100 },
           { 'DeviceName' => '/dev/sdb', 'VirtualName' => 'ephemeral0', },

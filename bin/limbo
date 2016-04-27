@@ -20,7 +20,6 @@ function main {
   source "$shome/script/profile"
   source limbo_common
 
-  export VAGRANT_DEFAULT_PROVIDER="virtualbox"
   box_main "$@"
 }
 
