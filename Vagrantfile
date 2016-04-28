@@ -25,12 +25,15 @@ Vagrant.configure("2") do |config|
   brbuild_args = [ ENV['BASEBOX_DOCKER_NETWORK_PREFIX'] ]
 
   cibuild_script = %x{which block-cibuild 2>/dev/null}.strip
-  cibuild_args = [ ENV['BASEBOX_HOME_URL'], ENV['VAGRANT_DEFAULT_PROVIDER'] ]
+  cibuild_args = [ ENV['BASEBOX_HOME_URL'] ]
   %w(http_proxy ssh_gateway ssh_gateway_user).each {|ele|
     unless ENV[ele].nil? || ENV[ele].empty?
       cibuild_args << ENV[ele]
     end
   }
+
+  cache_script = "#{shome}/script/cache-bootstrap"
+  cache_args = [ ENV['BASEBOX_CACHE'] ]
 
   config.ssh.username = "ubuntu"
   config.ssh.forward_agent = true
@@ -41,7 +44,6 @@ Vagrant.configure("2") do |config|
 
   config.vm.define ENV['BASEBOX_NAME'] do |region|
     region.vm.box = ENV['BASEBOX_NAME']
-    region.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
 
     case ENV['VAGRANT_DEFAULT_PROVIDER']
     when "vmware_fusion"
@@ -61,6 +63,7 @@ Vagrant.configure("2") do |config|
       region.vm.network "private_network", ip: ENV['BASEBOX_IP'], nic_type: "virtio"
 
       region.vm.provider "virtualbox" do |v, override|
+        override.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
         override.vm.provision "shell", path: brbuild_script, args: brbuild_args, privileged: false
         v.linked_clone = true
         v.memory = 4096
@@ -89,7 +92,8 @@ Vagrant.configure("2") do |config|
         override.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant', disabled: true
         override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer', disabled: true
 
-        override.vm.provision "shell", path: brbuild_script, args: brbuild_args, privileged: false
+        override.vm.provision "shell", path: cache_script, args: cache_args, privileged: false
+        override.vm.provision "shell", path: cibuild_script, args: [ ENV['BASEBOX_HOME_URL'] ], privileged: false
 
         v.keypair_name = "vagrant-#{Digest::MD5.file("#{ssh_keys[0]}.pub").hexdigest}"
         v.instance_type = 't2.medium'
@@ -118,7 +122,7 @@ Vagrant.configure("2") do |config|
       v.cmd = [ "/usr/sbin/sshd", "-D", "-o", "VersionAddendum=#{nm_box}#{nm_region}" ]
 
       if nm_region == ''
-        region.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
+        override.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
         v.volumes = [ "/var/run/sshd" ]
         v.image = ENV['BASEBOX_SOURCE'] || "#{ENV['BASEBOX_NAME']}:packer"
       else
