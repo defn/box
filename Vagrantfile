@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
   brbuild_args = [ ENV['BASEBOX_DOCKER_NETWORK_PREFIX'] ]
 
   cibuild_script = %x{which block-cibuild 2>/dev/null}.strip
-  cibuild_args = [ ENV['BASEBOX_HOME_URL'] ]
+  cibuild_args = [ ENV['BASEBOX_HOME_URL'], ENV['VAGRANT_DEFAULT_PROVIDER'] ]
   %w(http_proxy ssh_gateway ssh_gateway_user).each {|ele|
     unless ENV[ele].nil? || ENV[ele].empty?
       cibuild_args << ENV[ele]
