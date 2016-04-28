@@ -4,6 +4,7 @@ function main {
   local net_bridge="$1"; shift
 
   sudo install -d -o ubuntu -g ubuntu /vagrant
+  sudo install -d -o ubuntu -g ubuntu /vagrant/packages
 }
 
 main "$@"
