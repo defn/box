@@ -6,4 +6,4 @@ function main {
   sudo install -d -o ubuntu -g ubuntu /vagrant
 }
 
-source sub "$BASH_SOURCE" "$@"
+main "$@"
