@@ -97,7 +97,6 @@ Vagrant.configure("2") do |config|
 
         v.keypair_name = "vagrant-#{Digest::MD5.file("#{ssh_keys[0]}.pub").hexdigest}"
         v.instance_type = 't2.medium'
-        v.region = ENV['AWS_REGION'] || %x{aws configure get region}.chomp
         v.access_key_id = ENV['AWS_ACCESS_KEY_ID'] || %x{aws configure get aws_access_key_id}.chomp
         v.secret_access_key= ENV['AWS_SECRET_ACCESS_KEY'] || %x{aws configure get aws_secret_access_key}.chomp
         v.block_device_mapping = [
