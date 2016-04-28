@@ -86,6 +86,9 @@ Vagrant.configure("2") do |config|
       region.ssh.private_key_path = ssh_keys
 
       region.vm.provider "aws" do |v, override|
+        override.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant', disabled: true
+        override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer', disabled: true
+
         override.vm.provision "shell", path: brbuild_script, args: brbuild_args, privileged: false
 
         v.keypair_name = "vagrant-#{Digest::MD5.file("#{ssh_keys[0]}.pub").hexdigest}"
