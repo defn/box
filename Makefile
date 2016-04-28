@@ -14,3 +14,6 @@ cidata/user-data: $(BASEBOX_CACHE)/.ssh/ssh-vagrant
 $(BASEBOX_CACHE)/.ssh/ssh-vagrant:
 	@mkdir -p $(shell dirname $@)
 	@ssh-keygen -f $@ -P ''
+
+key:
+	@aws ec2 import-key-pair --key-name vagrant-$(shell md5 -q /vagrant/.ssh/ssh-vagrant.pub) --public-key-material "$(shell cat /vagrant/.ssh/ssh-vagrant.pub)"

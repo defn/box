@@ -88,7 +88,7 @@ Vagrant.configure("2") do |config|
       region.vm.provider "aws" do |v, override|
         override.vm.provision "shell", path: brbuild_script, args: brbuild_args, privileged: false
 
-        v.keypair_name = "vagrant-#{Digest::MD5.file(ssh_keys[0]).hexdigest}"
+        v.keypair_name = "vagrant-#{Digest::MD5.file("#{ssh_keys[0]}.pub").hexdigest}"
         v.instance_type = 't2.medium'
         v.region = ENV['AWS_REGION'] || %x{aws configure get region}.chomp
         v.access_key_id = ENV['AWS_ACCESS_KEY_ID'] || %x{aws configure get aws_access_key_id}.chomp
