@@ -97,11 +97,13 @@ Vagrant.configure("2") do |config|
         override.vm.provision "shell", path: cibuild_script, args: [ ENV['BASEBOX_HOME_URL'] ], privileged: false
 
         v.ami = "meh" if ENV['LIMBO_FAKE']
-        v.region = ENV['AWS_REGION'] || %x{aws configure get region}.chomp
-        v.keypair_name = "vagrant-#{Digest::MD5.file("#{ssh_keys[0]}.pub").hexdigest}"
-        v.instance_type = 't2.medium'
+
+        v.region = ENV['AWS_DEFAULT_REGION'] || %x{aws configure get region}.chomp
         v.access_key_id = ENV['AWS_ACCESS_KEY_ID'] || %x{aws configure get aws_access_key_id}.chomp
         v.secret_access_key= ENV['AWS_SECRET_ACCESS_KEY'] || %x{aws configure get aws_secret_access_key}.chomp
+
+        v.keypair_name = "vagrant-#{Digest::MD5.file("#{ssh_keys[0]}.pub").hexdigest}"
+        v.instance_type = 't2.medium'
         v.block_device_mapping = [
           { 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 100 },
           { 'DeviceName' => '/dev/sdb', 'VirtualName' => 'ephemeral0', },
