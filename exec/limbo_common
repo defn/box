@@ -68,13 +68,13 @@ function box_main {
     media)
       case "$nm_rebuilder" in
         virtualbox|vmware)
-          $cmd_guest destroy -f
+          env LIMBO_FAKE=1 $cmd_guest destroy -f
           $nm_rebuilder build "$nm_basebox_build"
           $nm_rebuilder remove 2>&- || true
           $nm_rebuilder add
           ;;
         aws)
-          $cmd_guest destroy -f
+          env LIMBO_FAKE=1 $cmd_guest destroy -f
           $nm_rebuilder build
           $nm_rebuilder remove 2>&- || true
           $nm_rebuilder add
