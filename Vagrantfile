@@ -96,6 +96,7 @@ Vagrant.configure("2") do |config|
         override.vm.provision "shell", path: cache_script, args: cache_args, privileged: false
         override.vm.provision "shell", path: cibuild_script, args: [ ENV['BASEBOX_HOME_URL'] ], privileged: false
 
+        v.ami = "meh" if ENV['LIMBO_FAKE']
         v.keypair_name = "vagrant-#{Digest::MD5.file("#{ssh_keys[0]}.pub").hexdigest}"
         v.instance_type = 't2.medium'
         v.access_key_id = ENV['AWS_ACCESS_KEY_ID'] || %x{aws configure get aws_access_key_id}.chomp
@@ -107,6 +108,9 @@ Vagrant.configure("2") do |config|
           { 'DeviceName' => '/dev/sdd', 'VirtualName' => 'ephemeral2', },
           { 'DeviceName' => '/dev/sde', 'VirtualName' => 'ephemeral3', }
         ]
+        v.tags = {
+          'Provisioner' => 'vagrant'
+        }
       end
     end
   end
