@@ -7,7 +7,7 @@ function box_main {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
   source "$shome/script/profile"
 
-  export VAGRANT_CWD="$shome${BASEBOX_INSTANCE:+/instance/${BASEBOX_INSTANCE}}"
+  export VAGRANT_CWD="$shome${BASEBOX_INSTANCE:+/instance/${BASEBOX_INSTANCE}}-${VAGRANT_DEFAULT_PROVIDER}"
   
   if [[ "$VAGRANT_CWD" != "$shome" ]]; then
     mkdir -p "$VAGRANT_CWD"
