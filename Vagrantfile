@@ -32,6 +32,10 @@ Vagrant.configure("2") do |config|
     end
   }
 
+  if ENV['ssh_gateway_user'].nil? || ENV['ssh_gateway_user'].empty?
+    cibuild_args << ENV['USER']
+  END
+
   cache_script = "#{shome}/script/cache-bootstrap"
   cache_args = [ ENV['BASEBOX_CACHE'] ]
 
