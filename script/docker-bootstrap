@@ -3,8 +3,6 @@
 function main {
   local net_bridge="$1"; shift
 
-  set -x
-
   sudo aptitude install -y bridge-utils
 
   if [[ ! -x "$(which docker 2>&- || true)" ]]; then

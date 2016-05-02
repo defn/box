@@ -21,8 +21,6 @@ function box_main {
     return 0
   fi
 
-  set -x
-
   local nm_action="$1"; shift
   local nm_guest=
   local cmd_guest=
