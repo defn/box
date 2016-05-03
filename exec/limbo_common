@@ -174,9 +174,15 @@ function box_main {
       exec parity "$nm_action" "$nm_guest" "$@"
       ;;
     sync)
-      local pth_packages="${BASEBOX_CACHE}/packages/"$(echo "$(parity ssh "$nm_guest" uname -s)_$(parity ssh "$nm_guest" uname -r | cut -d- -f1 | cut -d. -f1-3)${PKG_HOME}" | tr / _ | tr . _ | perl -pe 's{__+}{_}')""
-      parity "ssh" "$nm_guest" sudo install -d -o ubuntu -g ubuntu "$pth_packages"
-      exec parity "rsync" "$nm_guest" -ia --delete --progress "$pth_packages/." "${nm_guest}:$pth_packages/"
+      if [[ "$#" == 0 ]]; then
+        local pth_packages="${BASEBOX_CACHE}/packages/"$(echo "$(parity ssh "$nm_guest" uname -s)_$(parity ssh "$nm_guest" uname -r | cut -d- -f1 | cut -d. -f1-3)${PKG_HOME}" | tr / _ | tr . _ | perl -pe 's{__+}{_}')""
+        set -- "$pth_packages"
+      fi
+
+      for pth_packages in "$@"; do
+        parity "ssh" "$nm_guest" sudo install -d -o ubuntu -g ubuntu "$pth_packages"
+        parity "rsync" "$nm_guest" -ia --delete --progress "$pth_packages/." "${nm_guest}:$pth_packages/"
+      done
       ;;
     id)
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
