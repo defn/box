@@ -177,7 +177,7 @@ function box_main {
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
       ;;
     build)
-      exec $cmd_guest up
+      exec $cmd_guest up "$@"
       ;;
     remote)
       local quoted=()
