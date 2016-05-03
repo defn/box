@@ -43,15 +43,15 @@ Vagrant.configure("2") do |config|
   config.ssh.forward_agent = true
   config.ssh.insert_key = false
 
-  config.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant'
-  config.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer'
-
-  config.vm.define ENV['BASEBOX_NAME'] do |region|
-    region.vm.box = ENV['BASEBOX_NAME']
+  config.vm.define ENV['BASEBOX_NAME'] do |basebox|
+    basebox.vm.box = ENV['BASEBOX_NAME']
 
     case ENV['VAGRANT_DEFAULT_PROVIDER']
     when "vmware_fusion"
-      region.vm.provider "vmware_fusion" do |v|
+      basebox.vm.provider "vmware_fusion" do |v, override|
+        override.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant'
+        override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer'
+
         v.gui = false
         v.linked_clone = true
         v.verify_vmnet = true
@@ -62,13 +62,17 @@ Vagrant.configure("2") do |config|
         v.vmx["ethernet0.connectionType"] = "nat"
       end
     when "virtualbox"
-      region.ssh.private_key_path = ssh_keys
+      basebox.ssh.private_key_path = ssh_keys
 
-      region.vm.network "private_network", ip: ENV['BASEBOX_IP'], nic_type: "virtio"
+      basebox.vm.network "private_network", ip: ENV['BASEBOX_IP'], nic_type: "virtio"
 
-      region.vm.provider "virtualbox" do |v, override|
+      basebox.vm.provider "virtualbox" do |v, override|
+        override.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant'
+        override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer'
+
         override.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
         override.vm.provision "shell", path: brbuild_script, args: brbuild_args, privileged: false
+
         v.linked_clone = true
         v.memory = 4096
         v.cpus = 2
@@ -90,14 +94,12 @@ Vagrant.configure("2") do |config|
         ]
       end
     when "aws"
-      region.ssh.private_key_path = ssh_keys
+      basebox.ssh.private_key_path = ssh_keys
 
-      region.vm.provider "aws" do |v, override|
+      basebox.vm.provider "aws" do |v, override|
         override.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant', disabled: true
-        override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer', disabled: true
-        override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/packages/Linux_4_4_0_opt_pkgsrc", '/vagrant/packages/Linux_4_4_0_opt_pkgsrc', type: "rsync",
-          rsync__args: [ "-ia", "--delete", "--verbose" ],
-          rsync__chown: false, rsync__auto: false
+        override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/packages/Linux_4_4_0_opt_pkgsrc", '/vagrant/packages/Linux_4_4_0_opt_pkgsrc', 
+          type: "rsync", rsync__args: [ "-ia", "--delete", "--verbose" ], rsync__chown: false, rsync__auto: false, rsync__rsync_path: "rsync"
           
         override.vm.provision "shell", path: cache_script, args: cache_args, privileged: false
         override.vm.provision "shell", path: cibuild_script, args: [ ENV['BASEBOX_HOME_URL'] ], privileged: false
@@ -126,9 +128,9 @@ Vagrant.configure("2") do |config|
 
   ([''] + (0..99).to_a).each do |nm_region|
   config.vm.define "#{nm_box}#{nm_region}" do |region|
-    region.ssh.private_key_path = ssh_keys
+    basebox.ssh.private_key_path = ssh_keys
 
-    region.vm.provider "docker" do |v, override|
+    basebox.vm.provider "docker" do |v, override|
       v.create_args = []
       v.volumes = []
       v.cmd = [ "/usr/sbin/sshd", "-D", "-o", "VersionAddendum=#{nm_box}#{nm_region}" ]
