@@ -95,8 +95,10 @@ Vagrant.configure("2") do |config|
       region.vm.provider "aws" do |v, override|
         override.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant', disabled: true
         override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer', disabled: true
-        override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/packages/Linux_4_4_0_opt_pkgsrc", '/vagrant/packages/Linux_4_4_0_opt_pkgsrc', type: "rsync"
-
+        override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/packages/Linux_4_4_0_opt_pkgsrc", '/vagrant/packages/Linux_4_4_0_opt_pkgsrc', type: "rsync",
+          rsync__args: [ "-ia", "--delete", "--verbose" ],
+          rsync__chown: false, rsync__auto: false
+          
         override.vm.provision "shell", path: cache_script, args: cache_args, privileged: false
         override.vm.provision "shell", path: cibuild_script, args: [ ENV['BASEBOX_HOME_URL'] ], privileged: false
 
