@@ -31,11 +31,11 @@ function box_main {
 
   case "$VAGRANT_DEFAULT_PROVIDER" in
     vmware_fusion)
-      nm_guest='osx'
-      cmd_guest="limbo osx"
+      nm_guest="${BASEBOX_NAME}"
+      cmd_guest="limbo vmware"
       nm_rebuilder='vmware'
 
-      nm_basebox_build='osx'
+      nm_basebox_build='ubuntu'
       basebox_type='vmx'
       ;;
     virtualbox)
@@ -47,7 +47,7 @@ function box_main {
       basebox_type='ovf'
       ;;
     docker)
-      nm_guest="$1"; shift
+      nm_guest="${BASEBOX_NAME}"
       cmd_guest="limbo docker"
       nm_rebuilder='docker'
       ;;
