@@ -58,6 +58,9 @@ Vagrant.configure("2") do |config|
         override.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant', type: "nfs"
         override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer', type: "nfs"
 
+        override.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
+        override.vm.provision "shell", path: brbuild_script, args: brbuild_args, privileged: false
+
         v.gui = true
         v.linked_clone = true
         v.verify_vmnet = true
