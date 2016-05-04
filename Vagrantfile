@@ -55,8 +55,8 @@ Vagrant.configure("2") do |config|
           end
         end
 
-        override.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant'
-        override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer'
+        override.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant', type: "nfs"
+        override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer', type: "nfs"
 
         v.gui = true
         v.linked_clone = true
