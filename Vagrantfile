@@ -49,17 +49,30 @@ Vagrant.configure("2") do |config|
     case ENV['VAGRANT_DEFAULT_PROVIDER']
     when "vmware_fusion"
       basebox.vm.provider "vmware_fusion" do |v, override|
+        unless File.exists?("#{ENV['LIMBO_HOME']}/cidata.iso")
+          Dir.chdir(ENV['LIMBO_HOME']) do
+            system("make")
+          end
+        end
+
         override.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant'
         override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer'
 
-        v.gui = false
+        v.gui = true
         v.linked_clone = true
         v.verify_vmnet = true
         v.vmx["memsize"] = "4096"
         v.vmx["numvcpus"] = "2"
 
         v.vmx["ethernet0.present"] = "TRUE"
-        v.vmx["ethernet0.connectionType"] = "nat"
+        v.vmx["ethernet0.connectionType"] = "custom"
+        v.vmx["ethernet0.vnet"] = "vmnet2"
+        v.vmx["ethernet0.virtualdev"] = "vmxnet3"
+
+				v.vmx["ide1:0.present"]    = "TRUE"
+				v.vmx["ide1:0.fileName"]   = "#{ENV['LIMBO_HOME']}/cidata.iso"
+				v.vmx["ide1:0.deviceType"] = "cdrom-image"
+				v.vmx["ide1:0.startconnected"] = "TRUE"
       end
     when "virtualbox"
       basebox.ssh.private_key_path = ssh_keys
@@ -67,6 +80,12 @@ Vagrant.configure("2") do |config|
       basebox.vm.network "private_network", ip: ENV['BASEBOX_IP'], nic_type: "virtio"
 
       basebox.vm.provider "virtualbox" do |v, override|
+        unless File.exists?("#{ENV['LIMBO_HOME']}/cidata.iso")
+          Dir.chdir(ENV['LIMBO_HOME']) do
+            system("make")
+          end
+        end
+
         override.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant'
         override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer'
 
@@ -76,12 +95,6 @@ Vagrant.configure("2") do |config|
         v.linked_clone = true
         v.memory = 4096
         v.cpus = 2
-
-        unless File.exists?("#{ENV['LIMBO_HOME']}/cidata.iso")
-          Dir.chdir(ENV['LIMBO_HOME']) do
-            system("make")
-          end
-        end
 
 				v.customize [ 'modifyvm', :id, '--nictype1', 'virtio' ]
         v.customize [ 

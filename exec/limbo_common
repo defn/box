@@ -127,6 +127,10 @@ function box_main {
           ;;
       esac
       ;;
+    recycle)
+      $cmd_guest destroy -f 2>&- || true
+      $cmd_guest build
+      ;;
     rebuild)
       local nm_export="${1:-}"
       local nm_suffix="${nm_export:+-${nm_export}}"
