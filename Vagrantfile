@@ -69,7 +69,7 @@ Vagrant.configure("2") do |config|
 
         v.vmx["ethernet0.present"] = "TRUE"
         v.vmx["ethernet0.connectionType"] = "custom"
-        v.vmx["ethernet0.vnet"] = "vmnet2"
+        v.vmx["ethernet0.vnet"] = "vmnet3"
         v.vmx["ethernet0.virtualdev"] = "vmxnet3"
 
 				v.vmx["ide1:0.present"]    = "TRUE"
