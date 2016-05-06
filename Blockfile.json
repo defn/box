@@ -4,7 +4,8 @@
       "cache",
       "squid",
       "artifacts",
-      "launch-config"
+      "launch-config",
+      "python"
     ],
     [
       "build-essential",
