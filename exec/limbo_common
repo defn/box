@@ -29,6 +29,8 @@ function box_main {
   local nm_basebox_build=
   local basebox_type=
 
+  set -x
+
   case "$VAGRANT_DEFAULT_PROVIDER" in
     vmware_fusion)
       nm_guest="${BASEBOX_NAME}"
@@ -45,6 +47,14 @@ function box_main {
 
       nm_basebox_build='ubuntu'
       basebox_type='ovf'
+      ;;
+    parallels)
+      nm_guest="${BASEBOX_NAME}"
+      cmd_guest="limbo parallels"
+      nm_rebuilder='parallels'
+
+      nm_basebox_build='ubuntu'
+      basebox_type='pvm'
       ;;
     docker)
       nm_guest="${BASEBOX_NAME}"
@@ -65,7 +75,7 @@ function box_main {
   case "$nm_action" in
     media)
       case "$nm_rebuilder" in
-        virtualbox|vmware)
+        virtualbox|vmware|parallels)
           env LIMBO_FAKE=1 $cmd_guest destroy -f
           $nm_rebuilder build "$nm_basebox_build"
           $nm_rebuilder remove 2>&- || true

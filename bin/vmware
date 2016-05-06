@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+export VAGRANT_DEFAULT_PROVIDER="vmware_fusion"
+
+function main {
+  local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
+
+  case "${1:-}" in
+    remove|add)
+      cd "$shome"
+      ;;
+  esac
+
+  exec parity "$@"
+}
+
+source sub "$BASH_SOURCE" "$@"
