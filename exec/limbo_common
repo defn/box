@@ -23,8 +23,8 @@ function box_main {
 
   local nm_action="$1"; shift
   local nm_guest=
-  local cmd_guest=
-  local nm_rebuilder=
+  local cmd_limbo=
+  local cmd_basebox=
 
   local nm_basebox_build=
   local basebox_type=
@@ -32,39 +32,39 @@ function box_main {
   set -x
 
   case "$VAGRANT_DEFAULT_PROVIDER" in
-    vmware_fusion)
+    vmware*)
       nm_guest="${BASEBOX_NAME}"
-      cmd_guest="limbo vmware"
-      nm_rebuilder='vmware'
+      cmd_limbo="limbo vmware"
+      cmd_basebox='basebox vmware'
 
       nm_basebox_build='ubuntu'
       basebox_type='vmx'
       ;;
     virtualbox)
       nm_guest="${BASEBOX_NAME}"
-      cmd_guest="limbo virtualbox"
-      nm_rebuilder='virtualbox'
+      cmd_limbo="limbo virtualbox"
+      cmd_basebox='basebox virtualbox'
 
       nm_basebox_build='ubuntu'
       basebox_type='ovf'
       ;;
     parallels)
       nm_guest="${BASEBOX_NAME}"
-      cmd_guest="limbo parallels"
-      nm_rebuilder='parallels'
+      cmd_limbo="limbo parallels"
+      cmd_basebox='basebox parallels'
 
       nm_basebox_build='ubuntu'
       basebox_type='pvm'
       ;;
     docker)
       nm_guest="${BASEBOX_NAME}"
-      cmd_guest="limbo docker"
-      nm_rebuilder='docker'
+      cmd_limbo="limbo docker"
+      cmd_basebox='basedox docker'
       ;;
     aws)
       nm_guest="${BASEBOX_NAME}"
-      cmd_guest="limbo aws"
-      nm_rebuilder="aws"
+      cmd_limbo="limbo aws"
+      cmd_basebox="basebox aws"
       ;;
     *)
       echo "ERROR: unknown provider $VAGRANT_DEFAULT_PROVIDER" 1>&2
@@ -74,24 +74,24 @@ function box_main {
 
   case "$nm_action" in
     media)
-      case "$nm_rebuilder" in
-        virtualbox|vmware|parallels)
-          env LIMBO_FAKE=1 $cmd_guest destroy -f
-          $nm_rebuilder build "$nm_basebox_build"
-          $nm_rebuilder remove 2>&- || true
-          $nm_rebuilder add
+      case "$VAGRANT_DEFAULT_PROVIDER" in
+        virtualbox|parallels|vmware*)
+          env LIMBO_FAKE=1 $cmd_limbo destroy -f
+          $cmd_basebox build "$nm_basebox_build"
+          $cmd_basebox remove 2>&- || true
+          $cmd_basebox add
           ;;
         aws)
-          env LIMBO_FAKE=1 $cmd_guest destroy -f
-          $nm_rebuilder build
-          $nm_rebuilder remove 2>&- || true
-          $nm_rebuilder add
+          env LIMBO_FAKE=1 $cmd_limbo destroy -f
+          $cmd_basebox build
+          $cmd_basebox remove 2>&- || true
+          $cmd_basebox add
           ;;
         docker)
           if [[ "$nm_guest" == "${BOX_NAME}" ]]; then
             export BASEBOX_SOURCE="ubuntu:trusty"
             export BASEBOX_TAG="packer"
-            $nm_rebuilder build "$BASEBOX_SOURCE"
+            $cmd_basebox build "$BASEBOX_SOURCE"
           else
             export BASEBOX_TAG="vagrant"
             docker commit "$(limbo ${BOX_NAME} id)" "${BASEBOX_NAME}:${BASEBOX_TAG}"
@@ -102,24 +102,24 @@ function box_main {
     export)
       local nm_export="${1:-}"
       local nm_suffix="${nm_export:+-${nm_export}}"
-      case "$nm_rebuilder" in
+      case "$VAGRANT_DEFAULT_PROVIDER" in
         virtualbox)
-          cat "${BASEBOX_CACHE}/.ssh/ssh-vagrant.pub" | $cmd_guest ssh tee -a '~ubuntu/.ssh/authorized_keys'
-          $cmd_guest ssh sudo rm -rf /dev/.udev
-          $cmd_guest ssh sudo rm -f /lib/udev/rules.d/75-persistent-net-generator.rules
-          $cmd_guest ssh sudo rm -rf /var/lib/dhcp # TODO assumes only leases are here
-          $cmd_guest ssh sudo mkdir -p /var/lib/dhcp
-          $cmd_guest halt
+          cat "${BASEBOX_CACHE}/.ssh/ssh-vagrant.pub" | $cmd_limbo ssh tee -a '~ubuntu/.ssh/authorized_keys'
+          $cmd_limbo ssh sudo rm -rf /dev/.udev
+          $cmd_limbo ssh sudo rm -f /lib/udev/rules.d/75-persistent-net-generator.rules
+          $cmd_limbo ssh sudo rm -rf /var/lib/dhcp # TODO assumes only leases are here
+          $cmd_limbo ssh sudo mkdir -p /var/lib/dhcp
+          $cmd_limbo halt
 
           (set +f; rm -f "${BASEBOX_CACHE}/box/${BASEBOX_NAME}${nm_suffix}.ovf" ${BASEBOX_CACHE}/box/${BASEBOX_NAME}${nm_suffix}-disk*.vmdk)
-          (set -x; VBoxManage export $($cmd_guest id) --ovf20 -o "${BASEBOX_CACHE}/box/${BASEBOX_NAME}${nm_suffix}.ovf")
+          (set -x; VBoxManage export $($cmd_limbo id) --ovf20 -o "${BASEBOX_CACHE}/box/${BASEBOX_NAME}${nm_suffix}.ovf")
           ;;
-        vmware)
-          $cmd_guest halt
+        vmware*)
+          $cmd_limbo halt
           ;;
         docker)
           if [[ "$nm_guest" == "${BOX_NAME}" ]]; then
-            docker commit "$($cmd_guest id)" "${BASEBOX_NAME}:vagrant"
+            docker commit "$($cmd_limbo id)" "${BASEBOX_NAME}:vagrant"
           fi
           ;;
       esac
@@ -127,38 +127,38 @@ function box_main {
     import)
       local nm_import="${1:-}"
       local nm_suffix="${nm_import:+-${nm_import}}"
-      case "$nm_rebuilder" in
+      case "$VAGRANT_DEFAULT_PROVIDER" in
         docker)
           docker load -i "${BASEBOX_CACHE}/box/${BASEBOX_NAME}.docker"
           ;;
         virtualbox)
-          $nm_rebuilder remove 2>&- || true
-          $nm_rebuilder add
+          $cmd_basebox remove 2>&- || true
+          $cmd_basebox add
           ;;
       esac
       ;;
     recycle)
-      $cmd_guest destroy -f 2>&- || true
-      $cmd_guest build
+      $cmd_limbo destroy -f 2>&- || true
+      $cmd_limbo build
       ;;
     rebuild)
       local nm_export="${1:-}"
       local nm_suffix="${nm_export:+-${nm_export}}"
-      case "$nm_rebuilder" in
-        virtualbox|vmware)
-          case "$nm_rebuilder" in
-            vmware)
-              export BASEBOX_SOURCE="$($cmd_guest id)"
+      case "$VAGRANT_DEFAULT_PROVIDER" in
+        virtualbox|vmware*)
+          case "$VAGRANT_DEFAULT_PROVIDER" in
+            vmware*)
+              export BASEBOX_SOURCE="$($cmd_limbo id)"
               ;;
             virtualbox)
               export BASEBOX_SOURCE="${BASEBOX_CACHE}/box/${BASEBOX_NAME}${nm_suffix}.ovf"
               ;;
           esac
 
-          $nm_rebuilder build "$nm_basebox_build" "$basebox_type" "$nm_export" "$@"
-          $cmd_guest destroy -f
-          $nm_rebuilder remove 2>&- || true
-          $nm_rebuilder add
+          $cmd_basebox build "$nm_basebox_build" "$basebox_type" "$nm_export" "$@"
+          $cmd_limbo destroy -f
+          $cmd_basebox remove 2>&- || true
+          $cmd_basebox add
 
           rm -f "$shome/cidata/meta-data"
           (cd $shome && make)
@@ -167,7 +167,7 @@ function box_main {
           export BASEBOX_SOURCE="${BASEBOX_NAME}:vagrant"
           if [[ "$nm_guest" == "${BOX_NAME}" ]]; then
             export BASEBOX_TAG="vagrant"
-            $nm_rebuilder build
+            $cmd_basebox build
             docker images -a
             docker history "$BASEBOX_SOURCE" || true
             docker save -o "${BASEBOX_CACHE}/box/${BASEBOX_NAME}${nm_suffix}.docker" "$BASEBOX_SOURCE"
@@ -175,8 +175,8 @@ function box_main {
           fi
           ;;
       esac
-      $cmd_guest destroy -f
-      exec $cmd_guest up
+      $cmd_limbo destroy -f
+      exec $cmd_limbo up
       ;;
     up)
       exec parity "$nm_action" "$nm_guest" "$@"
@@ -202,7 +202,7 @@ function box_main {
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
       ;;
     build)
-      exec $cmd_guest up "$@"
+      exec $cmd_limbo up "$@"
       ;;
     remote)
       local quoted=()
