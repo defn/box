@@ -26,7 +26,6 @@ function box_main {
   local cmd_limbo=
   local cmd_basebox=
 
-  local nm_basebox_build=
   local basebox_type=
 
   case "$VAGRANT_DEFAULT_PROVIDER" in
@@ -35,7 +34,6 @@ function box_main {
       cmd_limbo="limbo vmware"
       cmd_basebox='basebox vmware'
 
-      nm_basebox_build='ubuntu'
       basebox_type='vmx'
       ;;
     virtualbox)
@@ -43,7 +41,6 @@ function box_main {
       cmd_limbo="limbo virtualbox"
       cmd_basebox='basebox virtualbox'
 
-      nm_basebox_build='ubuntu'
       basebox_type='ovf'
       ;;
     parallels)
@@ -51,7 +48,6 @@ function box_main {
       cmd_limbo="limbo parallels"
       cmd_basebox='basebox parallels'
 
-      nm_basebox_build='ubuntu'
       basebox_type='pvm'
       ;;
     docker)
@@ -75,7 +71,7 @@ function box_main {
       case "$VAGRANT_DEFAULT_PROVIDER" in
         virtualbox|parallels|vmware*)
           env LIMBO_FAKE=1 $cmd_limbo destroy -f
-          $cmd_basebox build "$nm_basebox_build"
+          $cmd_basebox build
           $cmd_basebox remove 2>&- || true
           $cmd_basebox add
           ;;
@@ -153,7 +149,7 @@ function box_main {
               ;;
           esac
 
-          $cmd_basebox build "$nm_basebox_build" "$basebox_type" "$nm_export" "$@"
+          $cmd_basebox build "$basebox_type" "$nm_export" "$@"
           $cmd_limbo destroy -f
           $cmd_basebox remove 2>&- || true
           $cmd_basebox add
