@@ -17,8 +17,6 @@ function main {
   sudo ip addr add "${net_bridge}/24" dev br0
   sudo ip link set dev br0 up
   sudo ip addr show br0
-
-  sudo service docker start
 }
 
 main "$@"
