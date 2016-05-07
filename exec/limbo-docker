@@ -5,9 +5,11 @@ function limbo_docker {
   source "$shome/script/profile"
 
   export VAGRANT_DEFAULT_PROVIDER='docker'
-  export DOCKER_HOST="tcp://${BASEBOX_DOCKER_NETWORK_PREFIX}.${BASEBOX_DOCKER_OCTET:-1}:2375"
 
-  exec limbo "$@"
+  eval $(docker machine env --no-proxy $BASEBOX_INSTANCE)
+
+  exec docker "$@"
+  #exec limbo "$@"
 }
 
 limbo_docker "$@"
