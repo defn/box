@@ -66,7 +66,7 @@ Vagrant.configure("2") do |config|
         v.gui = false
         v.linked_clone = true
         v.verify_vmnet = true
-        v.vmx["memsize"] = "4096"
+        v.vmx["memsize"] = "2048"
         v.vmx["numvcpus"] = "2"
 
         v.vmx["ethernet0.vnet"] = "vmnet3"
@@ -96,7 +96,7 @@ Vagrant.configure("2") do |config|
         override.vm.provision "shell", path: brbuild_script, args: brbuild_args, privileged: false
 
         v.linked_clone = true
-        v.memory = 4096
+        v.memory = 2048
         v.cpus = 2
 
 				v.customize [ 'modifyvm', :id, '--nictype1', 'virtio' ]
