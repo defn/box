@@ -63,7 +63,7 @@ Vagrant.configure("2") do |config|
         override.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
         override.vm.provision "shell", path: brbuild_script, args: brbuild_args, privileged: false
 
-        v.gui = true
+        v.gui = false
         v.linked_clone = true
         v.verify_vmnet = true
         v.vmx["memsize"] = "4096"
