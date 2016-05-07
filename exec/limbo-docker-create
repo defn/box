@@ -4,7 +4,13 @@ function main {
   local shome="$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
   source "$shome/script/profile"
 
-  exec docker machine create --driver generic --generic-ip-address "$BASEBOX_IP" --generic-ssh-user ubuntu "$BASEBOX_INSTANCE"
+  exec docker machine create --driver generic --generic-ip-address "$BASEBOX_IP" --generic-ssh-user ubuntu \
+    --swarm \
+    --swarm-discovery="consul://$(docker-machine ip reality):8500" \
+    --engine-opt="cluster-store=consul://$(docker-machine ip reality):8500" \
+    --engine-opt="cluster-advertise=eth1:2376" \
+    "$@" \
+    "$BASEBOX_INSTANCE"
 }
 
 source sub "$BASH_SOURCE" "$@"
