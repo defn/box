@@ -4,7 +4,7 @@ function main {
   local shome="$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
   source "$shome/script/profile"
 
-  exec docker machine create -driver generic --generic-ip-address "$BASEBOX_IP" --generic-ssh-user ubuntu "$BASEBOX_INSTANCE"
+  exec docker machine create --driver generic --generic-ip-address "$BASEBOX_IP" --generic-ssh-user ubuntu "$BASEBOX_INSTANCE"
 }
 
 source sub "$BASH_SOURCE" "$@"
