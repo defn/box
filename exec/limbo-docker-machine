@@ -4,11 +4,7 @@ function main {
   local shome="$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
   source "$shome/script/profile"
 
-  export VAGRANT_DEFAULT_PROVIDER='docker'
-
-  eval $(docker machine env --no-proxy $BASEBOX_INSTANCE)
-
-  exec docker "$@"
+  exec docker machine "$@" "$BASE_INSTANCE"
 }
 
 source sub "$BASH_SOURCE" "$@"
