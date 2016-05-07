@@ -48,6 +48,8 @@ Vagrant.configure("2") do |config|
 
     case ENV['VAGRANT_DEFAULT_PROVIDER']
     when "vmware_fusion"
+      basebox.vm.network "private_network", ip: ENV['BASEBOX_IP'], nic_type: "vmnet3"
+
       basebox.vm.provider "vmware_fusion" do |v, override|
         unless File.exists?("#{ENV['LIMBO_HOME']}/cidata.iso")
           Dir.chdir(ENV['LIMBO_HOME']) do
@@ -67,10 +69,8 @@ Vagrant.configure("2") do |config|
         v.vmx["memsize"] = "4096"
         v.vmx["numvcpus"] = "2"
 
-        v.vmx["ethernet0.present"] = "TRUE"
-        v.vmx["ethernet0.connectionType"] = "custom"
         v.vmx["ethernet0.vnet"] = "vmnet3"
-        v.vmx["ethernet0.virtualdev"] = "vmxnet3"
+        v.vmx["ethernet1.vnet"] = "vmnet3"
 
 				v.vmx["ide1:0.present"]    = "TRUE"
 				v.vmx["ide1:0.fileName"]   = "#{ENV['LIMBO_HOME']}/cidata.iso"
