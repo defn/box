@@ -29,8 +29,6 @@ function box_main {
   local nm_basebox_build=
   local basebox_type=
 
-  set -x
-
   case "$VAGRANT_DEFAULT_PROVIDER" in
     vmware*)
       nm_guest="${BASEBOX_NAME}"
