@@ -72,13 +72,13 @@ function box_main {
         virtualbox|parallels|vmware*)
           env LIMBO_FAKE=1 $cmd_limbo destroy -f
           $cmd_basebox build
-          $cmd_basebox remove 2>&- || true
+          $cmd_basebox remove -f 2>&- || true
           $cmd_basebox add
           ;;
         aws)
           env LIMBO_FAKE=1 $cmd_limbo destroy -f
           $cmd_basebox build
-          $cmd_basebox remove 2>&- || true
+          $cmd_basebox remove -f 2>&- || true
           $cmd_basebox add
           ;;
         docker)
@@ -126,7 +126,7 @@ function box_main {
           docker load -i "${BASEBOX_CACHE}/box/${BASEBOX_NAME}.docker"
           ;;
         virtualbox)
-          $cmd_basebox remove 2>&- || true
+          $cmd_basebox remove -f 2>&- || true
           $cmd_basebox add
           ;;
       esac
@@ -151,7 +151,7 @@ function box_main {
 
           $cmd_basebox build "$basebox_type" "$nm_export" "$@"
           $cmd_limbo destroy -f
-          $cmd_basebox remove 2>&- || true
+          $cmd_basebox remove -f 2>&- || true
           $cmd_basebox add
 
           rm -f "$shome/cidata/meta-data"
