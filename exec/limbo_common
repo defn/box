@@ -133,7 +133,7 @@ function box_main {
       ;;
     recycle)
       $cmd_limbo destroy -f 2>&- || true
-      $cmd_limbo build
+      $cmd_limbo build "$@"
       ;;
     rebuild)
       local nm_export="${1:-}"
