@@ -135,6 +135,10 @@ function box_main {
       $cmd_limbo destroy -f 2>&- || true
       $cmd_limbo build "$@"
       ;;
+    rebase)
+      $cmd_limbo media
+      $cmd_limbo build "$@"
+      ;;
     rebuild)
       local nm_export="${1:-}"
       local nm_suffix="${nm_export:+-${nm_export}}"
