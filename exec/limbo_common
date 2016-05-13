@@ -135,6 +135,10 @@ function box_main {
       $cmd_limbo destroy -f 2>&- || true
       $cmd_limbo build "$@"
       ;;
+    reuse)
+      $cmd_limbo export "$@"
+      $cmd_limbo rebuild "$@"
+      ;;
     rebase)
       $cmd_limbo media
       $cmd_limbo build "$@"
