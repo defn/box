@@ -7,7 +7,6 @@ function main {
   ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo service docker start || true
   exec "$BASEBOX_INSTANCE" docker machine create --driver generic --generic-ip-address "$BASEBOX_IP" --generic-ssh-user ubuntu \
     --engine-storage-driver="devicemapper" \
-    --engine-opt="bridge=br0" \
     "$@" \
     "$BASEBOX_INSTANCE"
 }

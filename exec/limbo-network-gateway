@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+function main {
+  local shome="$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
+  source "$shome/script/profile"
+
+  exec "$BASEBOX_INSTANCE" docker network create --driver bridge \
+    --opt=com.docker.network.bridge.enable_icc=false \
+    --opt=com.docker.network.bridge.enable_ip_masquerade=true \
+    --subnet "${BASEBOX_DOCKER_NETWORK_PREFIX}.0/24" \
+    "$@" docker_gwbridge
+}
+
+source sub "$BASH_SOURCE" "$@"
