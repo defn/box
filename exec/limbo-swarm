@@ -5,6 +5,7 @@ function main {
   source "$shome/script/profile"
 
   local ip_consul="${CONSUL_SERVER:-$(docker-machine ip reality)}"
+  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo rm -fv /etc/docker/key.json || true
   ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo service docker start || true
   "$BASEBOX_INSTANCE" docker machine rm -f "$BASEBOX_INSTANCE"
   "$BASEBOX_INSTANCE" docker machine create --driver generic --generic-ip-address "$BASEBOX_IP" --generic-ssh-user ubuntu \
