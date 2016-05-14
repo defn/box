@@ -7,6 +7,8 @@ function box_main {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
   source "$shome/script/profile"
 
+  set -x
+
   export VAGRANT_CWD="$shome${BASEBOX_INSTANCE:+/instance/${BASEBOX_INSTANCE}}-${VAGRANT_DEFAULT_PROVIDER}"
   
   if [[ "$VAGRANT_CWD" != "$shome" ]]; then
@@ -52,8 +54,8 @@ function box_main {
       ;;
     docker)
       nm_guest="${BASEBOX_NAME}"
-      cmd_limbo="limbo docker"
-      cmd_basebox='basedox docker'
+      cmd_limbo="limbo image"
+      cmd_basebox='basebox docker'
       ;;
     aws)
       nm_guest="${BASEBOX_NAME}"
@@ -82,14 +84,9 @@ function box_main {
           $cmd_basebox add
           ;;
         docker)
-          if [[ "$nm_guest" == "${BOX_NAME}" ]]; then
-            export BASEBOX_SOURCE="ubuntu:trusty"
-            export BASEBOX_TAG="packer"
-            $cmd_basebox build "$BASEBOX_SOURCE"
-          else
-            export BASEBOX_TAG="vagrant"
-            docker commit "$(limbo ${BOX_NAME} id)" "${BASEBOX_NAME}:${BASEBOX_TAG}"
-          fi
+          export BASEBOX_SOURCE="ubuntu:trusty"
+          export BASEBOX_TAG="packer"
+          $cmd_basebox build "$BASEBOX_SOURCE"
           ;;
       esac
       ;;
@@ -112,9 +109,7 @@ function box_main {
           $cmd_limbo halt
           ;;
         docker)
-          if [[ "$nm_guest" == "${BOX_NAME}" ]]; then
-            docker commit "$($cmd_limbo id)" "${BASEBOX_NAME}:vagrant"
-          fi
+          docker commit "$($cmd_limbo id)" "${BASEBOX_NAME}:vagrant"
           ;;
       esac
       ;;
@@ -167,14 +162,12 @@ function box_main {
           ;;
         docker)
           export BASEBOX_SOURCE="${BASEBOX_NAME}:vagrant"
-          if [[ "$nm_guest" == "${BOX_NAME}" ]]; then
-            export BASEBOX_TAG="vagrant"
-            $cmd_basebox build
-            docker images -a
-            docker history "$BASEBOX_SOURCE" || true
-            docker save -o "${BASEBOX_CACHE}/box/${BASEBOX_NAME}${nm_suffix}.docker" "$BASEBOX_SOURCE"
-            docker history "$BASEBOX_SOURCE"
-          fi
+          export BASEBOX_TAG="vagrant"
+          $cmd_basebox build
+          docker images -a
+          docker history "$BASEBOX_SOURCE" || true
+          docker save -o "${BASEBOX_CACHE}/box/${BASEBOX_NAME}${nm_suffix}.docker" "$BASEBOX_SOURCE"
+          docker history "$BASEBOX_SOURCE"
           ;;
       esac
       $cmd_limbo destroy -f

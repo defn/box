@@ -133,45 +133,41 @@ Vagrant.configure("2") do |config|
           'Provisioner' => 'vagrant'
         }
       end
-    end
-  end
+    when "docker"
+      basebox.ssh.private_key_path = ssh_keys
 
-  ([''] + (0..99).to_a).each do |nm_region|
-  config.vm.define "#{nm_box}#{nm_region}" do |region|
-    basebox.ssh.private_key_path = ssh_keys
+      config.vm.define "docker" do |v, override|
+        override.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant'
+        override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer', type: "nfs"
 
-    basebox.vm.provider "docker" do |v, override|
-      v.create_args = []
-      v.volumes = []
-      v.cmd = [ "/usr/sbin/sshd", "-D", "-o", "VersionAddendum=#{nm_box}#{nm_region}" ]
-
-      if nm_region == ''
         override.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
+
+        v.create_args = []
+        v.volumes = []
+        v.cmd = [ "/usr/sbin/sshd", "-D" ]
+
         v.volumes = [ "/var/run/sshd" ]
         v.image = ENV['BASEBOX_SOURCE'] || "#{ENV['BASEBOX_NAME']}:packer"
-      else
-        v.image = ENV['BASEBOX_SOURCE'] || "#{ENV['BASEBOX_NAME']}:vagrant"
-      end
-      
-      v.has_ssh = true
-      
-      module VagrantPlugins
-        module DockerProvider
-          class Provider < Vagrant.plugin("2", :provider)
-            def host_vm?
-              false
+        
+        v.has_ssh = true
+        
+        module VagrantPlugins
+          module DockerProvider
+            class Provider < Vagrant.plugin("2", :provider)
+              def host_vm?
+                false
+              end
             end
-          end
-          module Action
-            class Create
-              def forwarded_ports(include_ssh=false)
-                return []
+            module Action
+              class Create
+                def forwarded_ports(include_ssh=false)
+                  return []
+                end
               end
             end
           end
-        end
-      end # end docker monkey patching
+        end # end docker monkey patching
+      end
     end
-  end # end docker config
-  end # end docker configs
+  end
 end
