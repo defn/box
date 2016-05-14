@@ -142,11 +142,11 @@ Vagrant.configure("2") do |config|
 
       basebox.vm.provider "docker" do |v, override|
         override.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant'
-        override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer', type: "nfs"
+        override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer'
 
         override.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
 
-        v.create_args = []
+        v.create_args = [ ]
         v.volumes = []
         v.cmd = [ "/usr/sbin/sshd", "-D" ]
 
