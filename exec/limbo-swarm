@@ -8,8 +8,8 @@ function main {
 
   ssh-keygen -R "$BASEBOX_IP"
   ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo rm -fv /etc/docker/key.json || true
+  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo service docker stop || true
   ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo service docker start || true
-  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo service docker restart || true
 
   local ip_consul="${CONSUL_SERVER:-$(docker-machine ip reality)}"
   "$BASEBOX_INSTANCE" docker machine create --driver generic --generic-ip-address "$BASEBOX_IP" --generic-ssh-user ubuntu \
