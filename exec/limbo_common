@@ -54,7 +54,7 @@ function box_main {
       ;;
     docker)
       nm_guest="${BASEBOX_NAME}"
-      cmd_limbo="limbo image"
+      cmd_limbo="limbo docker image"
       cmd_basebox='basebox docker'
       ;;
     aws)

@@ -41,10 +41,10 @@ Vagrant.configure("2") do |config|
   config.ssh.insert_key = false
 
   config.vm.define ENV['BASEBOX_NAME'] do |basebox|
-    basebox.vm.box = ENV['BASEBOX_NAME']
-
     case ENV['VAGRANT_DEFAULT_PROVIDER']
     when "vmware_fusion"
+      basebox.vm.box = ENV['BASEBOX_NAME']
+
       basebox.vm.network "private_network", ip: ENV['BASEBOX_IP'], nic_type: "vmnet3"
 
       basebox.vm.provider "vmware_fusion" do |v, override|
@@ -74,9 +74,11 @@ Vagrant.configure("2") do |config|
 				v.vmx["ide1:0.startconnected"] = "TRUE"
       end
     when "virtualbox"
-      basebox.ssh.private_key_path = ssh_keys
+      basebox.vm.box = ENV['BASEBOX_NAME']
 
       basebox.vm.network "private_network", ip: ENV['BASEBOX_IP'], nic_type: "virtio"
+
+      basebox.ssh.private_key_path = ssh_keys
 
       basebox.vm.provider "virtualbox" do |v, override|
         unless File.exists?("#{ENV['LIMBO_HOME']}/cidata.iso")
@@ -105,6 +107,8 @@ Vagrant.configure("2") do |config|
         ]
       end
     when "aws"
+      basebox.vm.box = ENV['BASEBOX_NAME']
+
       basebox.ssh.private_key_path = ssh_keys
 
       basebox.vm.provider "aws" do |v, override|
@@ -136,7 +140,7 @@ Vagrant.configure("2") do |config|
     when "docker"
       basebox.ssh.private_key_path = ssh_keys
 
-      config.vm.define "docker" do |v, override|
+      basebox.vm.provider "docker" do |v, override|
         override.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant'
         override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer', type: "nfs"
 
