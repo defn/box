@@ -4,10 +4,14 @@ function main {
   local shome="$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
   source "$shome/script/profile"
 
-  local ip_consul="${CONSUL_SERVER:-$(docker-machine ip reality)}"
-  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo rm -fv /etc/docker/key.json || true
-  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo service docker start || true
   "$BASEBOX_INSTANCE" docker machine rm -f "$BASEBOX_INSTANCE"
+
+  ssh-keygen -R "$BASEBOX_IP"
+  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo rm -fv /etc/docker/key.json || true
+
+  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo service docker start || true
+
+  local ip_consul="${CONSUL_SERVER:-$(docker-machine ip reality)}"
   "$BASEBOX_INSTANCE" docker machine create --driver generic --generic-ip-address "$BASEBOX_IP" --generic-ssh-user ubuntu \
     --swarm \
     --swarm-discovery="consul://${ip_consul}:8500" \
