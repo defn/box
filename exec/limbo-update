@@ -12,7 +12,7 @@ function limbo_update {
   case "$(uname -s)" in
     Darwin)
       if ! netstat -rn | grep "${BASEBOX_DOCKER_NETWORK_PREFIX}/.*${BASEBOX_IP}"; then
-        sudo route add -net "${BASEBOX_DOCKER_NETWORK_PREFIX}" "${BASEBOX_IP}" 255.255.255.0
+        sudo route add -net "${BASEBOX_DOCKER_NETWORK_PREFIX}.0" "${BASEBOX_IP}" 255.255.255.0
       fi
       ;;
   esac
