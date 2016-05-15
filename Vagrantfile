@@ -21,6 +21,9 @@ Vagrant.configure("2") do |config|
     "#{shome}/.ssh/ssh-vagrant-insecure"
   ]
 
+  brbuild_script = "#{shome}/script/docker-bootstrap"
+  brbuild_args = [ ENV['BASEBOX_DOCKER_NETWORK_PREFIX'] ]
+
   cibuild_script = %x{which block-cibuild 2>/dev/null}.strip
   cibuild_args = [ ENV['BASEBOX_HOME_URL'] ]
   %w(http_proxy ssh_gateway ssh_gateway_user).each {|ele|
@@ -90,6 +93,7 @@ Vagrant.configure("2") do |config|
         override.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant', type: "nfs"
         override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer', type: "nfs"
 
+        override.vm.provision "shell", path: brbuild_script, args: brbuild_args, privileged: false
         override.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
 
         v.linked_clone = true
