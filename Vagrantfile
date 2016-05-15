@@ -146,7 +146,7 @@ Vagrant.configure("2") do |config|
 
         override.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
 
-        v.create_args = [ ]
+        v.create_args = [ "--net", "limbo" ]
         v.volumes = []
         v.cmd = [ "/usr/sbin/sshd", "-D" ]
 

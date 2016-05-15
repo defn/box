@@ -8,7 +8,7 @@ function main {
     --opt=com.docker.network.bridge.enable_icc=false \
     --opt=com.docker.network.bridge.enable_ip_masquerade=true \
     --subnet "${BASEBOX_DOCKER_NETWORK_PREFIX}.0/24" \
-    "$@" docker_gwbridge
+    "$@" limbo
 }
 
 source sub "$BASH_SOURCE" "$@"

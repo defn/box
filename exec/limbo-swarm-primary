@@ -5,7 +5,8 @@ function main {
   source "$shome/script/profile"
 
   export CONSUL_SERVER="$BASEBOX_IP"
-  exec limbo swarm --swarm-master "$@"
+  limbo swarm --swarm-master "$@"
+  limbo docker network create -d overlay inception
 }
 
 source sub "$BASH_SOURCE" "$@"
