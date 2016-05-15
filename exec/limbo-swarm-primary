@@ -6,7 +6,6 @@ function main {
 
   export CONSUL_SERVER="$BASEBOX_IP"
   limbo swarm --swarm-master "$@"
-  limbo docker network create -d overlay inception
 }
 
 source sub "$BASH_SOURCE" "$@"
