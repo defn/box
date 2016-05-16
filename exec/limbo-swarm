@@ -1,34 +1,14 @@
 #!/usr/bin/env bash
 
+export VAGRANT_DEFAULT_PROVIDER='docker'
+
+eval $(docker machine env --swarm --no-proxy $BASEBOX_INSTANCE)
+
 function main {
   local shome="$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
   source "$shome/script/profile"
 
-  "$BASEBOX_INSTANCE" docker machine rm -f "$BASEBOX_INSTANCE"
-
-  ssh-keygen -R "$BASEBOX_IP"
-  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo rm -fv /etc/docker/key.json || true
-  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo service docker stop || true
-  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo service docker start || true
-
-  local ip_consul="${CONSUL_SERVER:-$(docker-machine ip reality)}"
-  "$BASEBOX_INSTANCE" docker machine create --driver generic --generic-ip-address "$BASEBOX_IP" --generic-ssh-user ubuntu \
-    --swarm \
-    --swarm-discovery="consul://${ip_consul}:8500" \
-    --engine-storage-driver="devicemapper" \
-    --engine-opt="cluster-store=consul://${ip_consul}:8500" \
-    --engine-opt="cluster-advertise=eth1:2376" \
-    --engine-opt="bridge=br0" \
-    --engine-opt="fixed-cidr=${BASEBOX_DOCKER_NETWORK_PREFIX}.0/28" \
-    "$@" \
-    "$BASEBOX_INSTANCE"
-
-  case "$*" in
-    *--swarm-master*)
-      "$BASEBOX_INSTANCE" swarm consul
-      sleep 5
-      ;;
-  esac
+  exec docker "$@"
 }
 
 source sub "$BASH_SOURCE" "$@"

@@ -5,7 +5,7 @@ function main {
   source "$shome/script/profile"
 
   export CONSUL_SERVER="$BASEBOX_IP"
-  limbo swarm --swarm-master "$@"
+  limbo swarm node --swarm-master "$@"
 }
 
 source sub "$BASH_SOURCE" "$@"
