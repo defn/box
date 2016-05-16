@@ -85,7 +85,7 @@ function box_main {
           export BASEBOX_SOURCE="ubuntu:trusty"
           export BASEBOX_TAG="packer"
           $cmd_basebox build "$BASEBOX_SOURCE"
-          docker save -o "${BASEBOX_CACHE}/box/${BASEBOX_NAME}-packager.docker" "$BASEBOX_NAME:$BASEBOX_TAG"
+          docker save -o "${BASEBOX_CACHE}/box/${BASEBOX_NAME}-${BASEBOX_TAG}.docker" "$BASEBOX_NAME:$BASEBOX_TAG"
           ;;
       esac
       ;;
