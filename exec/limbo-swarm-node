@@ -11,7 +11,7 @@ function main {
   ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo service docker stop || true
   ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo service docker start || true
 
-  local ip_consul="${CONSUL_SERVER:-$(docker-machine ip reality)}"
+  local ip_consul="${CONSUL_SERVER:-$(docker-machine ip "$1")}"
   "$BASEBOX_INSTANCE" docker machine create --driver generic --generic-ip-address "$BASEBOX_IP" --generic-ssh-user ubuntu \
     --swarm \
     --swarm-discovery="consul://${ip_consul}:8500" \
