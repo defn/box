@@ -4,7 +4,6 @@ function main {
   local shome="$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
   source "$shome/script/profile"
 
-  export CONSUL_SERVER="$BASEBOX_IP"
   limbo swarm node --swarm-master "$@"
 }
 
