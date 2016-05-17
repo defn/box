@@ -6,7 +6,7 @@ function main {
 
   eval $(docker machine env --swarm --no-proxy $BASEBOX_INSTANCE)
 
-  exec "${BASEBOX_INSTANCE}" docker run -ti -u ubuntu -w /home/ubuntu "$@" bash -il
+  exec docker run -ti -u ubuntu -w /home/ubuntu "$@" bash -il
 }
 
 source sub "$BASH_SOURCE" "$@"
