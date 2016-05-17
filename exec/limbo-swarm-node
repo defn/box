@@ -11,12 +11,7 @@ function main {
   ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo service docker stop || true
   ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo service docker start || true
 
-  if [[ -n "${CONSUL_SERVER:-}" ]]; then
-    local ip_consul="${CONSUL_SERVER}"
-  else
-    local ip_consul="$(docker-machine ip "$1")"
-    shift
-  fi
+  local ip_consul="${CONSUL_SERVER}"
 
   "$BASEBOX_INSTANCE" docker machine create --driver generic --generic-ip-address "$BASEBOX_IP" --generic-ssh-user ubuntu \
     --swarm \
@@ -28,13 +23,6 @@ function main {
     --engine-opt="fixed-cidr=${BASEBOX_DOCKER_NETWORK_PREFIX}.0/28" \
     "$@" \
     "$BASEBOX_INSTANCE"
-
-  case "$*" in
-    *--swarm-master*)
-      "$BASEBOX_INSTANCE" swarm consul
-      sleep 5
-      ;;
-  esac
 }
 
 source sub "$BASH_SOURCE" "$@"
