@@ -204,7 +204,14 @@ function box_main {
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
       ;;
     build)
-      exec $cmd_limbo up "$@"
+      $cmd_limbo up --no-provision "$@"
+      $cmd_limbo ssh-config
+      case "$VAGRANT_DEFAULT_PROVIDER" in
+        aws)
+          $cmd_limbo sync
+          ;;
+      esac
+      $cmd_limbo provision
       ;;
     remote)
       local quoted=()
