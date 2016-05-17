@@ -169,6 +169,9 @@ function box_main {
             | tail -1
           )"
           $cmd_basebox build
+          $cmd_limbo destroy -f
+          $cmd_basebox remove -f 2>&- || true
+          $cmd_basebox add
           ;;
          docker)
           export BASEBOX_SOURCE="${BASEBOX_NAME}:vagrant"
