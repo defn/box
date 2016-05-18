@@ -7,6 +7,11 @@ function box_main {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
   source "$shome/script/profile"
 
+  if [[ "$#" == 0 ]]; then
+    echo "$(basename "$0"): up|destroy ssh|rsync|scp id media build export rebuild"
+    return 0
+  fi
+
   export VAGRANT_CWD="$shome${BASEBOX_INSTANCE:+/instance/${BASEBOX_INSTANCE}}-${VAGRANT_DEFAULT_PROVIDER}"
   
   if [[ "$VAGRANT_CWD" != "$shome" ]]; then
@@ -16,16 +21,10 @@ function box_main {
     ln -nfs "$shome/.ssh" "$VAGRANT_CWD/"
   fi 
 
-  if [[ "$#" == 0 ]]; then
-    echo "$(basename "$0"): up|destroy ssh|rsync|scp id media build export rebuild"
-    return 0
-  fi
-
   local nm_action="$1"; shift
   local nm_guest=
   local cmd_limbo=
   local cmd_basebox=
-
   local basebox_type=
 
   case "$VAGRANT_DEFAULT_PROVIDER" in
