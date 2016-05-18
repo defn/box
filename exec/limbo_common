@@ -108,7 +108,7 @@ function box_main {
           $cmd_limbo halt
           ;;
         aws)
-          aws ec2 create-image --name "${BASEBOX_NAME}-vagrant-packer-$(hostname -s)-$(date +%s)" --description "vagrant export to packer rebuild" --instance-id $(clara aws id) --no-reboot
+          aws ec2 create-image --name "${BASEBOX_NAME}-vagrant-packer-$(hostname -s)-$(date +%s)" --description "vagrant export to packer rebuild" --instance-id $($cmd_limbo id) --no-reboot
           ;;
         docker)
           docker commit "$($cmd_limbo id)" "${BASEBOX_NAME}:vagrant"
