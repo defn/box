@@ -108,7 +108,23 @@ function box_main {
           $cmd_limbo halt
           ;;
         aws)
-          aws ec2 create-image --name "${BASEBOX_NAME}-vagrant-packer-$(hostname -s)-$(date +%s)" --description "vagrant export to packer rebuild" --instance-id $($cmd_limbo id) --no-reboot
+          local id_ami="$(aws ec2 create-image --name "${BASEBOX_NAME}-vagrant-packer-$(hostname -s)-$(date +%s)" --description "vagrant export to packer rebuild" --instance-id $($cmd_limbo id) --no-reboot | jq -r '.ImageId')"
+          while true; do 
+            local state="$(aws ec2 describe-images --image-id ami-41f2192c | jq -r '.Images[].State')"
+            case "$state" in
+              available)
+                break
+                ;;
+              pending)
+                echo "INFO: waiting for ami $id_ami... $(date)"
+                continue
+                ;;
+              *)
+                echo "ERROR: unknown state '$state' while waiting for ami $id_ami" 1>&2
+                return 1
+                ;;
+            esac
+          done
           ;;
         docker)
           docker commit "$($cmd_limbo id)" "${BASEBOX_NAME}:vagrant"
