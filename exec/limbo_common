@@ -116,6 +116,7 @@ function box_main {
                 ;;
               pending)
                 echo "INFO: waiting for ami $id_ami... $(date)"
+                sleep 15
                 continue
                 ;;
               *)
