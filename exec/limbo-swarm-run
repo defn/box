@@ -11,7 +11,7 @@ function main {
       exec docker run -ti -u ubuntu -w /home/ubuntu "$@"
       ;;
     *)
-      exec docker run -ti -u ubuntu -w /home/ubuntu "${BASEBOX_NAME}:vagrant" "$@"
+      exec docker run -ti -u ubuntu -w /home/ubuntu --net "${BASEBOX_NAME}" "${BASEBOX_NAME}:vagrant" "$@"
       ;;
   esac
 }
