@@ -180,7 +180,7 @@ function box_main {
           ;;
         aws)
           export EC2_SOURCE_AMI="$(\
-            aws ec2 describe-images --filter Name=name,Values="${BASEBOX_NAME}"'-vagrant-packer-*' --owners self \
+            aws ec2 describe-images --filter Name=name,Values="${BASEBOX_NAME}-vagrant-$(aws configure get region)"'-*' --owners self \
             | jq -r '.Images | sort_by(.CreationDate)[] | select(.State != "failed") | .ImageId' \
             | tail -1
           )"
