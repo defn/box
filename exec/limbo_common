@@ -107,7 +107,7 @@ function box_main {
           $cmd_limbo halt
           ;;
         aws)
-          local id_ami="$(aws ec2 create-image --name "${BASEBOX_NAME}-vagrant-packer-$(hostname -s)-$(date +%s)" --description "vagrant export to packer rebuild" --instance-id $($cmd_limbo id) --no-reboot | jq -r '.ImageId')"
+          local id_ami="$(aws ec2 create-image --name "${BASEBOX_NAME}-vagrant-$(aws configure get region)-$(hostname -s)-$(date +%s)" --description "vagrant export to packer rebuild" --instance-id $($cmd_limbo id) --no-reboot | jq -r '.ImageId')"
           while true; do 
             local state="$(aws ec2 describe-images --image-id "$id_ami" | jq -r '.Images[].State')"
             case "$state" in
