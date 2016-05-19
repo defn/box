@@ -4,7 +4,14 @@ function main {
   local shome="$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
   source "$shome/script/profile"
 
-  exec "${BASEBOX_INSTANCE}" docker run -ti -u ubuntu -w /home/ubuntu "$@"
+  case "${1:-}" in
+    *:*)
+      exec "${BASEBOX_INSTANCE}" docker run -ti -u ubuntu -w /home/ubuntu "$@"
+      ;;
+    *)
+      exec "${BASEBOX_INSTANCE}" docker run -ti -u ubuntu -w /home/ubuntu "${BASEBOX_NAME}:vagrant" "$@"
+      ;;
+  esac
 }
 
 source sub "$BASH_SOURCE" "$@"

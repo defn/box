@@ -6,11 +6,11 @@ function main {
 
   eval $(docker machine env --swarm --no-proxy $BASEBOX_INSTANCE)
 
-  if [[ "$#" -gt 0 ]]; then
-    exec docker run -ti -u ubuntu -w /home/ubuntu "$@" bash -il
-  else
-    exec docker run -ti -u ubuntu -w /home/ubuntu "${BASEBOX_NAME}:vagrant" bash -il
+  if [[ "$#" == 0 ]]; then
+    set -- "${BASEBOX_NAME}:vagrant"
   fi
+  
+  exec docker run -ti -u ubuntu -w /home/ubuntu "$@" bash -il
 }
 
 source sub "$BASH_SOURCE" "$@"
