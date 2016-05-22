@@ -224,7 +224,6 @@ function box_main {
       ;;
     build)
       $cmd_limbo up --no-provision "$@"
-      $cmd_limbo ssh-config
       case "$VAGRANT_DEFAULT_PROVIDER" in
         aws)
           $cmd_limbo sync
