@@ -10,6 +10,12 @@ function main {
   ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo rm -fv /etc/docker/key.json || true
   ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo service docker stop || true
   ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo service docker start || true
+  
+  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo docker stop swarm-agent-master || true
+  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo docker rm swarm-agent-master || true
+
+  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo docker stop swarm-agent || true
+  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo docker rm swarm-agent || true
 
   local ip_consul="${CONSUL_SERVER}"
 
