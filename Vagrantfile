@@ -101,6 +101,7 @@ Vagrant.configure("2") do |config|
         v.cpus = 2
 
 				v.customize [ 'modifyvm', :id, '--nictype1', 'virtio' ]
+				v.customize [ 'modifyvm', :id, '--nictype2', 'virtio' ]
         v.customize [ 
           'storageattach', :id, 
           '--storagectl', 'SATA Controller', 
@@ -109,6 +110,11 @@ Vagrant.configure("2") do |config|
           '--type', 'dvddrive', 
           '--medium', "#{ENV['LIMBO_HOME']}/cidata.iso"
         ]
+				v.customize [
+					'storagectl', :id,
+					'--name', 'SATA Controller',
+					'--hostiocache', 'on'
+				]
       end
     when "aws"
       basebox.vm.box = ENV['BASEBOX_NAME']
