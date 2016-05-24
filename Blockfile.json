@@ -19,7 +19,8 @@
       "basebox-osx",
       "vagrant-shell",
       "vagrant-limbo",
-      "docker-swarm"
+      "docker-swarm",
+      "docker-distribution"
     ],
     [
       "consul",
