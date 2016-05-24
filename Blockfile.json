@@ -18,7 +18,8 @@
       "basebox-ubuntu",
       "basebox-osx",
       "vagrant-shell",
-      "vagrant-limbo"
+      "vagrant-limbo",
+      "docker-swarm"
     ],
     [
       "consul",
