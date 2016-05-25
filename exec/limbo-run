@@ -6,10 +6,10 @@ function main {
 
   case "${1:-}" in
     *:*)
-      exec "${BASEBOX_INSTANCE}" docker run -ti -u ubuntu -w /home/ubuntu "$@"
+      exec "${BASEBOX_INSTANCE}" docker run -rm -ti -u ubuntu -w /home/ubuntu "$@"
       ;;
     *)
-      exec "${BASEBOX_INSTANCE}" docker run -ti -u ubuntu -w /home/ubuntu "${BASEBOX_NAME}:vagrant" "$@"
+      exec "${BASEBOX_INSTANCE}" docker run -rm -ti -u ubuntu -w /home/ubuntu "${BASEBOX_NAME}:vagrant" "$@"
       ;;
   esac
 }

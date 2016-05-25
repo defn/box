@@ -8,7 +8,7 @@ function main {
     set -- "${BASEBOX_NAME}:vagrant"
   fi
 
-  exec "${BASEBOX_INSTANCE}" docker run -ti -u ubuntu -w /home/ubuntu "$@" bash -il
+  exec "${BASEBOX_INSTANCE}" docker run -rm -ti -u ubuntu -w /home/ubuntu "$@" bash -il
 }
 
 source sub "$BASH_SOURCE" "$@"
