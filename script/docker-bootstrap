@@ -14,6 +14,16 @@ function main {
   sudo ip addr add "${net_bridge}/24" dev br0
   sudo ip link set dev br0 up
   sudo ip addr show br0
+
+  if dmsetup status | grep system-docker--data; then
+    if ! dmsetup status | grep system-docker--data | grep thin-pool; then
+      if lvremove -f /dev/system/docker-data; then
+        lvcreate -T -L 20G system/docker-data
+      fi
+    fi
+  fi
+
+	lvs
 }
 
 main "$@"
