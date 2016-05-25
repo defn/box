@@ -10,7 +10,7 @@ function main {
     set -- "${BASEBOX_NAME}:vagrant"
   fi
   
-  exec docker run -rm -ti -u ubuntu -w /home/ubuntu --net "${BASEBOX_NAME}" "$@" bash -il
+  exec docker run --rm -ti -u ubuntu -w /home/ubuntu --net "${BASEBOX_NAME}" "$@" bash -il
 }
 
 source sub "$BASH_SOURCE" "$@"
