@@ -148,6 +148,10 @@ function box_main {
       $cmd_limbo destroy -f 2>&- || true
       $cmd_limbo build "$@"
       ;;
+    refresh)
+      $cmd_limbo "${1:-provision}"
+      $cmd_limbo reuse
+      ;;
     reuse)
       $cmd_limbo export "$@"
       $cmd_limbo rebuild "$@"
