@@ -15,15 +15,15 @@ function main {
   sudo ip link set dev br0 up
   sudo ip addr show br0
 
-  if dmsetup status | grep system-docker--data; then
-    if ! dmsetup status | grep system-docker--data | grep thin-pool; then
-      if lvremove -f /dev/system/docker-data; then
-        lvcreate -T -L 20G --poolmetadatasize 4G system/docker-data
+  if sudo dmsetup status | grep system-docker--data; then
+    if ! sudo dmsetup status | grep system-docker--data | grep thin-pool; then
+      if sudo lvremove -f /dev/system/docker-data; then
+        sudo lvcreate -T -L 20G --poolmetadatasize 4G system/docker-data
       fi
     fi
   fi
 
-	lvs
+	sudo lvs
 }
 
 main "$@"
