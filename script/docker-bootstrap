@@ -15,8 +15,8 @@ function main {
   sudo ip link set dev br0 up
   sudo ip addr show br0
 
-  if lvs system/docker-data; then
-    if ! lvs system/docker-data | awk 'NR == 2 { print $3 }' | grep ^t; then
+  if sudo lvs system/docker-data; then
+    if ! sudo lvs system/docker-data | awk 'NR == 2 { print $3 }' | grep ^t; then
       sudo lvremove -f system/docker-data || true
       sudo lvcreate -T -L 20G --poolmetadatasize 4G system/docker-data
     fi
