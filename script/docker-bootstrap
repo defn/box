@@ -18,7 +18,7 @@ function main {
   if dmsetup status | grep system-docker--data; then
     if ! dmsetup status | grep system-docker--data | grep thin-pool; then
       if lvremove -f /dev/system/docker-data; then
-        lvcreate -T -L 20G system/docker-data
+        lvcreate -T -L 20G --poolmetadatasize 4G system/docker-data
       fi
     fi
   fi
