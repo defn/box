@@ -158,7 +158,7 @@ function box_main {
       ;;
     rebase)
       $cmd_limbo media
-      $cmd_limbo build "$@"
+      env BASEBOX_SOURCE="${BASEBOX_NAME}:packer" $cmd_limbo build "$@"
       ;;
     rebuild)
       local nm_export="${1:-}"

@@ -160,7 +160,7 @@ Vagrant.configure("2") do |config|
 
         override.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
 
-        v.image = ENV['BASEBOX_SOURCE'] || "#{ENV['BASEBOX_NAME']}:packer"
+        v.image = ENV['BASEBOX_SOURCE'] || "#{ENV['BASEBOX_NAME']}:vagrant"
         v.cmd = [ "/usr/sbin/sshd", "-D" ]
         v.volumes = [ "/var/run/sshd" ]
         v.create_args = [ ]
