@@ -9,7 +9,7 @@ function main {
     nm_swarm_type="$1"; shift
   fi
 
-  limbo swarm "${nm_swarm_type:node}" --swarm-master "$@"
+  limbo swarm "${nm_swarm_type:-node}" --swarm-master "$@"
 }
 
 source sub "$BASH_SOURCE" "$@"
