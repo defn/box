@@ -3,9 +3,6 @@
 function main {
   local net_bridge="$1"; shift
 
-  sudo aptitude update
-  sudo aptitude install -y bridge-utils
-
   if ifconfig br0 2>/dev/null; then
     return 0
   fi
