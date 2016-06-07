@@ -7,7 +7,7 @@ function main {
 		echo 'source-directory /etc/network/interfaces.d' | sudo tee -a /etc/network/interfaces
 	fi # TODO move to packer?
 
-  cat > "/etc/network/interfaces.d/br0" <<__EOF
+  cat | sudo tee -a "/etc/network/interfaces.d/br0" <<__EOF
 auto
 iface br0 inet static
   address "${net_bridge}.0"
@@ -15,6 +15,8 @@ iface br0 inet static
   pre-up brctl addbr br0
   post-down brctl delbr br0
 __EOF
+
+  sudo ifup br0 || true
 
   if sudo lvs system/docker-data; then
     if ! sudo lvs system/docker-data | awk 'NR == 2 { print $3 }' | grep ^t; then
