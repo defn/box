@@ -11,7 +11,7 @@ function main {
 auto
 iface br0 inet static
   address "${net_bridge}.0"
-  network 255.255.255.0
+  netmask "255.255.255.0"
   pre-up brctl addbr br0
   post-down brctl delbr br0
 __EOF
