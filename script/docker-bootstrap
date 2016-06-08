@@ -3,6 +3,10 @@
 function main {
   local net_bridge="$1"; shift
 
+	if ! grep -s /etc/network/interfaces.d /etc/network/interfaces; then
+		echo 'source-directory /etc/network/interfaces.d' | sudo tee -a /etc/network/interfaces
+	fi # TODO move to packer?
+
   cat | sudo tee -a "/etc/network/interfaces.d/br0" <<__EOF
 auto
 iface br0 inet static
