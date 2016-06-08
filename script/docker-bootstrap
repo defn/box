@@ -4,8 +4,11 @@ function main {
   local net_bridge="$1"; shift
 
 	if ! grep -s /etc/network/interfaces.d /etc/network/interfaces; then
-		echo 'source-directory /etc/network/interfaces.d' | sudo tee -a /etc/network/interfaces
-	fi # TODO move to packer?
+    {
+      echo
+      echo 'source-directory /etc/network/interfaces.d'
+    } | sudo tee -a /etc/network/interfaces
+	fi
 
   cat | sudo tee -a "/etc/network/interfaces.d/br0" <<__EOF
 auto
