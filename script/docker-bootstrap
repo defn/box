@@ -10,7 +10,7 @@ function main {
     } | sudo tee -a /etc/network/interfaces
 	fi
 
-  cat | sudo tee -a "/etc/network/interfaces.d/br0.cfg" <<__EOF
+  cat | sudo tee -a "/etc/network/interfaces.d/br0" <<__EOF
 auto
 iface br0 inet static
   address "${net_bridge}.0"
