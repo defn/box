@@ -39,9 +39,6 @@ Vagrant.configure("2") do |config|
     cibuild_args << ENV['USER']
   end
 
-  cache_script = "#{shome}/script/cache-bootstrap"
-  cache_args = [ ENV['BASEBOX_CACHE'] ]
-
   config.ssh.username = "ubuntu"
   config.ssh.forward_agent = true
   config.ssh.insert_key = false
@@ -130,7 +127,6 @@ Vagrant.configure("2") do |config|
       basebox.vm.provider "aws" do |v, override|
         override.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant', disabled: true
           
-        override.vm.provision "shell", path: cache_script, args: cache_args, privileged: false
         override.vm.provision "shell", path: cibuild_script, args: [ ENV['BASEBOX_HOME_URL'] ], privileged: false
 
         v.ami = "meh" if ENV['LIMBO_FAKE']
