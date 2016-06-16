@@ -21,11 +21,8 @@ Vagrant.configure("2") do |config|
     "#{shome}/.ssh/ssh-vagrant-insecure"
   ]
 
-  brbuild_script = "#{shome}/script/docker-bootstrap"
-  brbuild_args = [ ENV['BASEBOX_DOCKER_NETWORK_PREFIX'] ]
-
-  tpbuild_script = "#{shome}/script/docker-thinpool"
-  tpbuild_args = [ ]
+  docker_script = "#{shome}/script/docker-bootstrap"
+  docker_args = [ ENV['BASEBOX_DOCKER_NETWORK_PREFIX'] ]
 
   cibuild_script = %x{which block-cibuild 2>/dev/null}.strip
   cibuild_args = [ ENV['BASEBOX_HOME_URL'] ]
@@ -34,6 +31,10 @@ Vagrant.configure("2") do |config|
       cibuild_args << ENV[ele]
     end
   }
+
+  facts_script = "#{shome}/script/facts-finish"
+  facts_args = [ ]
+
 
   if ENV['ssh_gateway_user'].nil? || ENV['ssh_gateway_user'].empty?
     cibuild_args << ENV['USER']
@@ -60,9 +61,9 @@ Vagrant.configure("2") do |config|
         override.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant', type: "nfs"
         override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer', type: "nfs"
 
-        override.vm.provision "shell", path: brbuild_script, args: brbuild_args, privileged: false
+        override.vm.provision "shell", path: docker_script, args: docker_args, privileged: false
         override.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
-        override.vm.provision "shell", path: tpbuild_script, args: tpbuild_args, privileged: false
+        override.vm.provision "shell", path: facts_script,   args: facts_args, privileged: false
 
         v.gui = false
         v.linked_clone = true
@@ -95,9 +96,9 @@ Vagrant.configure("2") do |config|
         override.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant'
         override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer'
 
-        override.vm.provision "shell", path: brbuild_script, args: brbuild_args, privileged: false
+        override.vm.provision "shell", path: docker_script,  args: docker_args, privileged: false
         override.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
-        override.vm.provision "shell", path: tpbuild_script, args: tpbuild_args, privileged: false
+        override.vm.provision "shell", path: facts_script,   args: facts_args, privileged: false
 
         v.linked_clone = true
         v.memory = 2048

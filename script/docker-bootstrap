@@ -30,6 +30,22 @@ __EOF
 
 	sudo lvs
   lsblk
+
+  local nm_driver="$(sudo docker info 2>&- | awk '/Storage Drive/ { print $3 }')"
+  if [[ "$nm_driver" == "aufs" ]]; then
+    sudo service docker stop
+    sudo rm -rf /var/lib/docker 
+    cat << ____EOF | sudo tee /etc/default/docker
+    DOCKER_OPTS='
+    -H tcp://0.0.0.0:2376
+    -H unix:///var/run/docker.sock
+    --storage-driver devicemapper --storage-opt dm.thinpooldev=/dev/mapper/system-docker--data-tpool
+    --bridge=br0
+
+    '
+____EOF
+    sudo service docker start
+  fi
 }
 
 main "$@"
