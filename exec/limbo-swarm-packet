@@ -17,7 +17,7 @@ function main {
   ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo docker stop swarm-agent || true
   ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo docker rm swarm-agent || true
 
-  local ip_consul="${CONSUL_SERVER}"
+  local ip_consul="${CACHE_VIP}"
 
   "$BASEBOX_INSTANCE" docker machine create --driver generic --generic-ip-address "$BASEBOX_IP" --generic-ssh-user ubuntu \
     --swarm \
