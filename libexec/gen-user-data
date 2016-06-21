@@ -13,18 +13,3 @@ function main {
 }
 
 main "$@"
-
-#			apt_mirror: http://172.28.128.1:3000/ubuntu/,
-#			system_info: {
-#				package_mirrors: [
-#					{ arches: [i386, amd64],
-#         		failsafe: {
-#							primary: http://172.28.128.1:3000/ubuntu/,
-#       				security: http://172.28.128.1:3000/ubuntu/
-#						},
-#						search: {
-#							primary: [],
-#							security: []
-#						}
-#					}
-#				}
