@@ -4,11 +4,6 @@ function limbo_update {
   local shome="${_limbo_home:-"$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"}"
   source "$shome/script/profile"
 
-  if ! VBoxManage list hostonlyifs | grep vboxnet0; then
-    VBoxManage hostonlyif create
-  fi
-  VBoxManage hostonlyif ipconfig vboxnet0 --ip "172.28.128.1" --netmask 255.255.255.0
-
   case "$(uname -s)" in
     Darwin)
       if netstat -rn | grep "${BASEBOX_DOCKER_NETWORK_PREFIX}/.*${BASEBOX_IP}"; then
