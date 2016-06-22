@@ -1,20 +1,5 @@
 #!/usr/bin/env bash
 
-if [[ -z "${BOX_NAME:-}" ]]; then
-  echo "ERROR: override vagrant docker names with BOX_NAME" 1>&2
-  exit 1
-fi
-
-if [[ -z "${BASEBOX_NAME:-}" ]]; then
-  echo "ERROR: override main vagrant name names with BASEBOX_NAME" 1>&2
-  exit 1
-fi
-
-if [[ -z "${BASEBOX_HOME_URL:-}" ]]; then
-  echo "ERROR: override ubuntu home directory repo with BASEBOX_HOME_URL" 1>&2
-  exit 1
-fi
-
 function main {
   local shome="${_limbo_home:-"$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"}"
   source "$shome/script/profile"
