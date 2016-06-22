@@ -3,6 +3,10 @@
 TMPDIR="${BASEBOX_CACHE}/tmp"
 
 function box_main {
+  if [[ -x "$(which "limbo-${1:-}" 2>&- || true)" ]]; then
+    exec limbo "$@"
+  fi
+
   local shome="${_limbo_home:-"$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"}"
   source "$shome/script/profile"
 
