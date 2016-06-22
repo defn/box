@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 TMPDIR="${BASEBOX_CACHE}/tmp"
-mkdir -p "$TMPDIR"
 
 function box_main {
   local shome="${_limbo_home:-"$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"}"
@@ -11,15 +10,6 @@ function box_main {
     echo "$(basename "$0"): up|destroy ssh|rsync|scp id media build export rebuild"
     return 0
   fi
-
-  export VAGRANT_CWD="$shome${BASEBOX_INSTANCE:+/instance/${BASEBOX_INSTANCE}}-${VAGRANT_DEFAULT_PROVIDER}"
-  
-  if [[ "$VAGRANT_CWD" != "$shome" ]]; then
-    mkdir -p "$VAGRANT_CWD"
-    ln -nfs "$shome/Vagrantfile" "$VAGRANT_CWD/"
-    ln -nfs "$shome/script" "$VAGRANT_CWD/"
-    ln -nfs "$shome/.ssh" "$VAGRANT_CWD/"
-  fi 
 
   local nm_action="$1"; shift
   local nm_guest=
@@ -64,6 +54,15 @@ function box_main {
       return 1
       ;;
   esac
+
+  export VAGRANT_CWD="$shome${BASEBOX_INSTANCE:+/instance/${BASEBOX_INSTANCE}}-${VAGRANT_DEFAULT_PROVIDER}"
+  
+  if [[ "$VAGRANT_CWD" != "$shome" ]]; then
+    mkdir -p "$VAGRANT_CWD"
+    ln -nfs "$shome/Vagrantfile" "$VAGRANT_CWD/"
+    ln -nfs "$shome/script" "$VAGRANT_CWD/"
+    ln -nfs "$shome/.ssh" "$VAGRANT_CWD/"
+  fi 
 
   case "$nm_action" in
     media)
