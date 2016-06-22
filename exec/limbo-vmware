@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
-function limbo_docker {
+function main {
   local shome="${_limbo_home:-"$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"}"
   source "$shome/script/profile"
+  source limbo_common
 
   export VAGRANT_DEFAULT_PROVIDER='vmware_fusion'
 
-  exec limbo "$@"
+  box_main "$@"
 }
 
-limbo_docker "$@"
+source sub "$BASH_SOURCE" "$@"
