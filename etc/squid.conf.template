@@ -3361,7 +3361,7 @@ maximum_object_size 100000 MB
 #
 
 # Uncomment and adjust the following to add a disk cache directory.
-cache_dir ufs ${BASEBOX_CACHE}/cache/squid 100000 16 256
+cache_dir ufs ${CACHE_DIR}/cache/squid 100000 16 256
 
 #  TAG: store_dir_select_algorithm
 #	How Squid selects which cache_dir to use when the response
@@ -4133,7 +4133,7 @@ cache_dir ufs ${BASEBOX_CACHE}/cache/squid 100000 16 256
 #
 
 # Leave coredumps in the first cache dir
-coredump_dir ${BASEBOX_CACHE}/cache/squid
+coredump_dir ${CACHE_DIR}/cache/squid
 
 # OPTIONS FOR FTP GATEWAYING
 # -----------------------------------------------------------------------------
@@ -4343,7 +4343,7 @@ coredump_dir ${BASEBOX_CACHE}/cache/squid
 #	By default, a URL rewriter is not used.
 #Default:
 # none
-url_rewrite_program ${BASEBOX_CACHE}/cache/apt-mirror/rewrite-apt.pl
+url_rewrite_program ${CACHE_DIR}/cache/apt-mirror/rewrite-apt.pl
 
 #  TAG: url_rewrite_children
 #	The maximum number of redirector processes to spawn. If you limit

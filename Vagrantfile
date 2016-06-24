@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
   nm_box=ENV['BOX_NAME']
 
   ssh_keys = [
-    "#{ENV['BASEBOX_CACHE']}/.ssh/ssh-vagrant",
+    "#{ENV['CACHE_DIR']}/.ssh/ssh-vagrant",
     "#{shome}/.ssh/ssh-vagrant-insecure"
   ]
 
@@ -60,8 +60,8 @@ Vagrant.configure("2") do |config|
           end
         end
 
-        override.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant', type: "nfs"
-        override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer', type: "nfs"
+        override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', type: "nfs"
+        override.vm.synced_folder "#{ENV['CACHE_DIR']}/tmp/packer", '/vagrant/tmp/packer', type: "nfs"
 
         override.vm.provision "shell", path: docker_script, args: docker_args, privileged: false
         override.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
@@ -95,8 +95,8 @@ Vagrant.configure("2") do |config|
           end
         end
 
-        override.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant'
-        override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer'
+        override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant'
+        override.vm.synced_folder "#{ENV['CACHE_DIR']}/tmp/packer", '/vagrant/tmp/packer'
 
         override.vm.provision "shell", path: docker_script,  args: docker_args, privileged: false
         override.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
@@ -128,7 +128,7 @@ Vagrant.configure("2") do |config|
       basebox.ssh.private_key_path = ssh_keys
 
       basebox.vm.provider "aws" do |v, override|
-        override.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant', disabled: true
+        override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', disabled: true
           
         override.vm.provision "shell", path: cibuild_script, args: [ ENV['BASEBOX_HOME_URL'] ], privileged: false
 
@@ -156,8 +156,8 @@ Vagrant.configure("2") do |config|
       basebox.ssh.private_key_path = ssh_keys
 
       basebox.vm.provider "docker" do |v, override|
-        override.vm.synced_folder ENV['BASEBOX_CACHE'], '/vagrant'
-        override.vm.synced_folder "#{ENV['BASEBOX_CACHE']}/tmp/packer", '/vagrant/tmp/packer'
+        override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant'
+        override.vm.synced_folder "#{ENV['CACHE_DIR']}/tmp/packer", '/vagrant/tmp/packer'
 
         override.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
 

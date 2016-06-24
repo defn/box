@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-TMPDIR="${BASEBOX_CACHE}/tmp"
+TMPDIR="${CACHE_DIR}/tmp"
 
 function box_main {
   if [[ -x "$(which "limbo-${1:-}" 2>&- || true)" ]]; then
@@ -87,7 +87,7 @@ function box_main {
           export BASEBOX_SOURCE="ubuntu:trusty"
           export BASEBOX_TAG="packer"
           $cmd_basebox build "$BASEBOX_SOURCE"
-          docker save -o "${BASEBOX_CACHE}/box/${BASEBOX_NAME}-${BASEBOX_TAG}.docker" "$BASEBOX_NAME:$BASEBOX_TAG"
+          docker save -o "${CACHE_DIR}/box/${BASEBOX_NAME}-${BASEBOX_TAG}.docker" "$BASEBOX_NAME:$BASEBOX_TAG"
           ;;
       esac
       ;;
@@ -96,15 +96,15 @@ function box_main {
       local nm_suffix="${nm_export:+-${nm_export}}"
       case "$VAGRANT_DEFAULT_PROVIDER" in
         virtualbox)
-          cat "${BASEBOX_CACHE}/.ssh/ssh-vagrant.pub" | $cmd_limbo ssh tee -a '~ubuntu/.ssh/authorized_keys'
+          cat "${CACHE_DIR}/.ssh/ssh-vagrant.pub" | $cmd_limbo ssh tee -a '~ubuntu/.ssh/authorized_keys'
           $cmd_limbo ssh sudo rm -rf /dev/.udev
           $cmd_limbo ssh sudo rm -f /lib/udev/rules.d/75-persistent-net-generator.rules
           $cmd_limbo ssh sudo rm -rf /var/lib/dhcp # TODO assumes only leases are here
           $cmd_limbo ssh sudo mkdir -p /var/lib/dhcp
           $cmd_limbo halt
 
-          (set +f; rm -f "${BASEBOX_CACHE}/box/${BASEBOX_NAME}${nm_suffix}.ovf" ${BASEBOX_CACHE}/box/${BASEBOX_NAME}${nm_suffix}-disk*.vmdk)
-          (set -x; VBoxManage export $($cmd_limbo id) --ovf20 -o "${BASEBOX_CACHE}/box/${BASEBOX_NAME}${nm_suffix}.ovf")
+          (set +f; rm -f "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.ovf" ${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}-disk*.vmdk)
+          (set -x; VBoxManage export $($cmd_limbo id) --ovf20 -o "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.ovf")
           ;;
         vmware*)
           $cmd_limbo halt
@@ -139,7 +139,7 @@ function box_main {
       local nm_suffix="${nm_import:+-${nm_import}}"
       case "$VAGRANT_DEFAULT_PROVIDER" in
         docker)
-          docker load -i "${BASEBOX_CACHE}/box/${BASEBOX_NAME}${nm_suffix}.docker"
+          docker load -i "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.docker"
           ;;
         virtualbox)
           $cmd_basebox remove -f 2>&- || true
@@ -173,7 +173,7 @@ function box_main {
               export BASEBOX_SOURCE="$($cmd_limbo id)"
               ;;
             virtualbox)
-              export BASEBOX_SOURCE="${BASEBOX_CACHE}/box/${BASEBOX_NAME}${nm_suffix}.ovf"
+              export BASEBOX_SOURCE="${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.ovf"
               ;;
           esac
 
@@ -200,7 +200,7 @@ function box_main {
           export BASEBOX_SOURCE="${BASEBOX_NAME}:vagrant"
           export BASEBOX_TAG="vagrant"
           $cmd_basebox build
-          docker save -o "${BASEBOX_CACHE}/box/${BASEBOX_NAME}${nm_suffix}.docker" "$BASEBOX_SOURCE"
+          docker save -o "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.docker" "$BASEBOX_SOURCE"
           ;;
       esac
       $cmd_limbo destroy -f
@@ -217,7 +217,7 @@ function box_main {
       ;;
     sync)
       if [[ "$#" == 0 ]]; then
-        local pth_packages="${BASEBOX_CACHE}/packages/"$(echo "$(parity ssh "$nm_guest" uname -s)_$(parity ssh "$nm_guest" uname -r | cut -d- -f1 | cut -d. -f1-3)${PKG_HOME}" | tr / _ | tr . _ | perl -pe 's{__+}{_}')""
+        local pth_packages="${CACHE_DIR}/packages/"$(echo "$(parity ssh "$nm_guest" uname -s)_$(parity ssh "$nm_guest" uname -r | cut -d- -f1 | cut -d. -f1-3)${PKG_HOME}" | tr / _ | tr . _ | perl -pe 's{__+}{_}')""
         set -- "$pth_packages"
       fi
 

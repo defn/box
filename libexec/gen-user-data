@@ -6,7 +6,7 @@ function main {
 
   echo '#cloud-config'
   jq -n \
-    --arg ssh_key "$(cat "${BASEBOX_CACHE}/.ssh/ssh-vagrant.pub")" \
+    --arg ssh_key "$(cat "${CACHE_DIR}/.ssh/ssh-vagrant.pub")" \
     --arg sudo "ALL=(ALL) NOPASSWD: ALL" '{
 			users: [ {name: "ubuntu", "ssh-authorized-keys": [ $ssh_key ], sudo: $sudo } ]
     }' | python3.5 -c 'import json; import yaml; import sys; print(yaml.dump(json.load(sys.stdin)))'

@@ -4,14 +4,14 @@ function bootstrap {
   local shome="${_limbo_home:-"$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"}"
   source "$shome/script/profile"
 
-  mkdir -p "${BASEBOX_CACHE}/tmp"
+  mkdir -p "${CACHE_DIR}/tmp"
 
   if "$shome/script/stale"; then
     "$shome/script/bootstrap"
   fi
 
-  cat "$shome/etc/squid.conf.template" | envsubst '${BASEBOX_CACHE}' > "$shome/etc/squid.conf"
-  mkdir -p "${BASEBOX_CACHE}/cache/squid"
+  cat "$shome/etc/squid.conf.template" | envsubst '${CACHE_DIR}' > "$shome/etc/squid.conf"
+  mkdir -p "${CACHE_DIR}/cache/squid"
   squid -f "$shome/etc/squid.conf" -zN
   block compile service
 
