@@ -12,6 +12,9 @@ function limbo_update {
       fi
       sudo route add -net "${BASEBOX_DOCKER_NETWORK_PREFIX}.0" "${BASEBOX_IP}" 255.255.255.0
       ;;
+    Linux)
+      sudo route add -net "${BASEBOX_DOCKER_NETWORK_PREFIX}.0" gw "${BASEBOX_IP}" netmask 255.255.255.0
+      ;;
   esac
 }
 
