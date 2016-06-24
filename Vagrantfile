@@ -29,6 +29,8 @@ Vagrant.configure("2") do |config|
   %w(http_proxy ssh_gateway ssh_gateway_user).each {|ele|
     unless ENV[ele].nil? || ENV[ele].empty?
       cibuild_args << ENV[ele]
+    else
+      break
     end
   }
 
