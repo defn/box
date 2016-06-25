@@ -5,6 +5,7 @@ function bootstrap {
   source "$shome/script/profile"
 
   pkg ensure misc/tmux
+  pkg ensure devel/gettext-tools
 }
 
 bootstrap
