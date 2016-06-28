@@ -84,7 +84,7 @@ Vagrant.configure("2") do |config|
     when "virtualbox"
       basebox.vm.box = ENV['BASEBOX_NAME']
 
-      basebox.vm.network "private_network", ip: ENV['BASEBOX_IP'], nic_type: "virtio"
+      basebox.vm.network "private_network", ip: ENV['BASEBOX_IP']
 
       basebox.ssh.private_key_path = ssh_keys
 
@@ -106,8 +106,11 @@ Vagrant.configure("2") do |config|
         v.memory = 2048
         v.cpus = 2
 
-				#v.customize [ 'modifyvm', :id, '--nictype1', 'virtio' ]
-				#v.customize [ 'modifyvm', :id, '--nictype2', 'virtio' ]
+        if /darwin/ =~ RUBY_PLATFORM
+          v.customize [ 'modifyvm', :id, '--nictype1', 'virtio' ]
+          v.customize [ 'modifyvm', :id, '--nictype2', 'virtio' ]
+        end
+
         v.customize [ 
           'storageattach', :id, 
           '--storagectl', 'SATA Controller', 
