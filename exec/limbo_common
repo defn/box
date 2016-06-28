@@ -203,8 +203,6 @@ function box_main {
           docker save -o "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.docker" "$BASEBOX_SOURCE"
           ;;
       esac
-      $cmd_limbo destroy -f
-      exec $cmd_limbo up
       ;;
     up)
       exec parity "$nm_action" "$nm_guest" "$@"
