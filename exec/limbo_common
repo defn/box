@@ -157,7 +157,7 @@ function box_main {
       ;;
     reuse)
       $cmd_limbo export "$@"
-      $cmd_limbo rebuild "$@"
+      $cmd_limbo repackage "$@"
       ;;
     rebase)
       $cmd_limbo media
