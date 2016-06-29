@@ -106,10 +106,8 @@ Vagrant.configure("2") do |config|
         v.memory = 2048
         v.cpus = 2
 
-        if /darwin/ =~ RUBY_PLATFORM
-          v.customize [ 'modifyvm', :id, '--nictype1', 'virtio' ]
-          v.customize [ 'modifyvm', :id, '--nictype2', 'virtio' ]
-        end
+        v.customize [ 'modifyvm', :id, '--nictype1', 'virtio' ]
+        v.customize [ 'modifyvm', :id, '--nictype2', 'virtio' ]
 
         v.customize [ 
           'storageattach', :id, 
