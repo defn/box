@@ -163,7 +163,7 @@ function box_main {
       $cmd_limbo media
       env BASEBOX_SOURCE="${BASEBOX_NAME}:packer" $cmd_limbo build "$@"
       ;;
-    rebuild)
+    repackage)
       local nm_export="${1:-}"
       local nm_suffix="${nm_export:+-${nm_export}}"
       case "$VAGRANT_DEFAULT_PROVIDER" in
