@@ -180,6 +180,11 @@ function box_main {
           $cmd_basebox build "$basebox_type" "$nm_export" "$@"
           $cmd_limbo destroy -f
           $cmd_basebox remove -f 2>&- || true
+          case "$VAGRANT_DEFAULT_PROVIDER" in
+            virtualbox)
+              VBoxManage list vms | cut -d'"' -f2 | runmany 'VBoxManage unregistervm --delete $1'
+              ;;
+          esac
           $cmd_basebox add
 
           rm -f "$shome/cidata/meta-data"
