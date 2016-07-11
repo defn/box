@@ -5,7 +5,8 @@
       "squid",
       "artifacts",
       "launch-config",
-      "python"
+      "python",
+      "service"
     ],
     [
       "build-essential",
@@ -26,7 +27,6 @@
       "facts",
       "openvpn",
       "dnsmasq",
-      "runit",
       "linkerd"
     ]
   ]
