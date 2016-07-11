@@ -22,6 +22,7 @@ function main {
   "$BASEBOX_INSTANCE" docker machine create --driver generic --generic-ip-address "$BASEBOX_IP" --generic-ssh-user ubuntu \
     --swarm \
     --swarm-discovery="consul://${ip_consul}:8500" \
+    --engine-storage-driver="devicemapper" \
     --engine-opt="cluster-store=consul://${ip_consul}:8500" \
     --engine-opt="cluster-advertise=vboxnet0:2376" \
     --engine-opt="bridge=br0" \
