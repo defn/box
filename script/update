@@ -13,7 +13,6 @@ function bootstrap {
   cat "$shome/etc/squid.conf.template" | envsubst '${CACHE_DIR}' > "$shome/etc/squid.conf"
   mkdir -p "${CACHE_DIR}/cache/squid"
   squid -f "$shome/etc/squid.conf" -zN
-  block compile service
 
   make
 }
