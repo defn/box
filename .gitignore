@@ -17,6 +17,3 @@
 
 # services
 /sv
-
-# squid
-/etc/squid.conf
