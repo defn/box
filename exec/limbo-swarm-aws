@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+function main {
+  local shome="${_limbo_home:-"$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"}"
+  source "$shome/script/profile"
+
+  "$BASEBOX_INSTANCE" docker machine rm -f "$BASEBOX_INSTANCE"
+
+  ssh-keygen -R "$BASEBOX_IP"
+  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo rm -fv /etc/docker/key.json || true
+  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo service docker stop || true
+  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo service docker start || true
+  
+  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo docker stop swarm-agent-master || true
+  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo docker rm swarm-agent-master || true
+
+  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo docker stop swarm-agent || true
+  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo docker rm swarm-agent || true
+
+  local ip_consul="${CACHE_VIP}"
+
+  "$BASEBOX_INSTANCE" docker machine create --driver generic --generic-ip-address "$BASEBOX_IP" --generic-ssh-user ubuntu \
+    --swarm \
+    --swarm-discovery="consul://${ip_consul}:8500" \
+    --engine-storage-driver="devicemapper" \
+    --engine-opt="cluster-store=consul://${ip_consul}:8500" \
+    --engine-opt="cluster-advertise=eth0:2376" \
+    --engine-opt="bridge=br0" \
+    --engine-opt="fixed-cidr=${BASEBOX_DOCKER_NETWORK_PREFIX}.0/28" \
+    "$@" \
+    "$BASEBOX_INSTANCE"
+}
+
+source sub "$BASH_SOURCE" "$@"
