@@ -28,6 +28,11 @@
       "openvpn",
       "dnsmasq",
       "linkerd"
+    ],
+    [
+      "virtualbox",
+      "aws",
+      "docker"
     ]
   ]
 }
