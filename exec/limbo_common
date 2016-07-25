@@ -17,40 +17,34 @@ function box_main {
 
   local nm_action="$1"; shift
   local nm_guest=
-  local cmd_limbo=
   local cmd_basebox=
   local basebox_type=
 
   case "$VAGRANT_DEFAULT_PROVIDER" in
     vmware*)
       nm_guest="${BASEBOX_NAME}"
-      cmd_limbo="limbo vmware"
       cmd_basebox='basebox vmware'
 
       basebox_type='vmx'
       ;;
     virtualbox)
       nm_guest="${BASEBOX_NAME}"
-      cmd_limbo="limbo virtualbox"
       cmd_basebox='basebox virtualbox'
 
       basebox_type='ovf'
       ;;
     parallels)
       nm_guest="${BASEBOX_NAME}"
-      cmd_limbo="limbo parallels"
       cmd_basebox='basebox parallels'
 
       basebox_type='pvm'
       ;;
     docker)
       nm_guest="${BASEBOX_NAME}"
-      cmd_limbo="limbo docker image"
       cmd_basebox='basebox docker'
       ;;
     aws)
       nm_guest="${BASEBOX_NAME}"
-      cmd_limbo="limbo aws"
       cmd_basebox="basebox aws"
       ;;
     *)
@@ -72,13 +66,13 @@ function box_main {
     media)
       case "$VAGRANT_DEFAULT_PROVIDER" in
         virtualbox|parallels|vmware*)
-          env LIMBO_FAKE=1 $cmd_limbo destroy -f
+          env LIMBO_FAKE=1 limbo destroy -f
           $cmd_basebox build
           $cmd_basebox remove -f 2>&- || true
           $cmd_basebox add
           ;;
         aws)
-          env LIMBO_FAKE=1 $cmd_limbo destroy -f
+          env LIMBO_FAKE=1 limbo destroy -f
           $cmd_basebox build
           $cmd_basebox remove -f 2>&- || true
           $cmd_basebox add
@@ -96,21 +90,21 @@ function box_main {
       local nm_suffix="${nm_export:+-${nm_export}}"
       case "$VAGRANT_DEFAULT_PROVIDER" in
         virtualbox)
-          cat "${CACHE_DIR}/.ssh/ssh-vagrant.pub" | $cmd_limbo ssh tee -a '~ubuntu/.ssh/authorized_keys'
-          $cmd_limbo ssh sudo rm -rf /dev/.udev
-          $cmd_limbo ssh sudo rm -f /lib/udev/rules.d/75-persistent-net-generator.rules
-          $cmd_limbo ssh sudo rm -rf /var/lib/dhcp # TODO assumes only leases are here
-          $cmd_limbo ssh sudo mkdir -p /var/lib/dhcp
-          $cmd_limbo halt
+          cat "${CACHE_DIR}/.ssh/ssh-vagrant.pub" | limbo ssh tee -a '~ubuntu/.ssh/authorized_keys'
+          limbo ssh sudo rm -rf /dev/.udev
+          limbo ssh sudo rm -f /lib/udev/rules.d/75-persistent-net-generator.rules
+          limbo ssh sudo rm -rf /var/lib/dhcp # TODO assumes only leases are here
+          limbo ssh sudo mkdir -p /var/lib/dhcp
+          limbo halt
 
           (set +f; rm -f "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.ovf" ${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}-disk*.vmdk)
-          (set -x; VBoxManage export $($cmd_limbo id) --ovf20 -o "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.ovf")
+          (set -x; VBoxManage export $(limbo id) --ovf20 -o "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.ovf")
           ;;
         vmware*)
-          $cmd_limbo halt
+          limbo halt
           ;;
         aws)
-          local id_ami="$(aws ec2 create-image --name "${BASEBOX_NAME}-vagrant-$(aws configure get region)-$(hostname -s)-$(date +%s)" --description "vagrant export to packer rebuild" --instance-id $($cmd_limbo id) --no-reboot | jq -r '.ImageId')"
+          local id_ami="$(aws ec2 create-image --name "${BASEBOX_NAME}-vagrant-$(aws configure get region)-$(hostname -s)-$(date +%s)" --description "vagrant export to packer rebuild" --instance-id $(limbo id) --no-reboot | jq -r '.ImageId')"
           while true; do 
             local state="$(aws ec2 describe-images --image-id "$id_ami" | jq -r '.Images[].State')"
             case "$state" in
@@ -130,7 +124,7 @@ function box_main {
           done
           ;;
         docker)
-          docker commit "$($cmd_limbo id)" "${BASEBOX_NAME}:vagrant"
+          docker commit "$(limbo id)" "${BASEBOX_NAME}:vagrant"
           ;;
       esac
       ;;
@@ -148,20 +142,20 @@ function box_main {
       esac
       ;;
     recycle)
-      $cmd_limbo destroy -f 2>&- || true
-      $cmd_limbo build "$@"
+      limbo destroy -f 2>&- || true
+      limbo build "$@"
       ;;
     refresh)
-      $cmd_limbo "${1:-provision}"
-      $cmd_limbo reuse
+      limbo "${1:-provision}"
+      limbo reuse
       ;;
     reuse)
-      $cmd_limbo export "$@"
-      $cmd_limbo repackage "$@"
+      limbo export "$@"
+      limbo repackage "$@"
       ;;
     rebase)
-      $cmd_limbo media
-      env BASEBOX_SOURCE="${BASEBOX_NAME}:packer" $cmd_limbo build "$@"
+      limbo media
+      env BASEBOX_SOURCE="${BASEBOX_NAME}:packer" limbo build "$@"
       ;;
     repackage)
       local nm_export="${1:-}"
@@ -170,7 +164,7 @@ function box_main {
         virtualbox|vmware*)
           case "$VAGRANT_DEFAULT_PROVIDER" in
             vmware*)
-              export BASEBOX_SOURCE="$($cmd_limbo id)"
+              export BASEBOX_SOURCE="$(limbo id)"
               ;;
             virtualbox)
               export BASEBOX_SOURCE="${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.ovf"
@@ -178,7 +172,7 @@ function box_main {
           esac
 
           $cmd_basebox build "$basebox_type" "$nm_export" "$@"
-          $cmd_limbo destroy -f
+          limbo destroy -f
           $cmd_basebox remove -f 2>&- || true
           case "$VAGRANT_DEFAULT_PROVIDER" in
             virtualbox)
@@ -197,7 +191,7 @@ function box_main {
             | tail -1
           )"
           $cmd_basebox build
-          $cmd_limbo destroy -f
+          limbo destroy -f
           $cmd_basebox remove -f 2>&- || true
           $cmd_basebox add
           ;;
@@ -233,13 +227,13 @@ function box_main {
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
       ;;
     build)
-      $cmd_limbo up --no-provision "$@"
+      limbo up --no-provision "$@"
       case "$VAGRANT_DEFAULT_PROVIDER" in
         aws)
-          $cmd_limbo sync
+          limbo sync
           ;;
       esac
-      $cmd_limbo provision
+      limbo provision
       ;;
     remote)
       local quoted=()

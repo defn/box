@@ -8,4 +8,5 @@ function main {
   box_main "$@"
 }
 
+export SUB_MIDDLEWARE='limbo'
 source sub "$BASH_SOURCE" "$@"
