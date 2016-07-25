@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+function main {
+  local shome="${_limbo_home:-"$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"}"
+  source "$shome/script/profile"
+  source limbo_common
+
+  export BASEBOX_SOURCE="ubuntu:trusty"
+  export BASEBOX_TAG="packer"
+  $cmd_basebox build "$BASEBOX_SOURCE"
+  docker save -o "${CACHE_DIR}/box/${BASEBOX_NAME}-${BASEBOX_TAG}.docker" "$BASEBOX_NAME:$BASEBOX_TAG"
+}
+
+source sub-chain "$BASH_SOURCE" "$@"
+
