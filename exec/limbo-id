@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
 
-export TMPDIR="${CACHE_DIR}/tmp"
-
 function main {
   local shome="${_limbo_home:-"$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"}"
   source "$shome/script/profile"
   source limbo_common
 
-  exec vagrant "$1" "$BASEBOX_NAME" "${@:2}"
+   cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$BASEBOX_NAME"/*/id | head -1)"; echo
 }
 
 source sub-chain "$BASH_SOURCE" "$@"

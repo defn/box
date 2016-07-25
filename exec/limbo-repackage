@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+function main {
+  local shome="${_limbo_home:-"$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"}"
+  source "$shome/script/profile"
+  source limbo_common
+
+  local nm_export="${1:-}"
+  local nm_suffix="${nm_export:+-${nm_export}}"
+  case "$VAGRANT_DEFAULT_PROVIDER" in
+    virtualbox|vmware*)
+      case "$VAGRANT_DEFAULT_PROVIDER" in
+        vmware*)
+          export BASEBOX_SOURCE="$(limbo id)"
+          ;;
+        virtualbox)
+          export BASEBOX_SOURCE="${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.ovf"
+          ;;
+      esac
+
+      $cmd_basebox build "$basebox_type" "$nm_export" "$@"
+      limbo destroy -f
+      $cmd_basebox remove -f 2>&- || true
+      case "$VAGRANT_DEFAULT_PROVIDER" in
+        virtualbox)
+          VBoxManage list vms | cut -d'"' -f2 | runmany 'VBoxManage unregistervm --delete $1'
+          ;;
+      esac
+      $cmd_basebox add
+
+      rm -f "$shome/cidata/meta-data"
+      (cd $shome && make)
+      ;;
+    aws)
+      export EC2_SOURCE_AMI="$(\
+        aws ec2 describe-images --filter Name=name,Values="${BASEBOX_NAME}-vagrant-$(aws configure get region)"'-*' --owners self \
+        | jq -r '.Images | sort_by(.CreationDate)[] | select(.State != "failed") | .ImageId' \
+        | tail -1
+      )"
+      $cmd_basebox build
+      limbo destroy -f
+      $cmd_basebox remove -f 2>&- || true
+      $cmd_basebox add
+      ;;
+      docker)
+      export BASEBOX_SOURCE="${BASEBOX_NAME}:vagrant"
+      export BASEBOX_TAG="vagrant"
+      $cmd_basebox build
+      docker save -o "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.docker" "$BASEBOX_SOURCE"
+      ;;
+  esac
+}
+
+source sub-chain "$BASH_SOURCE" "$@"
+

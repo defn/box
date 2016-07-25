@@ -1,13 +1,20 @@
 #!/usr/bin/env bash
 
-export TMPDIR="${CACHE_DIR}/tmp"
-
 function main {
   local shome="${_limbo_home:-"$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"}"
   source "$shome/script/profile"
   source limbo_common
 
-  exec vagrant "$1" "$BASEBOX_NAME" "${@:2}"
+  local quoted=()
+  while [[ "$#" -gt 0 ]]; do
+    if [[ -n "$1" ]]; then
+      quoted+=($(printf '%q' "$1"))
+    else
+      quoted+=("''")
+    fi
+    shift
+  done
+  exec parity ssh "$BASEBOX_NAME" "${quoted[@]}"
 }
 
 source sub-chain "$BASH_SOURCE" "$@"

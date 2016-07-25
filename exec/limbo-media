@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+function main {
+  local shome="${_limbo_home:-"$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"}"
+  source "$shome/script/profile"
+  source limbo_common
+
+  case "$VAGRANT_DEFAULT_PROVIDER" in
+    virtualbox|parallels|vmware*)
+      env LIMBO_FAKE=1 limbo destroy -f
+      $cmd_basebox build
+      $cmd_basebox remove -f 2>&- || true
+      $cmd_basebox add
+      ;;
+    aws)
+      env LIMBO_FAKE=1 limbo destroy -f
+      $cmd_basebox build
+      $cmd_basebox remove -f 2>&- || true
+      $cmd_basebox add
+      ;;
+    docker)
+      export BASEBOX_SOURCE="ubuntu:trusty"
+      export BASEBOX_TAG="packer"
+      $cmd_basebox build "$BASEBOX_SOURCE"
+      docker save -o "${CACHE_DIR}/box/${BASEBOX_NAME}-${BASEBOX_TAG}.docker" "$BASEBOX_NAME:$BASEBOX_TAG"
+      ;;
+  esac
+}
+
+source sub-chain "$BASH_SOURCE" "$@"
+

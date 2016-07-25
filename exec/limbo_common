@@ -1,0 +1,36 @@
+local cmd_basebox=
+local basebox_type=
+
+case "$VAGRANT_DEFAULT_PROVIDER" in
+  vmware*)
+    cmd_basebox='basebox vmware'
+    basebox_type='vmx'
+    ;;
+  virtualbox)
+    cmd_basebox='basebox virtualbox'
+    basebox_type='ovf'
+    ;;
+  parallels)
+    cmd_basebox='basebox parallels'
+    basebox_type='pvm'
+    ;;
+  docker)
+    cmd_basebox='basebox docker'
+    ;;
+  aws)
+    cmd_basebox="basebox aws"
+    ;;
+  *)
+    echo "ERROR: unknown provider $VAGRANT_DEFAULT_PROVIDER" 1>&2
+    return 1
+    ;;
+esac
+
+export VAGRANT_CWD="$shome${BASEBOX_INSTANCE:+/instance/${BASEBOX_INSTANCE}}-${VAGRANT_DEFAULT_PROVIDER}"
+
+if [[ "$VAGRANT_CWD" != "$shome" ]]; then
+  mkdir -p "$VAGRANT_CWD"
+  ln -nfs "$shome/Vagrantfile" "$VAGRANT_CWD/"
+  ln -nfs "$shome/script" "$VAGRANT_CWD/"
+  ln -nfs "$shome/.ssh" "$VAGRANT_CWD/"
+fi 
