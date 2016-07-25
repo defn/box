@@ -5,12 +5,13 @@ function main {
   source "$shome/script/profile"
   source limbo_common
 
-  export BASEBOX_SOURCE="${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.ovf"
+  local nm_export="${1:-}"
+  local nm_suffix="${nm_export:+-${nm_export}}"
 
+  export BASEBOX_SOURCE="$(limbo id)"
   $cmd_basebox build "$basebox_type" "$nm_export" "$@"
   limbo destroy -f
   $cmd_basebox remove -f 2>&- || true
-  VBoxManage list vms | cut -d'"' -f2 | runmany 'VBoxManage unregistervm --delete $1'
   $cmd_basebox add
 
   rm -f "$shome/cidata/meta-data"

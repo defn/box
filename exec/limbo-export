@@ -1,16 +1,4 @@
 #!/usr/bin/env bash
 
-function main {
-  local shome="${_limbo_home:-"$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"}"
-  source "$shome/script/profile"
-  source limbo_common
-
-  local nm_provider="$1"; shift
-  local nm_export="${1:-}"
-  local nm_suffix="${nm_export:+-${nm_export}}"
-
-  limbo halt
-}
-
 source sub "$BASH_SOURCE" "$VAGRANT_DEFAULT_PROVIDER" "$@"
 

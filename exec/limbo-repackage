@@ -1,28 +1,4 @@
 #!/usr/bin/env bash
 
-function main {
-  local shome="${_limbo_home:-"$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"}"
-  source "$shome/script/profile"
-  source limbo_common
-
-  local nm_provider="$1"; shift
-  local nm_export="${1:-}"
-  local nm_suffix="${nm_export:+-${nm_export}}"
-
-  export BASEBOX_SOURCE="$(limbo id)"
-  $cmd_basebox build "$basebox_type" "$nm_export" "$@"
-  limbo destroy -f
-  $cmd_basebox remove -f 2>&- || true
-  case "$VAGRANT_DEFAULT_PROVIDER" in
-    virtualbox)
-      VBoxManage list vms | cut -d'"' -f2 | runmany 'VBoxManage unregistervm --delete $1'
-      ;;
-  esac
-  $cmd_basebox add
-
-  rm -f "$shome/cidata/meta-data"
-  (cd $shome && make)
-}
-
 source sub "$BASH_SOURCE" "$VAGRANT_DEFAULT_PROVIDER" "$@"
 
