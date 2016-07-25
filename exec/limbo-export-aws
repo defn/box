@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+function main {
+  local shome="${_limbo_home:-"$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"}"
+  source "$shome/script/profile"
+  source limbo_common
+
+  local nm_export="${1:-}"
+  local nm_suffix="${nm_export:+-${nm_export}}"
+
+  local id_ami="$(aws ec2 create-image --name "${BASEBOX_NAME}-vagrant-$(aws configure get region)-$(hostname -s)-$(date +%s)" --description "vagrant export to packer rebuild" --instance-id $(limbo id) --no-reboot | jq -r '.ImageId')"
+  while true; do 
+    local state="$(aws ec2 describe-images --image-id "$id_ami" | jq -r '.Images[].State')"
+    case "$state" in
+      available)
+        break
+        ;;
+      pending)
+        echo "INFO: waiting for ami $id_ami... $(date)"
+        sleep 15
+        continue
+        ;;
+      *)
+        echo "ERROR: unknown state '$state' while waiting for ami $id_ami" 1>&2
+        return 1
+        ;;
+    esac
+  done
+}
+
+source sub "$BASH_SOURCE" "$@"
+

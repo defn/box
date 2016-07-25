@@ -5,14 +5,11 @@ function main {
   source "$shome/script/profile"
   source limbo_common
 
-  local nm_provider="$1"; shift
   local nm_export="${1:-}"
   local nm_suffix="${nm_export:+-${nm_export}}"
 
-  case "$nm_provider" in
-    vmware*) limbo halt ;;
-  esac
+  docker commit "$(limbo id)" "${BASEBOX_NAME}:vagrant"
 }
 
-source sub "$BASH_SOURCE" "$VAGRANT_DEFAULT_PROVIDER" "$@"
+source sub "$BASH_SOURCE" "$@"
 

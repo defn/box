@@ -1,22 +1,3 @@
 #!/usr/bin/env bash
 
-function main {
-  local shome="${_limbo_home:-"$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"}"
-  source "$shome/script/profile"
-  source limbo_common
-
-  local nm_import="${1:-}"
-  local nm_suffix="${nm_import:+-${nm_import}}"
-  case "$VAGRANT_DEFAULT_PROVIDER" in
-    docker)
-      docker load -i "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.docker"
-      ;;
-    virtualbox)
-      $cmd_basebox remove -f 2>&- || true
-      $cmd_basebox add
-      ;;
-  esac
-}
-
-source sub-chain "$BASH_SOURCE" "$@"
-
+source sub "$BASH_SOURCE" ${VAGRANT_DEFAULT_PROVIDER}" "$@"

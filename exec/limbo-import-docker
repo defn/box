@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+function main {
+  local shome="${_limbo_home:-"$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"}"
+  source "$shome/script/profile"
+  source limbo_common
+
+  local nm_import="${1:-}"
+  local nm_suffix="${nm_import:+-${nm_import}}"
+
+  docker load -i "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.docker"
+}
+
+source sub "$BASH_SOURCE" "$@"
+

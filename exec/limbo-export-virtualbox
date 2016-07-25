@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+function main {
+  local shome="${_limbo_home:-"$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"}"
+  source "$shome/script/profile"
+  source limbo_common
+
+  local nm_export="${1:-}"
+  local nm_suffix="${nm_export:+-${nm_export}}"
+
+  cat "${CACHE_DIR}/.ssh/ssh-vagrant.pub" | limbo ssh tee -a '~ubuntu/.ssh/authorized_keys'
+  limbo halt
+
+  (set +f; rm -f "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.ovf" ${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}-disk*.vmdk)
+  (set -x; VBoxManage export $(limbo id) --ovf20 -o "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.ovf")
+}
+
+source sub "$BASH_SOURCE" "$@"
+
