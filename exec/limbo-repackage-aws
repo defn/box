@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+function main {
+  local shome="${_limbo_home:-"$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"}"
+  source "$shome/script/profile"
+  source limbo_common
+
+  local nm_export="${1:-}"
+  local nm_suffix="${nm_export:+-${nm_export}}"
+
+  export EC2_SOURCE_AMI="$(\
+    aws ec2 describe-images --filter Name=name,Values="${BASEBOX_NAME}-vagrant-$(aws configure get region)"'-*' --owners self \
+    | jq -r '.Images | sort_by(.CreationDate)[] | select(.State != "failed") | .ImageId' \
+    | tail -1
+  )"
+  $cmd_basebox build
+  limbo destroy -f
+  $cmd_basebox remove -f 2>&- || true
+  $cmd_basebox add
+}
+
+source sub-chain "$BASH_SOURCE" "$@"
+

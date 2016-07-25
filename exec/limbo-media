@@ -6,14 +6,11 @@ function main {
   source limbo_common
 
   local nm_provider="$1"; shift
-  case "$nm_provider" in
-    vmware*)
-      env LIMBO_FAKE=1 limbo destroy -f
-      $cmd_basebox build
-      $cmd_basebox remove -f 2>&- || true
-      $cmd_basebox add
-      ;;
-  esac
+
+  env LIMBO_FAKE=1 limbo destroy -f
+  $cmd_basebox build
+  $cmd_basebox remove -f 2>&- || true
+  $cmd_basebox add
 }
 
 source sub "$BASH_SOURCE" "$VAGRANT_DEFAULT_PROVIDER" "$@"

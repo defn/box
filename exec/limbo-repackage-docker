@@ -5,12 +5,14 @@ function main {
   source "$shome/script/profile"
   source limbo_common
 
-  local nm_provider="$1"; shift
   local nm_export="${1:-}"
   local nm_suffix="${nm_export:+-${nm_export}}"
 
-  limbo halt
+  export BASEBOX_SOURCE="${BASEBOX_NAME}:vagrant"
+  export BASEBOX_TAG="vagrant"
+  $cmd_basebox build
+  docker save -o "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.docker" "$BASEBOX_SOURCE"
 }
 
-source sub "$BASH_SOURCE" "$VAGRANT_DEFAULT_PROVIDER" "$@"
+source sub-chain "$BASH_SOURCE" "$@"
 
