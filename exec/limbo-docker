@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+export MACHINE_STORAGE_PATH="${CACHE_DIR}/.docker/machine"
 export VAGRANT_DEFAULT_PROVIDER='docker'
 
 eval $(docker machine env --no-proxy $BASEBOX_INSTANCE)
