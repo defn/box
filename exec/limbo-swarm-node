@@ -9,13 +9,14 @@ function main {
   ssh-keygen -R "$BASEBOX_IP"
   ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo rm -fv /etc/docker/key.json || true
   ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo service docker stop || true
+  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo ifup br0 || true
   ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo service docker start || true
   
-  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo docker stop swarm-agent-master || true
-  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo docker rm swarm-agent-master || true
+  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo docker kill swarm-agent-master 2>&- || true
+  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo docker rm swarm-agent-master 2>&- || true
 
-  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo docker stop swarm-agent || true
-  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo docker rm swarm-agent || true
+  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo docker kill swarm-agent 2>&- || true
+  ssh -o StrictHostKeyChecking=no ubuntu@"$BASEBOX_IP" sudo docker rm swarm-agent 2>&- || true
 
   local ip_consul="${CACHE_VIP}"
 
