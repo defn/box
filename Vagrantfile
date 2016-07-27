@@ -51,7 +51,7 @@ Vagrant.configure("2") do |config|
     when "vmware_fusion"
       basebox.vm.box = ENV['BASEBOX_NAME']
 
-      basebox.vm.network "private_network", ip: ENV['BASEBOX_IP']
+      basebox.vm.network "private_network", ip: ENV['BASEBOX_IP'], nic_type: "vmnet3"
 
       basebox.vm.provider "vmware_fusion" do |v, override|
         unless File.exists?("#{ENV['LIMBO_HOME']}/cidata.iso")
