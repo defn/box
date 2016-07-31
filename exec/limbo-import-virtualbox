@@ -8,8 +8,8 @@ function main {
   local nm_import="${1:-}"
   local nm_suffix="${nm_import:+-${nm_import}}"
 
-  $cmd_basebox remove -f 2>&- || true
-  $cmd_basebox add
+  basebox remove -f 2>&- || true
+  basebox add
 }
 
 source sub "$BASH_SOURCE" "$@"

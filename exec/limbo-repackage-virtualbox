@@ -1,17 +1,24 @@
 #!/usr/bin/env bash
 
+function source_id {
+  echo "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.ovf"
+}
+
 function main {
   local shome="${_limbo_home:-"$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"}"
   source "$shome/script/profile"
   source limbo_common
 
-  export BASEBOX_SOURCE="${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.ovf"
+  local nm_export="${1:-}"
+  local nm_suffix="${nm_export:+-${nm_export}}"
 
-  $cmd_basebox build "$basebox_type" "$nm_export" "$@"
+  export BASEBOX_SOURCE="$(source_id)"
+
+  set -- "$basebox_type" "$nm_export" "$@"
+  basebox build "$@"
   limbo destroy -f
-  $cmd_basebox remove -f 2>&- || true
-  VBoxManage list vms | cut -d'"' -f2 | runmany 'VBoxManage unregistervm --delete $1'
-  $cmd_basebox add
+  basebox remove -f 2>&- || true
+  basebox add
 
   rm -f "$shome/cidata/meta-data"
   (cd $shome && make)

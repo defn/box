@@ -10,7 +10,7 @@ function main {
 
   export BASEBOX_SOURCE="${BASEBOX_NAME}:vagrant"
   export BASEBOX_TAG="vagrant"
-  $cmd_basebox build
+  basebox build "$@"
   docker save -o "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.docker" "$BASEBOX_SOURCE"
 }
 

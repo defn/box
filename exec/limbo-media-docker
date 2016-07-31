@@ -7,7 +7,8 @@ function main {
 
   export BASEBOX_SOURCE="ubuntu:trusty"
   export BASEBOX_TAG="packer"
-  $cmd_basebox build "$BASEBOX_SOURCE"
+  set -- "$BASEBOX_SOURCE" "$@"
+  basebox build "$@"
   docker save -o "${CACHE_DIR}/box/${BASEBOX_NAME}-${BASEBOX_TAG}.docker" "$BASEBOX_NAME:$BASEBOX_TAG"
 }
 

@@ -6,9 +6,9 @@ function main {
   source limbo_common
 
   env LIMBO_FAKE=1 limbo destroy -f
-  $cmd_basebox build
-  $cmd_basebox remove -f 2>&- || true
-  $cmd_basebox add
+  basebox build "$@"
+  basebox remove -f 2>&- || true
+  basebox add
 }
 
 source sub "$BASH_SOURCE" "$@"

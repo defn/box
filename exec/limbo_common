@@ -1,24 +1,16 @@
-local cmd_basebox=
+#!/usr/bin/env bash
+
 local basebox_type=
 
 case "$VAGRANT_DEFAULT_PROVIDER" in
   vmware*)
-    cmd_basebox='basebox vmware'
     basebox_type='vmx'
     ;;
   virtualbox)
-    cmd_basebox='basebox virtualbox'
     basebox_type='ovf'
     ;;
   parallels)
-    cmd_basebox='basebox parallels'
     basebox_type='pvm'
-    ;;
-  docker)
-    cmd_basebox='basebox docker'
-    ;;
-  aws)
-    cmd_basebox="basebox aws"
     ;;
   *)
     echo "ERROR: unknown provider $VAGRANT_DEFAULT_PROVIDER" 1>&2
