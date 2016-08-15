@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
 export TMPDIR="${CACHE_DIR}/tmp"
+export DEBUG=1
 
 source sub-chain "$BASH_SOURCE" "$@"
-
