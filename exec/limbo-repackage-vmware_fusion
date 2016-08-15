@@ -19,9 +19,6 @@ function main {
   vagrant destroy -f
   basebox remove -f 2>&- || true
   basebox add
-
-  rm -f "$shome/cidata/meta-data"
-  (cd $shome && make)
 }
 
 source sub-chain "$BASH_SOURCE" "$@"
