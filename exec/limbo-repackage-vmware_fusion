@@ -16,7 +16,7 @@ function main {
 
   set -- "$basebox_type" "$nm_export" "$@"
   basebox build "$@"
-  limbo destroy -f
+  vagrant destroy -f
   basebox remove -f 2>&- || true
   basebox add
 

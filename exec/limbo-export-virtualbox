@@ -8,7 +8,7 @@ function main {
   local nm_export="${1:-}"
   local nm_suffix="${nm_export:+-${nm_export}}"
 
-  limbo halt
+  vagrant halt
 
   (set +f; rm -f "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.ovf" ${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}-disk*.vmdk)
   (set -x; VBoxManage export $(limbo id) --ovf20 -o "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.ovf")

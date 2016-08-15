@@ -3,13 +3,6 @@ require "net/ssh"
 Vagrant.configure("2") do |config|
   shome=File.expand_path("..", __FILE__)
 
-  nm_box=ENV['BOX_NAME']
-
-  ssh_keys = [
-    "#{shome}/.ssh/ssh-vagrant",
-    "#{shome}/.ssh/ssh-vagrant-insecure"
-  ]
-
   docker_script = "#{shome}/script/docker-bootstrap"
   docker_args = [ ENV['BASEBOX_DOCKER_NETWORK_PREFIX'] ]
 
@@ -33,6 +26,10 @@ Vagrant.configure("2") do |config|
   config.ssh.username = "ubuntu"
   config.ssh.forward_agent = true
   config.ssh.insert_key = false
+  config.ssh.private_key_path = [
+    "#{shome}/.ssh/ssh-vagrant",
+    "#{shome}/.ssh/ssh-vagrant-insecure"
+  ]
 
   config.vm.define ENV['BASEBOX_NAME'] do |basebox|
     case ENV['VAGRANT_DEFAULT_PROVIDER']
@@ -49,8 +46,8 @@ Vagrant.configure("2") do |config|
           inline: "rm -f /var/lib/cloud/instance; cloud-init init || true",
           privileged: true
         override.vm.provision "shell", path: docker_script, args: docker_args, privileged: false
-        override.vm.provision "shell", path: block_script, args: block_args, privileged: false
-        override.vm.provision "shell", path: facts_script,   args: facts_args, privileged: false
+        override.vm.provision "shell", path: block_script,  args: block_args, privileged: false
+        override.vm.provision "shell", path: facts_script,  args: facts_args, privileged: false
 
         v.gui = false
         v.linked_clone = true
@@ -71,8 +68,6 @@ Vagrant.configure("2") do |config|
 
       basebox.vm.network "private_network", ip: ENV['BASEBOX_IP']
 
-      basebox.ssh.private_key_path = ssh_keys
-
       basebox.vm.provider "virtualbox" do |v, override|
         override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant'
         override.vm.synced_folder "#{ENV['CACHE_DIR']}/tmp/packer", '/vagrant/tmp/packer'
@@ -81,7 +76,7 @@ Vagrant.configure("2") do |config|
           inline: "rm -f /var/lib/cloud/instance; cloud-init init || true",
           privileged: true
         override.vm.provision "shell", path: docker_script,  args: docker_args, privileged: false
-        override.vm.provision "shell", path: block_script, args: block_args, privileged: false
+        override.vm.provision "shell", path: block_script,   args: block_args, privileged: false
         override.vm.provision "shell", path: facts_script,   args: facts_args, privileged: false
 
         v.linked_clone = true
@@ -107,8 +102,6 @@ Vagrant.configure("2") do |config|
       end
     when "aws"
       basebox.vm.box = ENV['BASEBOX_NAME']
-
-      basebox.ssh.private_key_path = ssh_keys
 
       basebox.vm.provider "aws" do |v, override|
         override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', disabled: true
@@ -139,8 +132,6 @@ Vagrant.configure("2") do |config|
         }
       end
     when "docker"
-      basebox.ssh.private_key_path = ssh_keys
-
       basebox.vm.provider "docker" do |v, override|
         override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant'
         override.vm.synced_folder "#{ENV['CACHE_DIR']}/tmp/packer", '/vagrant/tmp/packer'

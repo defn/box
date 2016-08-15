@@ -17,7 +17,7 @@ function main {
   export EC2_SOURCE_AMI="$(source_id)"
 
   basebox build "$@"
-  limbo destroy -f
+  vagrant destroy -f
   basebox remove -f 2>&- || true
   basebox add
 }

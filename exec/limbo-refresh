@@ -5,7 +5,7 @@ function main {
   source "$shome/script/profile"
   source limbo_common
 
-  limbo "${1:-provision}"
+  vagrant "${1:-provision}"
   limbo reuse
 }
 

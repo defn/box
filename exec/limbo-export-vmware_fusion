@@ -8,7 +8,7 @@ function main {
   local nm_export="${1:-}"
   local nm_suffix="${nm_export:+-${nm_export}}"
 
-  limbo halt
+  vagrant halt
 }
 
 source sub "$BASH_SOURCE" "$@"
