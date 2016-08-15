@@ -8,7 +8,7 @@ cidata/meta-data: cidata/user-data
 	@echo instance-id: $(shell date +%s) | tee -a $@.tmp
 	mv $@.tmp $@
 
-cidata/user-data: cidata/user-data.template
+cidata/user-data: cidata/user-data.template $(CACHE_DIR)/.ssh/ssh-vagrant
 	@cat "$<" | env VAGRANT_SSH_KEY="$(shell cat $(CACHE_DIR)/.ssh/ssh-vagrant.pub)" envsubst '$$USER $$VAGRANT_SSH_KEY' | tee "$@.tmp"
 	mv "$@.tmp" "$@"
 
