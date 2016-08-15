@@ -24,11 +24,11 @@ Vagrant.configure("2") do |config|
   docker_script = "#{shome}/script/docker-bootstrap"
   docker_args = [ ENV['BASEBOX_DOCKER_NETWORK_PREFIX'] ]
 
-  cibuild_script = %x{which block-cibuild 2>/dev/null}.strip
-  cibuild_args = [ ENV['BASEBOX_HOME_URL'] ]
+  block_script = %x{which block-cibuild 2>/dev/null}.strip
+  block_args = [ ENV['BASEBOX_HOME_URL'] ]
   %w(http_proxy ssh_gateway ssh_gateway_user).each {|ele|
     unless ENV[ele].nil? || ENV[ele].empty?
-      cibuild_args << ENV[ele]
+      block_args << ENV[ele]
     else
       break
     end
@@ -39,7 +39,7 @@ Vagrant.configure("2") do |config|
 
 
   if ENV['ssh_gateway_user'].nil? || ENV['ssh_gateway_user'].empty?
-    cibuild_args << ENV['USER']
+    block_args << ENV['USER']
   end
 
   config.ssh.username = "ubuntu"
@@ -63,8 +63,11 @@ Vagrant.configure("2") do |config|
         override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', type: "nfs"
         override.vm.synced_folder "#{ENV['CACHE_DIR']}/tmp/packer", '/vagrant/tmp/packer', type: "nfs"
 
+        override.vm.provision "shell",
+          inline: "rm -f /var/lib/cloud/instance; cloud-init init || true",
+          privileged: true
         override.vm.provision "shell", path: docker_script, args: docker_args, privileged: false
-        override.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
+        override.vm.provision "shell", path: block_script, args: block_args, privileged: false
         override.vm.provision "shell", path: facts_script,   args: facts_args, privileged: false
 
         v.gui = false
@@ -98,8 +101,11 @@ Vagrant.configure("2") do |config|
         override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant'
         override.vm.synced_folder "#{ENV['CACHE_DIR']}/tmp/packer", '/vagrant/tmp/packer'
 
+        override.vm.provision "shell",
+          inline: "rm -f /var/lib/cloud/instance; cloud-init init || true",
+          privileged: true
         override.vm.provision "shell", path: docker_script,  args: docker_args, privileged: false
-        override.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
+        override.vm.provision "shell", path: block_script, args: block_args, privileged: false
         override.vm.provision "shell", path: facts_script,   args: facts_args, privileged: false
 
         v.linked_clone = true
@@ -131,7 +137,10 @@ Vagrant.configure("2") do |config|
       basebox.vm.provider "aws" do |v, override|
         override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', disabled: true
           
-        override.vm.provision "shell", path: cibuild_script, args: [ ENV['BASEBOX_HOME_URL'] ], privileged: false
+        override.vm.provision "shell",
+          inline: "rm -f /var/lib/cloud/instance; cloud-init init || true",
+          privileged: true
+        override.vm.provision "shell", path: block_script, args: [ ENV['BASEBOX_HOME_URL'] ], privileged: false
 
         v.ami = "meh" if ENV['LIMBO_FAKE']
 
@@ -160,7 +169,7 @@ Vagrant.configure("2") do |config|
         override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant'
         override.vm.synced_folder "#{ENV['CACHE_DIR']}/tmp/packer", '/vagrant/tmp/packer'
 
-        override.vm.provision "shell", path: cibuild_script, args: cibuild_args, privileged: false
+        override.vm.provision "shell", path: block_script, args: block_args, privileged: false
 
         v.image = ENV['BASEBOX_SOURCE'] || "#{ENV['BASEBOX_NAME']}:vagrant"
         v.cmd = [ "/usr/sbin/sshd", "-D" ]

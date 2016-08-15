@@ -1,6 +1,36 @@
-#cloud-config
+From nobody Wed Aug 10 18:58:26 2016
+Content-Type: multipart/mixed; boundary="===============88888888888888888888888888=="
+MIME-Version: 1.0
+Number-Attachments: 1
+
+--===============88888888888888888888888888==
+MIME-Version: 1.0
+Content-Type: text/cloud-config
+Content-Disposition: attachment; filename="part-001"
+
 users:
-- name: ubuntu
+  - name: ubuntu
+    sudo: "ALL=(ALL) NOPASSWD: ALL"
   ssh-authorized-keys:
-  - ssh-rsa TODO
-  sudo: 'ALL=(ALL) NOPASSWD: ALL'
+     - ${VAGRANT_SSH_KEY}
+
+--===============88888888888888888888888888==
+MIME-Version: 1.0
+Content-Type: text/cloud-boothook
+Content-Disposition: attachment; filename="part-002"
+
+#!/bin/bash
+exec 1>/root/.cloud-init.hostname
+exec 2>/root/.cloud-init.stderr
+echo "#cloud-config"
+echo "hostname: vagrant-${USER}-${INSTANCE_ID}"
+echo "manage_etc_hosts: true"
+
+--===============88888888888888888888888888==
+MIME-Version: 1.0
+Content-Type: text/x-include-once-url
+Content-Disposition: attachment; filename="part-003"
+
+file:///root/.cloud-init.hostname
+
+--===============88888888888888888888888888==
