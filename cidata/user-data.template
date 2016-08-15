@@ -11,8 +11,8 @@ Content-Disposition: attachment; filename="part-001"
 users:
   - name: ubuntu
     sudo: "ALL=(ALL) NOPASSWD: ALL"
-  ssh-authorized-keys:
-     - ${VAGRANT_SSH_KEY}
+    ssh-authorized-keys:
+      - ${VAGRANT_SSH_KEY}
 
 --===============88888888888888888888888888==
 MIME-Version: 1.0

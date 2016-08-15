@@ -6,7 +6,7 @@ Vagrant.configure("2") do |config|
   nm_box=ENV['BOX_NAME']
 
   ssh_keys = [
-    "#{ENV['CACHE_DIR']}/.ssh/ssh-vagrant",
+    "#{shome}/.ssh/ssh-vagrant",
     "#{shome}/.ssh/ssh-vagrant-insecure"
   ]
 

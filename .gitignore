@@ -17,3 +17,7 @@
 
 # services
 /sv
+
+# ssh keys
+/.ssh/ssh-vagrant
+/.ssh/ssh-vagrant.pub

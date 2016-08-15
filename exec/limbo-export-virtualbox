@@ -8,7 +8,6 @@ function main {
   local nm_export="${1:-}"
   local nm_suffix="${nm_export:+-${nm_export}}"
 
-  cat "${CACHE_DIR}/.ssh/ssh-vagrant.pub" | limbo ssh tee -a '~ubuntu/.ssh/authorized_keys'
   limbo halt
 
   (set +f; rm -f "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.ovf" ${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}-disk*.vmdk)
