@@ -42,12 +42,6 @@ Vagrant.configure("2") do |config|
       basebox.vm.network "private_network", ip: ENV['BASEBOX_IP'], nic_type: "vmnet3"
 
       basebox.vm.provider "vmware_fusion" do |v, override|
-        unless File.exists?("#{ENV['LIMBO_HOME']}/cidata.iso")
-          Dir.chdir(ENV['LIMBO_HOME']) do
-            system("make")
-          end
-        end
-
         override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', type: "nfs"
         override.vm.synced_folder "#{ENV['CACHE_DIR']}/tmp/packer", '/vagrant/tmp/packer', type: "nfs"
 
@@ -80,12 +74,6 @@ Vagrant.configure("2") do |config|
       basebox.ssh.private_key_path = ssh_keys
 
       basebox.vm.provider "virtualbox" do |v, override|
-        unless File.exists?("#{ENV['LIMBO_HOME']}/cidata.iso")
-          Dir.chdir(ENV['LIMBO_HOME']) do
-            system("make")
-          end
-        end
-
         override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant'
         override.vm.synced_folder "#{ENV['CACHE_DIR']}/tmp/packer", '/vagrant/tmp/packer'
 
