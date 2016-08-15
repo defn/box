@@ -2,6 +2,8 @@
 
 export TMPDIR="${CACHE_DIR}/tmp"
 export DEBUG=1
+: ${LIMBO_HOME:="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"}
+export LIMBO_HOME
 
 function main {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
