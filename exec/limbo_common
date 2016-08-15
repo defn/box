@@ -1,17 +1,13 @@
 #!/usr/bin/env bash
 
+source normalize
+
 local basebox_type=
 
 case "$VAGRANT_DEFAULT_PROVIDER" in
-  vmware*)
-    basebox_type='vmx'
-    ;;
-  virtualbox)
-    basebox_type='ovf'
-    ;;
-  parallels)
-    basebox_type='pvm'
-    ;;
+  vmware*)    basebox_type='vmx' ;;
+  virtualbox) basebox_type='ovf' ;;
+  parallels)  basebox_type='pvm' ;;
   *)
     echo "ERROR: unknown provider $VAGRANT_DEFAULT_PROVIDER" 1>&2
     return 1
