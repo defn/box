@@ -7,7 +7,7 @@ function main {
 
   env LIMBO_FAKE=1 limbo destroy -f
   basebox build "$@"
-  basebox remove -f 2>&- || true
+  basebox remove -f || true
   basebox add
 }
 
