@@ -1,16 +1,5 @@
 require "net/ssh"
 
-module Net::SSH
-  class << self
-    alias_method :old_start, :start
-    
-    def start(host, username, opts)
-      opts[:keys_only] = false
-      self.old_start(host, username, opts)
-    end
-  end
-end 
-
 Vagrant.configure("2") do |config|
   shome=File.expand_path("..", __FILE__)
 
@@ -36,7 +25,6 @@ Vagrant.configure("2") do |config|
 
   facts_script = "#{shome}/script/facts-finish"
   facts_args = [ ]
-
 
   if ENV['ssh_gateway_user'].nil? || ENV['ssh_gateway_user'].empty?
     block_args << ENV['USER']
