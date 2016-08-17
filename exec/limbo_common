@@ -8,10 +8,6 @@ case "$VAGRANT_DEFAULT_PROVIDER" in
   vmware*)    basebox_type='vmx' ;;
   virtualbox) basebox_type='ovf' ;;
   parallels)  basebox_type='pvm' ;;
-  *)
-    echo "ERROR: unknown provider $VAGRANT_DEFAULT_PROVIDER" 1>&2
-    return 1
-    ;;
 esac
 
 export VAGRANT_CWD="$shome${BASEBOX_INSTANCE:+/instance/${BASEBOX_INSTANCE}}-${VAGRANT_DEFAULT_PROVIDER}"
