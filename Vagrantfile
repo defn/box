@@ -1,7 +1,20 @@
-aws_region = ENV['AWS_DEFAULT_REGION'] || %x{aws configure get region}.chomp
-aws_access_key_id = ENV['AWS_ACCESS_KEY_ID'] || %x{aws configure get aws_access_key_id}.chomp
-aws_secret_access_key= ENV['AWS_SECRET_ACCESS_KEY'] || %x{aws configure get aws_secret_access_key}.chomp
 pth_block_script = %x{which block-cibuild 2>/dev/null}.chomp
+
+threads = []
+
+threads << Thread.new do     
+  aws_region = ENV['AWS_DEFAULT_REGION'] || %x{aws configure get region}.chomp
+end
+
+threads << Thread.new do     
+  aws_access_key_id = ENV['AWS_ACCESS_KEY_ID'] || %x{aws configure get aws_access_key_id}.chomp
+end
+
+threads << Thread.new do     
+  aws_secret_access_key= ENV['AWS_SECRET_ACCESS_KEY'] || %x{aws configure get aws_secret_access_key}.chomp
+end
+
+threads.map(&:join)
 
 Vagrant.configure("2") do |config|
   shome=File.expand_path("..", __FILE__)
@@ -61,10 +74,10 @@ Vagrant.configure("2") do |config|
         v.vmx["ethernet0.vnet"] = "vmnet3"
         v.vmx["ethernet1.vnet"] = "vmnet3"
 
-				v.vmx["ide1:0.present"]    = "TRUE"
-				v.vmx["ide1:0.fileName"]   = "#{ENV['LIMBO_HOME']}/cidata.iso"
-				v.vmx["ide1:0.deviceType"] = "cdrom-image"
-				v.vmx["ide1:0.startconnected"] = "TRUE"
+        v.vmx["ide1:0.present"]    = "TRUE"
+        v.vmx["ide1:0.fileName"]   = "#{ENV['LIMBO_HOME']}/cidata.iso"
+        v.vmx["ide1:0.deviceType"] = "cdrom-image"
+        v.vmx["ide1:0.startconnected"] = "TRUE"
       end
     when "virtualbox"
       basebox.vm.box = ENV['BASEBOX_NAME']
@@ -97,18 +110,18 @@ Vagrant.configure("2") do |config|
           '--type', 'dvddrive', 
           '--medium', "#{ENV['LIMBO_HOME']}/cidata.iso"
         ]
-				v.customize [
-					'storagectl', :id,
-					'--name', 'SATA Controller',
-					'--hostiocache', 'on'
-				]
+        v.customize [
+          'storagectl', :id,
+          '--name', 'SATA Controller',
+          '--hostiocache', 'on'
+        ]
       end
     when "aws"
       basebox.vm.box = ENV['BASEBOX_NAME']
 
       basebox.vm.provider "aws" do |v, override|
         override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', disabled: true
-          
+
         override.vm.provision "shell",
           inline: "rm -f /var/lib/cloud/instance; cloud-init init || true",
           privileged: true
@@ -146,7 +159,7 @@ Vagrant.configure("2") do |config|
         v.volumes = [ "/var/run/sshd" ]
         v.create_args = [ ]
         v.has_ssh = true
-        
+
         module VagrantPlugins
           module DockerProvider
             class Provider < Vagrant.plugin("2", :provider)
