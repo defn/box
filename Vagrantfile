@@ -1,20 +1,22 @@
 pth_block_script = %x{which block-cibuild 2>/dev/null}.chomp
 
-threads = []
+if ENV['VAGRANT_DEFAULT_PROVIDER'] == "aws"
+  threads = []
 
-threads << Thread.new do     
-  aws_region = ENV['AWS_DEFAULT_REGION'] || %x{aws configure get region}.chomp
+  threads << Thread.new do     
+    aws_region = ENV['AWS_DEFAULT_REGION'] || %x{aws configure get region}.chomp
+  end
+
+  threads << Thread.new do     
+    aws_access_key_id = ENV['AWS_ACCESS_KEY_ID'] || %x{aws configure get aws_access_key_id}.chomp
+  end
+
+  threads << Thread.new do     
+    aws_secret_access_key= ENV['AWS_SECRET_ACCESS_KEY'] || %x{aws configure get aws_secret_access_key}.chomp
+  end
+
+  threads.map(&:join)
 end
-
-threads << Thread.new do     
-  aws_access_key_id = ENV['AWS_ACCESS_KEY_ID'] || %x{aws configure get aws_access_key_id}.chomp
-end
-
-threads << Thread.new do     
-  aws_secret_access_key= ENV['AWS_SECRET_ACCESS_KEY'] || %x{aws configure get aws_secret_access_key}.chomp
-end
-
-threads.map(&:join)
 
 Vagrant.configure("2") do |config|
   shome=File.expand_path("..", __FILE__)
