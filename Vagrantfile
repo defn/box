@@ -1,6 +1,7 @@
 aws_region = ENV['AWS_DEFAULT_REGION'] || %x{aws configure get region}.chomp
 aws_access_key_id = ENV['AWS_ACCESS_KEY_ID'] || %x{aws configure get aws_access_key_id}.chomp
 aws_secret_access_key= ENV['AWS_SECRET_ACCESS_KEY'] || %x{aws configure get aws_secret_access_key}.chomp
+pth_block_script = %x{which block-cibuild 2>/dev/null}.chomp
 
 Vagrant.configure("2") do |config|
   shome=File.expand_path("..", __FILE__)
@@ -8,7 +9,7 @@ Vagrant.configure("2") do |config|
   docker_script = "#{shome}/script/docker-bootstrap"
   docker_args = [ ENV['BASEBOX_DOCKER_NETWORK_PREFIX'] ]
 
-  block_script = %x{which block-cibuild 2>/dev/null}.strip
+  block_script = pth_block_script
   block_args = [ ENV['BASEBOX_HOME_URL'] ]
   %w(http_proxy ssh_gateway ssh_gateway_user).each {|ele|
     unless ENV[ele].nil? || ENV[ele].empty?
