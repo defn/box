@@ -11,6 +11,9 @@ function main {
 
   local nm_export="${1:-}"
   local nm_suffix="${nm_export:+-${nm_export}}"
+  if [[ -n "$nm_export" ]]; then
+    shift
+  fi
 
   export BASEBOX_SOURCE="$(source_id)"
 

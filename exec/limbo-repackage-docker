@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+function source_id {
+  echo "${BASEBOX_NAME}:vagrant"
+}
+
 function main {
   local shome="${_limbo_home:-"$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"}"
   source "$shome/script/profile"
@@ -7,8 +11,11 @@ function main {
 
   local nm_export="${1:-}"
   local nm_suffix="${nm_export:+-${nm_export}}"
+  if [[ -n "$nm_export" ]]; then
+    shift
+  fi
 
-  export BASEBOX_SOURCE="${BASEBOX_NAME}:vagrant"
+  export BASEBOX_SOURCE="$(source_id)"
   export BASEBOX_TAG="vagrant"
   basebox build "$@"
   docker save -o "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.docker" "$BASEBOX_SOURCE"

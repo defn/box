@@ -13,8 +13,11 @@ function main {
 
   local nm_export="${1:-}"
   local nm_suffix="${nm_export:+-${nm_export}}"
+  if [[ -n "$nm_export" ]]; then
+    shift
+  fi
 
-  export EC2_SOURCE_AMI="$(source_id)"
+  export BASEBOX_SOURCE="$(source_id)"
 
   basebox build "$@"
   vagrant destroy -f
