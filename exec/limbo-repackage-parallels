@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function source_id {
-  ls -d ~/Documents/Parallels/*$(prlctl list | grep "$(limbo id)" | awk '{print $4}').pvm 2>&- || true
+  (set +f; ls -d ~/Documents/Parallels/*$(prlctl list | grep "$(limbo id)" | awk '{print $4}').pvm 2>&- || true)
 }
 
 function main {
