@@ -28,12 +28,12 @@ __EOF
     fi
   fi
 
-	sudo lvs
+	sudo lvdisplay -m system
   lsblk
 
   local nm_driver="$(sudo docker info 2>&- | awk '/Storage Drive/ { print $3 }')"
   if [[ "$nm_driver" != "overlay" ]]; then
-    sudo service docker stop
+    sudo service docker stop 2>&- || true
     sudo rm -rf /var/lib/docker 
     cat << ____EOF | sudo tee /etc/default/docker
     DOCKER_OPTS='
@@ -44,7 +44,6 @@ __EOF
 
     '
 ____EOF
-    sudo service docker start
   fi
 }
 
