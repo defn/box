@@ -1,11 +1,9 @@
-pth_block_script = %x{which block-cibuild 2>/dev/null}.chomp
-
 shome=File.expand_path("..", __FILE__)
 
 docker_script = "#{shome}/script/docker-bootstrap"
 docker_args = [ ENV['BASEBOX_DOCKER_NETWORK_PREFIX'] ]
 
-block_script = pth_block_script
+block_script = %x{which block-cibuild 2>/dev/null}.chomp
 block_args = [ ENV['BASEBOX_HOME_URL'] ]
 %w(http_proxy ssh_gateway ssh_gateway_user).each {|ele|
   unless ENV[ele].nil? || ENV[ele].empty?
