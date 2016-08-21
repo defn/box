@@ -20,9 +20,9 @@ function main {
 
   set -- "$basebox_type" "$nm_export" "$@"
   basebox build "$@"
-  #vagrant destroy -f
-  #basebox remove -f 2>&- || true
-  #basebox add
+  vagrant destroy -f
+  basebox remove -f 2>&- || true
+  basebox add
 }
 
 source sub-chain "$BASH_SOURCE" "$@"
