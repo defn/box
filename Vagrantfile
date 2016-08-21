@@ -120,7 +120,7 @@ Vagrant.configure("2") do |config|
 
       v.customize [ 'modifyvm', :id, '--nictype1', 'virtio' ]
       v.customize [ 'modifyvm', :id, '--nictype2', 'virtio' ]
-      v.customize [ 'modifyvm', :id, '--paravirtprovider ', 'kvm' ]
+      v.customize [ 'modifyvm', :id, '--paravirtprovider', 'kvm' ]
 
       v.customize [ 
         'storageattach', :id, 
