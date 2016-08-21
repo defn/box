@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function source_id {
-  (set +f; ls -d ~/Documents/Parallels/*$(prlctl list | grep "$(limbo id)" | awk '{print $4}').pvm 2>&- || true)
+  ls -d ~/Documents/Parallels/$(prlctl list "$(limbo id)" | tail +2 | awk '{print $4}').pvm 2>&- | awk '{print $1}' || true
 }
 
 function main {
@@ -15,13 +15,14 @@ function main {
     shift
   fi
 
-  prlctl unregister "$(limbo id)" || true
+  export BASEBOX_SOURCE="$(source_id)"
+  prlctl unregister "$(limbo id)"
 
   set -- "$basebox_type" "$nm_export" "$@"
   basebox build "$@"
-  vagrant destroy -f
-  basebox remove -f 2>&- || true
-  basebox add
+  #vagrant destroy -f
+  #basebox remove -f 2>&- || true
+  #basebox add
 }
 
 source sub-chain "$BASH_SOURCE" "$@"
