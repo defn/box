@@ -5,9 +5,6 @@ function main {
   source "$shome/script/profile"
   source limbo_common
 
-  local nm_export="${1:-}"
-  local nm_suffix="${nm_export:+-${nm_export}}"
-
   docker commit "$(limbo id)" "${BASEBOX_NAME}:vagrant"
 }
 

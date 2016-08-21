@@ -5,9 +5,7 @@ function main {
   source "$shome/script/profile"
   source limbo_common
 
-  local nm_export="${1:-}"
-  local nm_suffix="${nm_export:+-${nm_export}}"
-
+  set -x
   vagrant halt
   prlctl stop "$(limbo id)" || true
   prlctl unregister "$(limbo id)" || true
