@@ -71,6 +71,35 @@ Vagrant.configure("2") do |config|
       v.vmx["ide1:0.deviceType"] = "cdrom-image"
       v.vmx["ide1:0.startconnected"] = "TRUE"
     end
+  when "parallels"
+    config.vm.box = ENV['BASEBOX_NAME']
+
+    config.vm.network "private_network", ip: ENV['BASEBOX_IP']
+
+    config.vm.provider "parallels" do |v, override|
+      override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant'
+      override.vm.synced_folder "#{ENV['CACHE_DIR']}/tmp/packer", '/vagrant/tmp/packer'
+
+      override.vm.provision "shell",
+        inline: "rm -f /var/lib/cloud/instance; cloud-init init || true",
+        privileged: true
+      override.vm.provision "shell", path: docker_script, args: docker_args, privileged: false
+      override.vm.provision "shell", path: block_script,  args: block_args, privileged: false
+      override.vm.provision "shell", path: facts_script,  args: facts_args, privileged: false
+
+      v.linked_clone = true
+      v.check_guest_tools = false
+      
+      v.memory = 2048
+      v.cpus = 2
+
+      v.customize [
+        "set", :id,
+        "--device-set", "cdrom0",
+        "--image", "#{ENV['LIMBO_HOME']}/cidata.iso",
+        "--connect"
+      ]
+    end
   when "virtualbox"
     config.vm.box = ENV['BASEBOX_NAME']
 
