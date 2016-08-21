@@ -5,13 +5,17 @@ function main {
   source "$shome/script/profile"
   source limbo_common
 
-  vagrant up --no-provision "$@"
+  vagrant up --no-provision
   case "$VAGRANT_DEFAULT_PROVIDER" in
     aws)
       limbo sync
       ;;
   esac
-  vagrant provision
+  if [[ "$#" == 0 ]]; then
+    set -- provision
+  fi
+
+  vagrant "$@"
 }
 
 source sub-chain "$BASH_SOURCE" "$@"
