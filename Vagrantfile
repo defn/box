@@ -1,5 +1,27 @@
 pth_block_script = %x{which block-cibuild 2>/dev/null}.chomp
 
+shome=File.expand_path("..", __FILE__)
+
+docker_script = "#{shome}/script/docker-bootstrap"
+docker_args = [ ENV['BASEBOX_DOCKER_NETWORK_PREFIX'] ]
+
+block_script = pth_block_script
+block_args = [ ENV['BASEBOX_HOME_URL'] ]
+%w(http_proxy ssh_gateway ssh_gateway_user).each {|ele|
+  unless ENV[ele].nil? || ENV[ele].empty?
+    block_args << ENV[ele]
+  else
+    break
+  end
+}
+
+facts_script = "#{shome}/script/facts-finish"
+facts_args = [ ]
+
+if ENV['ssh_gateway_user'].nil? || ENV['ssh_gateway_user'].empty?
+  block_args << ENV['USER']
+end
+
 if ENV['VAGRANT_DEFAULT_PROVIDER'] == "aws"
   threads = []
   threads << Thread.new do aws_region = ENV['AWS_DEFAULT_REGION'] || %x{aws configure get region}.chomp; end
@@ -10,28 +32,6 @@ if ENV['VAGRANT_DEFAULT_PROVIDER'] == "aws"
 end
 
 Vagrant.configure("2") do |config|
-  shome=File.expand_path("..", __FILE__)
-
-  docker_script = "#{shome}/script/docker-bootstrap"
-  docker_args = [ ENV['BASEBOX_DOCKER_NETWORK_PREFIX'] ]
-
-  block_script = pth_block_script
-  block_args = [ ENV['BASEBOX_HOME_URL'] ]
-  %w(http_proxy ssh_gateway ssh_gateway_user).each {|ele|
-    unless ENV[ele].nil? || ENV[ele].empty?
-      block_args << ENV[ele]
-    else
-      break
-    end
-  }
-
-  facts_script = "#{shome}/script/facts-finish"
-  facts_args = [ ]
-
-  if ENV['ssh_gateway_user'].nil? || ENV['ssh_gateway_user'].empty?
-    block_args << ENV['USER']
-  end
-
   config.ssh.username = "ubuntu"
   config.ssh.forward_agent = true
   config.ssh.insert_key = false
