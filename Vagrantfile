@@ -77,8 +77,8 @@ Vagrant.configure("2") do |config|
     config.vm.network "private_network", ip: ENV['BASEBOX_IP']
 
     config.vm.provider "parallels" do |v, override|
-      override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant'
-      override.vm.synced_folder "#{ENV['CACHE_DIR']}/tmp/packer", '/vagrant/tmp/packer'
+      override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', type: "nfs"
+      override.vm.synced_folder "#{ENV['CACHE_DIR']}/tmp/packer", '/vagrant/tmp/packer', type: "nfs"
 
       override.vm.provision "shell",
         inline: "rm -f /var/lib/cloud/instance; cloud-init init || true",
