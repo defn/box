@@ -16,7 +16,6 @@ function main {
   fi
 
   prlctl unregister "$(limbo id)" || true
-  export BASEBOX_SOURCE="$(source_id)"
 
   set -- "$basebox_type" "$nm_export" "$@"
   basebox build "$@"

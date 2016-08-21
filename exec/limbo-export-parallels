@@ -9,6 +9,8 @@ function main {
   local nm_suffix="${nm_export:+-${nm_export}}"
 
   vagrant halt
+  prlctl stop "$(limbo id)" || true
+  prlctl unregister "$(limbo id)" || true
 }
 
 source sub "$BASH_SOURCE" "$@"
