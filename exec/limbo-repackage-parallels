@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+function source_id {
+  ls -d ~/Documents/Parallels/*$(prlctl list | grep "$(limbo id)" | awk '{print $4}').pvm 2>&- || true
+}
+
+function main {
+  local shome="${_limbo_home:-"$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"}"
+  source "$shome/script/profile"
+  source limbo_common
+
+  local nm_export="${1:-}"
+  local nm_suffix="${nm_export:+-${nm_export}}"
+  if [[ -n "$nm_export" ]]; then
+    shift
+  fi
+
+  export BASEBOX_SOURCE="$(source_id)"
+
+  set -- "$basebox_type" "$nm_export" "$@"
+  basebox build "$@"
+  vagrant destroy -f
+  basebox remove -f 2>&- || true
+  basebox add
+}
+
+source sub-chain "$BASH_SOURCE" "$@"
+
