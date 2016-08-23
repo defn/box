@@ -85,7 +85,7 @@ Vagrant.configure("2") do |config|
       override.vm.provision "shell", path: block_script,  args: block_args, privileged: false
       override.vm.provision "shell", path: facts_script,  args: facts_args, privileged: false
 
-      v.use_linked_clone = ENV['LIMBO_LINKED_CLONE'] ? true : false
+      v.linked_clone = ENV['LIMBO_LINKED_CLONE'] ? true : false
       v.check_guest_tools = false
       
       v.memory = 2048
