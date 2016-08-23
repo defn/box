@@ -19,7 +19,8 @@ iface br0 inet static
   post-down brctl delbr br0
 __EOF
 
-  sudo ifup br0 || true
+  sudo ifdown br0 2>&- || true
+  sudo ifup br0
 
   if sudo lvs system/docker-data; then
     if ! sudo lvs system/docker-data | awk 'NR == 2 { print $3 }' | grep ^t; then
