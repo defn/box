@@ -3,29 +3,6 @@
 function main {
   local net_bridge="$1"; shift
 
-  set -x
-
-	if ! grep -s /etc/network/interfaces.d /etc/network/interfaces; then
-    {
-      echo
-      echo 'source-directory /etc/network/interfaces.d'
-    } | sudo tee -a /etc/network/interfaces
-	fi
-
-  cat | sudo tee "/etc/network/interfaces.d/br0" <<__EOF
-auto
-iface br0 inet static
-  address "${net_bridge}.0"
-  netmask "255.255.255.0"
-  pre-up brctl addbr br0
-  post-down brctl delbr br0
-__EOF
-
-  sudo ifdown br0 2>&- || true
-  sudo ifup br0
-
-  ifconfig -a
-
   if sudo lvs system/docker-data; then
     if ! sudo lvs system/docker-data | awk 'NR == 2 { print $3 }' | grep ^t; then
       sudo lvremove -f system/docker-data 2>&- || true
@@ -45,8 +22,6 @@ __EOF
     -H tcp://0.0.0.0:2376
     -H unix:///var/run/docker.sock
     --storage-driver overlay
-    --bridge=br0
-
     '
 ____EOF
   fi
