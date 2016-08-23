@@ -3,6 +3,8 @@
 function main {
   local net_bridge="$1"; shift
 
+  set -x
+
 	if ! grep -s /etc/network/interfaces.d /etc/network/interfaces; then
     {
       echo
@@ -21,6 +23,8 @@ __EOF
 
   sudo ifdown br0 2>&- || true
   sudo ifup br0
+
+  ifconfig -a
 
   if sudo lvs system/docker-data; then
     if ! sudo lvs system/docker-data | awk 'NR == 2 { print $3 }' | grep ^t; then
