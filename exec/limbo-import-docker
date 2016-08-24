@@ -8,7 +8,7 @@ function main {
   local nm_import="${1:-}"
   local nm_suffix="${nm_import:+-${nm_import}}"
 
-  docker load -i "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.docker"
+  docker load -i "${CACHE_DIR}/box/${VAGRANT_DEFAULT_PROVIDER}/${BASEBOX_NAME}${nm_suffix}.docker"
 }
 
 source sub "$BASH_SOURCE" "$@"

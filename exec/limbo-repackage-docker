@@ -18,7 +18,8 @@ function main {
   export BASEBOX_SOURCE="$(source_id)"
   export BASEBOX_TAG="vagrant"
   basebox build "$@"
-  docker save -o "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.docker" "$BASEBOX_SOURCE"
+  mkdir -p "${CACHE_DIR}/box/${VAGRANT_DEFAULT_PROVIDER}"
+  docker save -o "${CACHE_DIR}/box/${VAGRANT_DEFAULT_PROVIDER}/${BASEBOX_NAME}${nm_suffix}.docker" "$BASEBOX_SOURCE"
 }
 
 source sub-chain "$BASH_SOURCE" "$@"
