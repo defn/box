@@ -21,7 +21,7 @@ function main {
   fi
 
   limbo_media_prep
-  set -- "$basebox_type" "$nm_export" "$@"
+  set -- "$nm_export" "$@"
   basebox build "$@"
   limbo_media_add
 }

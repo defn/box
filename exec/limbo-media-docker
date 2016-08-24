@@ -15,7 +15,14 @@ function main {
   source "$shome/script/profile"
   source limbo_common
 
+  local nm_export="${1:-}"
+  local nm_suffix="${nm_export:+-${nm_export}}"
+  if [[ -n "$nm_export" ]]; then
+    shift
+  fi
+
   limbo_media_prep
+  set -- "$nm_export" "$@"
   basebox build "$@"
   limbo_media_add
 }
