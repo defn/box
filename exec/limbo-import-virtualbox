@@ -8,7 +8,7 @@ function main {
   local nm_import="${1:-}"
   local nm_suffix="${nm_import:+-${nm_import}}"
 
-  basebox remove -f 2>&- || true
+  basebox remove || true
   basebox add
 }
 

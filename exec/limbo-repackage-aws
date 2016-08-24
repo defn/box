@@ -21,7 +21,7 @@ function main {
 
   basebox build "$@"
   vagrant destroy -f
-  basebox remove -f 2>&- || true
+  basebox remove || true
   basebox add
 }
 

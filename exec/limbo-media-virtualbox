@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function limbo_media_add {
-  basebox remove -f || true
+  basebox remove || true
   basebox add
 }
 
