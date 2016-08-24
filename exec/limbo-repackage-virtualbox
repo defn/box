@@ -7,6 +7,7 @@ function limbo_media_add {
 
 function limbo_media_prep {
   vagrant destroy -f
+  (set +f; rm -f "${CACHE_DIR}/box/${VAGRANT_DEFAULT_PROVIDER}/${BASEBOX_NAME}${nm_suffix}.ovf" ${CACHE_DIR}/box/${VAGRANT_DEFAULT_PROVIDER}/${BASEBOX_NAME}${nm_suffix}-disk*.vmdk)
 }
 
 function source_id {
