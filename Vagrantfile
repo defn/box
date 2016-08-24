@@ -157,7 +157,6 @@ Vagrant.configure("2") do |config|
       v.instance_type = 'm3.medium'
       v.block_device_mapping = [
         { 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 100 },
-        { 'DeviceName' => '/dev/sdf',  'Ebs.VolumeSize' => 100 },
         { 'DeviceName' => '/dev/sdb', 'VirtualName' => 'ephemeral0', },
         { 'DeviceName' => '/dev/sdc', 'VirtualName' => 'ephemeral1', },
         { 'DeviceName' => '/dev/sdd', 'VirtualName' => 'ephemeral2', },
