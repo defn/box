@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function source_id {
-  echo "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.ovf"
+  echo "${CACHE_DIR}/box/${VAGRANT_DEFAULT_PROVIDER}/${BASEBOX_NAME}${nm_suffix}.ovf"
 }
 
 function main {
