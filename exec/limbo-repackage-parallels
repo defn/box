@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+function limbo_media_add {
+  basebox remove -f || true
+  basebox add
+}
+
+function limbo_media_prep {
+  vagrant destroy -f
+}
+
 function source_id {
   ls -d ~/Documents/Parallels/$(prlctl list "$(limbo id)" | tail +2 | awk '{print $4}').pvm 2>&- | awk '{print $1}' || true
 }
@@ -20,10 +29,8 @@ function main {
 
   set -- "$basebox_type" "$nm_export" "$@"
   basebox build "$@"
-  vagrant destroy -f
-  basebox remove -f 2>&- || true
-  basebox add
+  limbo_media_prep
+  limbo_media_add
 }
 
-source sub-chain "$BASH_SOURCE" "$@"
-
+source sub "$BASH_SOURCE" "$@"
