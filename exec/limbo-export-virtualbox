@@ -10,7 +10,7 @@ function main {
 
   vagrant halt
 
-  (set +f; rm -f "${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}.ovf" ${CACHE_DIR}/box/${BASEBOX_NAME}${nm_suffix}-disk*.vmdk)
+  (set +f; rm -f "${CACHE_DIR}/box/${VAGRANT_DEFAULT_PROVIDER}/${BASEBOX_NAME}${nm_suffix}.ovf" ${CACHE_DIR}/box/${VAGRANT_DEFAULT_PROVIDER}/${BASEBOX_NAME}${nm_suffix}-disk*.vmdk)
   mkdir -p "${CACHE_DIR}/box/${VAGRANT_DEFAULT_PROVIDER}"
   (set -x; VBoxManage export $(limbo id) --ovf20 -o "${CACHE_DIR}/box/${VAGRANT_DEFAULT_PROVIDER}/${BASEBOX_NAME}${nm_suffix}.ovf")
 }
