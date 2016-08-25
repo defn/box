@@ -4,7 +4,7 @@ function main {
   local shome="${_limbo_home:-"$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"}"
   source "$shome/script/profile"
 
-  exec "${BASEBOX_INSTANCE}" docker run --rm -ti -u ubuntu -w /home/ubuntu "$@"
+  exec "${BASEBOX_INSTANCE}" docker run --rm -u ubuntu -w /home/ubuntu "$@"
 }
 
 source sub "$BASH_SOURCE" "$@"
