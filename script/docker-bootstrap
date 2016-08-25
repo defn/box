@@ -16,6 +16,7 @@ function main {
   local nm_driver="$(sudo docker info 2>&- | awk '/Storage Drive/ { print $3 }')"
   if [[ "$nm_driver" != "overlay" ]]; then
     sudo service docker stop 2>&- || true
+    sudo usermod -aG docker ubuntu
     sudo rm -rf /var/lib/docker 
     cat << ____EOF | sudo tee /etc/default/docker
     DOCKER_OPTS='
