@@ -4,13 +4,13 @@ source normalize
 
 local basebox_type=
 
-case "$VAGRANT_DEFAULT_PROVIDER" in
+case "${VAGRANT_DEFAULT_PROVIDER:-}" in
   vmware*)    basebox_type='vmx' ;;
   virtualbox) basebox_type='ovf' ;;
   parallels)  basebox_type='pvm' ;;
 esac
 
-export VAGRANT_CWD="$shome${BASEBOX_INSTANCE:+/instance/${BASEBOX_INSTANCE}}-${VAGRANT_DEFAULT_PROVIDER}"
+export VAGRANT_CWD="$shome/instance/${BASEBOX_INSTANCE}"
 
 if [[ "$VAGRANT_CWD" != "$shome" ]]; then
   mkdir -p "$VAGRANT_CWD"
