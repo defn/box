@@ -90,8 +90,8 @@ Vagrant.configure("2") do |config|
         v.gui = false
         v.linked_clone = true
         v.verify_vmnet = true
-        v.vmx["memsize"] = "2048"
-        v.vmx["numvcpus"] = "2"
+        v.vmx["memsize"] = "1024"
+        v.vmx["numvcpus"] = "1"
 
         v.vmx["ethernet0.vnet"] = "vmnet3"
         v.vmx["ethernet1.vnet"] = "vmnet3"
@@ -118,8 +118,8 @@ Vagrant.configure("2") do |config|
         v.linked_clone = ENV['LIMBO_LINKED_CLONE'] ? true : false
         v.check_guest_tools = false
         
-        v.memory = 2048
-        v.cpus = 2
+        v.memory = 1024
+        v.cpus = 1
 
         v.customize [
           "set", :id,
@@ -143,8 +143,8 @@ Vagrant.configure("2") do |config|
         override.vm.provision "shell", path: facts_script,   args: facts_args, privileged: false
 
         v.linked_clone = true
-        v.memory = 2048
-        v.cpus = 2
+        v.memory = 1024
+        v.cpus = 1
 
         v.customize [ 'modifyvm', :id, '--nictype1', 'virtio' ]
         v.customize [ 'modifyvm', :id, '--nictype2', 'virtio' ]
@@ -180,7 +180,7 @@ Vagrant.configure("2") do |config|
         v.secret_access_key= aws_secret_access_key
 
         v.keypair_name = "vagrant-#{Digest::MD5.file("#{ssh_keys[0]}.pub").hexdigest}"
-        v.instance_type = 'm3.medium'
+        v.instance_type = 't2.medium'
         v.block_device_mapping = [
           { 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 100 },
           { 'DeviceName' => '/dev/sdb', 'VirtualName' => 'ephemeral0', },
