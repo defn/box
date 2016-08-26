@@ -30,6 +30,7 @@ if ENV['VAGRANT_DEFAULT_PROVIDER'] == "aws"
 end
 
 Vagrant.configure("2") do |config|
+  config.ssh.pty = true
   config.ssh.username = "ubuntu"
   config.ssh.forward_agent = true
   config.ssh.insert_key = false
