@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 function main {
-  set -x
   if [[ -x "$(which facts 2>&- || true)" ]]; then
     facts cache
   fi
