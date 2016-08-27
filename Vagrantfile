@@ -154,7 +154,7 @@ Vagrant.configure("2") do |config|
       v.access_key_id = aws_access_key_id
       v.secret_access_key= aws_secret_access_key
 
-      v.keypair_name = "vagrant-#{Digest::MD5.file("#{ssh_keys[0]}.pub").hexdigest}"
+      v.keypair_name = "vagrant-#{Digest::MD5.file("#{shome}/.ssh/ssh-vagrant.pub").hexdigest}"
       v.instance_type = 't2.medium'
       v.block_device_mapping = [
         { 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 100 },
