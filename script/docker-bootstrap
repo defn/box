@@ -3,20 +3,38 @@
 set -x
 
 function main {
-  local nm_driver="$(sudo docker info 2>&- | awk '/Storage Drive/ { print $3 }')"
-  if [[ "$nm_driver" != "overlay" ]]; then
-    sudo service docker stop 2>&- || true
+  source /etc/lsb-release
+  export DEBIAN_FRONTEND=noninteractive
+
+  case "$DISTRIB_CODENAME" in
+    trusty)
+      sudo apt-add-repository -y ppa:zfs-native/stable
+      sudo aptitude update
+      sudo aptitude install -y ubuntu-zfs dkms
+      ;;
+
+    xenial)
+      sudo aptitude install -y zfsutils-linux
+      true
+      ;;
+  esac
+
+  sudo modprobe zfs || true
+  if sudo zpool create data /dev/mapper/system-zfs 2>&-; then
+    sudo zfs create -o mountpoint=/var/lib/docker data/docker
     sudo groupadd docker 2>&- || true
     sudo usermod -aG docker ubuntu
-    sudo rm -rf /var/lib/docker 
-    cat << ____EOF | sudo tee /etc/default/docker
-    DOCKER_OPTS='
-    -H tcp://0.0.0.0:2376
-    -H unix:///var/run/docker.sock
-    --storage-driver overlay
-    '
-____EOF
+    cat <<__EOF | sudo tee /etc/default/docker
+DOCKER_OPTS='
+-H tcp://0.0.0.0:2376
+-H unix:///var/run/docker.sock
+--storage-driver zfs
+'
+__EOF
   fi
+
+  sudo zpool list
+  sudo zfs list
 }
 
 main "$@"
