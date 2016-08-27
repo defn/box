@@ -6,6 +6,7 @@ function main {
   local net_bridge="$1"; shift
 
   source /etc/lsb-release
+  export DEBIAN_FRONTEND=noninteractive
 
   case "$DISTRIB_CODENAME" in
     trusty)
@@ -23,7 +24,6 @@ function main {
 
   sudo aptitude install -y lxd
   sudo usermod -aG lxd ubuntu
-  newgrp lxd
 
   cat <<EOF | sudo tee /etc/default/lxd-bridge
 USE_LXD_BRIDGE="true"
@@ -50,15 +50,15 @@ EOF
 
   sudo modprobe zfs || true
   if sudo zpool create lxd /dev/mapper/system-lxd--data 2>&-; then
-    lxc config set storage.zfs_pool_name lxd
+    sudo lxc config set storage.zfs_pool_name lxd
 
-    lxc image copy ubuntu:16.04 local: --alias xenial
-    lxc image copy ubuntu:14.04 local: --alias trusty
+    sudo lxc image copy ubuntu:16.04 local: --alias xenial
+    sudo lxc image copy ubuntu:14.04 local: --alias trusty
   fi
     
   sudo chown -vR ubuntu:ubuntu ~ubuntu/.config 2>&-
 
-  lxc image list
+  sudo lxc image list
 
   sudo zpool list
 }
