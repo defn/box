@@ -3,14 +3,14 @@
 set -x
 
 function main {
-  if sudo lvs system/docker-data; then
-    if ! sudo lvs system/docker-data | awk 'NR == 2 { print $3 }' | grep ^t; then
-      sudo lvremove -f system/docker-data 2>&- >/dev/null || true
-      sudo lvcreate -T -L 30G --poolmetadatasize 4G system/docker-data
+  if sudo lvs system/thinpool-data; then
+    if ! sudo lvs system/thinpool-data | awk 'NR == 2 { print $3 }' | grep ^t; then
+      sudo lvremove -f system/thinpool-data 2>&- >/dev/null || true
+      sudo lvcreate -T -L 20G --poolmetadatasize 4G system/thinpool-data
     fi
   fi
 
-	sudo lvdisplay -m system-data
+	sudo lvdisplay -m system-thinpool--data
   lsblk
 
   local nm_driver="$(sudo docker info 2>&- | awk '/Storage Drive/ { print $3 }')"

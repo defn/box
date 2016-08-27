@@ -49,8 +49,8 @@ EOF
   ifconfig -a
 
   sudo modprobe zfs || true
-  if sudo zpool create lxd /dev/mapper/system-lxd--data 2>&-; then
-    #sudo lxc config set storage.zfs_pool_name lxd
+  if sudo zpool create data /dev/mapper/system-zfs--data 2>&-; then
+    #sudo lxc config set storage.zfs_pool_name data
     true
   fi
     
