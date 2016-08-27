@@ -52,12 +52,12 @@ EOF
 		if sudo lvs system/thinpool-data; then
 			if ! sudo lvs system/thinpool-data | awk 'NR == 2 { print $3 }' | grep ^t; then
 				sudo lvremove -f system/thinpool-data 2>&- >/dev/null || true
-				sudo lvcreate -T -L 20G --poolmetadatasize 4G system/thinpool-data
+				#sudo lvcreate -T -L 20G --poolmetadatasize 4G system/thinpool-data
 			fi
 		fi
 
     sudo lxc config set storage.lvm_vg_name system
-    sudo lxc config set storage.lvm_thinpool_name lxd
+    #sudo lxc config set storage.lvm_thinpool_name lxd
   fi
 
   sudo lxc info
