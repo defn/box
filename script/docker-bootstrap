@@ -14,7 +14,7 @@ function main {
   lsblk
 
   local nm_driver="$(sudo docker info 2>&- | awk '/Storage Drive/ { print $3 }')"
-  if [[ "$nm_driver" != "overlay" ]]; then
+  if [[ "$nm_driver" != "overlay2" ]]; then
     sudo service docker stop 2>&- || true
     sudo groupadd docker 2>&- || true
     sudo usermod -aG docker ubuntu
@@ -23,7 +23,7 @@ function main {
     DOCKER_OPTS='
     -H tcp://0.0.0.0:2376
     -H unix:///var/run/docker.sock
-    --storage-driver overlay
+    --storage-driver overlay2
     '
 ____EOF
   fi
