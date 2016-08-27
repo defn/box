@@ -59,8 +59,8 @@ EOF
   sudo chown -vR ubuntu:ubuntu ~ubuntu/.config 2>&-
 
   sudo lxc image list
-
   sudo zpool list
+  sudo zfs list
 }
 
 main "$@"
