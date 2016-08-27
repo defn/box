@@ -45,14 +45,17 @@ LXD_IPV6_PROXY="false"
 EOF
 
   sudo service lxd stop 2>&- || true
-  sudo service lxd start
-  ifconfig -a
 
   sudo modprobe zfs || true
   if sudo zpool create data /dev/mapper/system-zfs--data 2>&-; then
-    #sudo lxc config set storage.zfs_pool_name data
-    true
+   #sudo lxc config set storage.zfs_pool_name data
+    sudo lxc config set storage.lvm_vg_name system
+    sudo lxc config set storage.lvm_thinpool_name lxd
   fi
+
+  sudo service lxd start
+  ifconfig -a
+
     
   sudo lxc image copy ubuntu:16.04 local: --alias xenial
   sudo lxc image copy ubuntu:14.04 local: --alias trusty
