@@ -1,8 +1,5 @@
 shome=File.expand_path("..", __FILE__)
 
-docker_script = "#{shome}/script/docker-bootstrap"
-docker_args = [ ENV['BASEBOX_DOCKER_NETWORK_PREFIX'] ]
-
 block_script = %x{which block-cibuild 2>/dev/null}.chomp
 block_args = [ ENV['BASEBOX_HOME_URL'] ]
 %w(http_proxy ssh_gateway ssh_gateway_user).each {|ele|
@@ -13,8 +10,11 @@ block_args = [ ENV['BASEBOX_HOME_URL'] ]
   end
 }
 
-facts_script = "#{shome}/script/facts-finish"
-facts_args = [ ]
+docker_script = "#{shome}/script/docker-bootstrap"
+docker_args = [ ]
+
+lxd_script = "#{shome}/script/lxd-bootstrap"
+lxd_args = [ ENV['BASEBOX_LXD_NETWORK_PREFIX'] ]
 
 if ENV['ssh_gateway_user'].nil? || ENV['ssh_gateway_user'].empty?
   block_args << ENV['USER']
@@ -31,7 +31,6 @@ end
 
 Vagrant.configure("2") do |config|
   config.ssh.shell = "bash"
-  config.ssh.pty = true
   config.ssh.username = "ubuntu"
   config.ssh.forward_agent = true
   config.ssh.insert_key = false
@@ -86,8 +85,8 @@ Vagrant.configure("2") do |config|
           inline: "rm -f /var/lib/cloud/instance; cloud-init init || true",
           privileged: true
         override.vm.provision "shell", path: docker_script, args: docker_args, privileged: false
-        override.vm.provision "shell", path: block_script,  args: block_args, privileged: false
-        override.vm.provision "shell", path: facts_script,  args: facts_args, privileged: false
+        override.vm.provision "shell", path: lxd_script,    args: lxd_args,    privileged: false
+        override.vm.provision "shell", path: block_script,  args: block_args,  privileged: false
 
         v.gui = false
         v.linked_clone = true
@@ -114,8 +113,8 @@ Vagrant.configure("2") do |config|
           inline: "rm -f /var/lib/cloud/instance; cloud-init init || true",
           privileged: true
         override.vm.provision "shell", path: docker_script, args: docker_args, privileged: false
-        override.vm.provision "shell", path: block_script,  args: block_args, privileged: false
-        override.vm.provision "shell", path: facts_script,  args: facts_args, privileged: false
+        override.vm.provision "shell", path: lxd_script,    args: lxd_args,    privileged: false
+        override.vm.provision "shell", path: block_script,  args: block_args,  privileged: false
 
         v.linked_clone = ENV['LIMBO_LINKED_CLONE'] ? true : false
         v.check_guest_tools = false
@@ -141,8 +140,8 @@ Vagrant.configure("2") do |config|
           inline: "rm -f /var/lib/cloud/instance; cloud-init init || true",
           privileged: true
         override.vm.provision "shell", path: docker_script,  args: docker_args, privileged: false
-        override.vm.provision "shell", path: block_script,   args: block_args, privileged: false
-        override.vm.provision "shell", path: facts_script,   args: facts_args, privileged: false
+        override.vm.provision "shell", path: lxd_script,     args: lxd_args,    privileged: false
+        override.vm.provision "shell", path: block_script,   args: block_args,  privileged: false
 
         v.linked_clone = true
         v.memory = 1024

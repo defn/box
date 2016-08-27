@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-function main {
-  local net_bridge="$1"; shift
+set -x
 
+function main {
   if sudo lvs system/docker-data; then
     if ! sudo lvs system/docker-data | awk 'NR == 2 { print $3 }' | grep ^t; then
       sudo lvremove -f system/docker-data 2>&- >/dev/null || true
@@ -10,7 +10,7 @@ function main {
     fi
   fi
 
-	sudo lvdisplay -m system
+	sudo lvdisplay -m system-data
   lsblk
 
   local nm_driver="$(sudo docker info 2>&- | awk '/Storage Drive/ { print $3 }')"

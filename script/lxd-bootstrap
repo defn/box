@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+set -x
+
+function main {
+  local net_bridge="$1"; shift
+
+  source /etc/lsb-release
+
+  case "$DISTRIB_CODENAME" in
+    trusty)
+      sudo add-apt-repository -y ppa:ubuntu-lxc/lxd-stable
+      sudo apt-add-repository -y ppa:zfs-native/stable
+      sudo aptitude update
+      sudo aptitude install -y ubuntu-zfs dkms
+      ;;
+
+    xenial)
+      sudo aptitude install -y zfsutils-linux
+      true
+      ;;
+  esac
+
+  sudo aptitude install -y lxd
+  sudo usermod -aG lxd ubuntu
+  newgrp lxd
+
+  cat <<EOF | sudo tee /etc/default/lxd-bridge
+USE_LXD_BRIDGE="true"
+LXD_BRIDGE="lxdbr0"
+UPDATE_PROFILE="true"
+LXD_CONFILE=""
+LXD_DOMAIN="lxd"
+LXD_IPV4_ADDR="${net_bridge}.1"
+LXD_IPV4_NETMASK="255.255.255.0"
+LXD_IPV4_NETWORK="${net_bridge}.1/24"
+LXD_IPV4_DHCP_RANGE="${net_bridge}.10,${net_bridge}.200"
+LXD_IPV4_DHCP_MAX="191"
+LXD_IPV4_NAT="true"
+LXD_IPV6_ADDR=""
+LXD_IPV6_MASK=""
+LXD_IPV6_NETWORK=""
+LXD_IPV6_NAT="false"
+LXD_IPV6_PROXY="false"
+EOF
+
+  sudo service lxd stop 2>&- || true
+  sudo service lxd start
+  ifconfig -a
+
+  sudo modprobe zfs || true
+  if sudo zpool create lxd /dev/mapper/system-lxd--data 2>&-; then
+    lxc config set storage.zfs_pool_name lxd
+
+    lxc image copy ubuntu:16.04 local: --alias xenial
+    lxc image copy ubuntu:14.04 local: --alias trusty
+  fi
+    
+  sudo chown -vR ubuntu:ubuntu ~ubuntu/.config 2>&-
+
+  lxc image list
+
+  sudo zpool list
+}
+
+main "$@"
