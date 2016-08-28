@@ -21,3 +21,6 @@
 # ssh keys
 /.ssh/ssh-vagrant
 /.ssh/ssh-vagrant.pub
+
+# lxc
+/.lxc
