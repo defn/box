@@ -32,7 +32,8 @@
     [
       "virtualbox",
       "aws",
-      "docker"
+      "docker",
+      "lxc"
     ]
   ]
 }
