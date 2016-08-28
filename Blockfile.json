@@ -16,20 +16,6 @@
     ],
     [
       "dream"
-    ],
-    [
-      "consul",
-      "vault",
-      "facts",
-      "openvpn",
-      "dnsmasq",
-      "linkerd"
-    ],
-    [
-      "virtualbox",
-      "aws",
-      "docker",
-      "lxc"
     ]
   ]
 }
