@@ -16,8 +16,6 @@
     ],
     [
       "basebox",
-      "vagrant-shell",
-      "vagrant-limbo"
     ],
     [
       "consul",
