@@ -5,6 +5,7 @@ function main {
   source "$shome/script/profile"
 
   set -x
+  rm -rf "$LXC_CONF"
   lxc remote add "$BASEBOX_INSTANCE" "$BASEBOX_IP" --password=ubuntu
   lxc remote set-default "$BASEBOX_INSTANCE" 
 }
