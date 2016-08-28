@@ -54,6 +54,9 @@ EOF
   sudo lxc image copy ubuntu:14.04 local: --alias trusty
   sudo chown -vR ubuntu:ubuntu ~ubuntu/.config 2>&-
 
+  sudo lxc config set core.https_address [::]
+  sudo lxc config set core.trust_password ubuntu
+
   sudo lxc image list
 }
 
