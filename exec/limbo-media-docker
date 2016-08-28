@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function limbo_media_add {
-  docker save -o "${CACHE_DIR}/box/${BASEBOX_NAME}-${BASEBOX_TAG}.docker" "$BASEBOX_NAME:$BASEBOX_TAG"
+  docker save -o "${CACHE_DIR}/box/${VAGRANT_DEFAULT_PROVIDER}/${BASEBOX_NAME}-${BASEBOX_TAG}.docker" "$BASEBOX_NAME:$BASEBOX_TAG"
 }
 
 function limbo_media_prep {
