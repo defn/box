@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+function main {
+  local shome="${_limbo_home:-"$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"}"
+  source "$shome/script/profile"
+
+  set -x
+  lxc remote add "$BASEBOX_INSTANCE" "$BASEBOX_IP" --password=ubuntu
+  lxc remote set-default "$BASEBOX_INSTANCE" 
+}
+
+source sub "$BASH_SOURCE" "$@"
