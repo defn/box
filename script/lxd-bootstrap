@@ -51,7 +51,6 @@ EOF
   sudo lxc info
 
   sudo lxc image copy ubuntu:16.04 local: --alias xenial
-  sudo lxc image copy ubuntu:14.04 local: --alias trusty
   sudo chown -vR ubuntu:ubuntu ~ubuntu/.config 2>&-
 
   sudo lxc config set core.https_address [::]
