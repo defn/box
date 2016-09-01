@@ -10,9 +10,6 @@ block_args = [ ENV['BASEBOX_HOME_URL'] ]
   end
 }
 
-docker_script = "#{shome}/script/docker-bootstrap"
-docker_args = [ ]
-
 lxd_script = "#{shome}/script/lxd-bootstrap"
 lxd_args = [ ENV['BASEBOX_LXD_NETWORK_PREFIX'] ]
 
@@ -55,7 +52,6 @@ Vagrant.configure("2") do |config|
       override.vm.provision "shell",
         inline: "rm -f /var/lib/cloud/instance; cloud-init init || true",
         privileged: true
-      override.vm.provision "shell", path: docker_script, args: docker_args, privileged: false
       override.vm.provision "shell", path: lxd_script,    args: lxd_args,    privileged: false
       override.vm.provision "shell", path: block_script,  args: block_args,  privileged: false
 
@@ -84,7 +80,6 @@ Vagrant.configure("2") do |config|
       override.vm.provision "shell",
         inline: "rm -f /var/lib/cloud/instance; cloud-init init || true",
         privileged: true
-      override.vm.provision "shell", path: docker_script, args: docker_args, privileged: false
       override.vm.provision "shell", path: lxd_script,    args: lxd_args,    privileged: false
       override.vm.provision "shell", path: block_script,  args: block_args,  privileged: false
 
@@ -114,7 +109,6 @@ Vagrant.configure("2") do |config|
       override.vm.provision "shell",
         inline: "rm -f /var/lib/cloud/instance; cloud-init init || true",
         privileged: true
-      override.vm.provision "shell", path: docker_script,  args: docker_args, privileged: false
       override.vm.provision "shell", path: lxd_script,     args: lxd_args,    privileged: false
       override.vm.provision "shell", path: block_script,   args: block_args,  privileged: false
 
