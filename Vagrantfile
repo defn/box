@@ -47,7 +47,6 @@ Vagrant.configure("2") do |config|
       override.vm.network "private_network", ip: ENV['BASEBOX_IP'], nic_type: "vmnet3"
 
       override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', type: "nfs"
-      override.vm.synced_folder "#{ENV['CACHE_DIR']}/tmp/packer", '/vagrant/tmp/packer', type: "nfs"
 
       override.vm.provision "shell",
         inline: "rm -f /var/lib/cloud/instance; cloud-init init || true",
@@ -75,7 +74,6 @@ Vagrant.configure("2") do |config|
       override.vm.network "private_network", ip: ENV['BASEBOX_IP']
 
       override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', type: "nfs"
-      override.vm.synced_folder "#{ENV['CACHE_DIR']}/tmp/packer", '/vagrant/tmp/packer', type: "nfs"
 
       override.vm.provision "shell",
         inline: "rm -f /var/lib/cloud/instance; cloud-init init || true",
@@ -102,8 +100,6 @@ Vagrant.configure("2") do |config|
       override.vm.network "private_network", ip: ENV['BASEBOX_IP']
 
       override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', 
-        type: "nfs", nfs_udp: false, nfs_export: false
-      override.vm.synced_folder "#{ENV['CACHE_DIR']}/tmp/packer", '/vagrant/tmp/packer', 
         type: "nfs", nfs_udp: false, nfs_export: false
 
       override.vm.provision "shell",
@@ -166,7 +162,6 @@ Vagrant.configure("2") do |config|
 
     config.vm.provider "docker" do |v, override|
       override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant'
-      override.vm.synced_folder "#{ENV['CACHE_DIR']}/tmp/packer", '/vagrant/tmp/packer'
 
       override.vm.provision "shell", path: block_script, args: block_args, privileged: false
 
