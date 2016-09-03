@@ -49,7 +49,7 @@ Vagrant.configure("2") do |config|
       override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', type: "nfs"
 
       override.vm.provision "shell",
-        inline: "rm -f /var/lib/cloud/instance; cloud-init init || true",
+        inline: "rm -rf /var/lib/cloud/instance; cloud-init init || true",
         privileged: true
       override.vm.provision "shell", path: lxd_script,    args: lxd_args,    privileged: false
       override.vm.provision "shell", path: block_script,  args: block_args,  privileged: false
@@ -76,7 +76,7 @@ Vagrant.configure("2") do |config|
       override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', type: "nfs"
 
       override.vm.provision "shell",
-        inline: "rm -f /var/lib/cloud/instance; cloud-init init || true",
+        inline: "rm -rf /var/lib/cloud/instance; cloud-init init || true",
         privileged: true
       override.vm.provision "shell", path: lxd_script,    args: lxd_args,    privileged: false
       override.vm.provision "shell", path: block_script,  args: block_args,  privileged: false
@@ -103,7 +103,7 @@ Vagrant.configure("2") do |config|
         type: "nfs", nfs_udp: false, nfs_export: false
 
       override.vm.provision "shell",
-        inline: "rm -f /var/lib/cloud/instance; cloud-init init || true",
+        inline: "rm -rf /var/lib/cloud/instance; cloud-init init || true",
         privileged: true
       override.vm.provision "shell", path: lxd_script,     args: lxd_args,    privileged: false
       override.vm.provision "shell", path: block_script,   args: block_args,  privileged: false
@@ -136,7 +136,7 @@ Vagrant.configure("2") do |config|
       override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', disabled: true
 
       override.vm.provision "shell",
-        inline: "rm -f /var/lib/cloud/instance; cloud-init init || true",
+        inline: "rm -rf /var/lib/cloud/instance; cloud-init init || true",
         privileged: true
       override.vm.provision "shell", path: block_script, args: [ ENV['BASEBOX_HOME_URL'] ], privileged: false
 
