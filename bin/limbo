@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+export TMPDIR="${TMPDIR:-${CACHE_DIR}/tmp}"
+export PACKER_TMP_DIR="${TMPDIR}/packer"
+mkdir -p "$PACKER_TMP_DIR"
+
 : ${LIMBO_HOME:="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"}
 export LIMBO_HOME
 
