@@ -2,14 +2,18 @@
 
 source normalize
 
-export VAGRANT_CWD="$shome/instance/${BASEBOX_INSTANCE}"
+export VAGRANT_CWD="$shome${BASEBOX_INSTANCE:+/instance/${BASEBOX_INSTANCE}}"
 
 local basebox_type=
 case "${VAGRANT_DEFAULT_PROVIDER:-}" in
   vmware*)    basebox_type='vmx' ;;
   virtualbox) basebox_type='ovf' ;;
   parallels)  basebox_type='pvm' ;;
-  docker)     VAGRANT_CWD="$shome/instance/${BASEBOX_INSTANCE}-${VAGRANT_DEFAULT_PROVIDER}" ;;
+  docker)     
+    if [[ -n "${BASEBOX_INSTANCE:-}" ]]; then
+      VAGRANT_CWD="$shome/instance/${BASEBOX_INSTANCE}-${VAGRANT_DEFAULT_PROVIDER}"
+    fi
+    ;;
 esac
 
 
