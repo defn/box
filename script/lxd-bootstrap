@@ -55,6 +55,7 @@ EOF
 
   sudo lxc config set core.https_address [::]
   sudo lxc config set core.trust_password ubuntu
+  sudo lxc config set storage.lvm_volume_size 20GiB
 
   sudo lxc image list
 }
