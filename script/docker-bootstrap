@@ -8,13 +8,13 @@ function main {
 
   case "$DISTRIB_CODENAME" in
     trusty)
-      sudo apt-add-repository -y ppa:zfs-native/stable
-      sudo aptitude update
-      sudo aptitude install -y ubuntu-zfs dkms
+      sudo -E apt-add-repository -y ppa:zfs-native/stable
+      sudo -E aptitude update
+      sudo -E aptitude install -y ubuntu-zfs dkms
       ;;
 
     xenial)
-      sudo aptitude install -y zfsutils-linux
+      sudo -E aptitude install -y zfsutils-linux
       true
       ;;
   esac

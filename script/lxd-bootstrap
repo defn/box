@@ -8,15 +8,19 @@ function main {
   source /etc/lsb-release
   export DEBIAN_FRONTEND=noninteractive
 
+  if [[ -n "${http_proxy:-}" ]]; then
+    echo "Acquire::http::Proxy \"$http_proxy\";" | sudo tee /etc/apt/apt.conf.d/99boxcache
+  fi
+
   case "$DISTRIB_CODENAME" in
     trusty)
-      sudo add-apt-repository -y ppa:ubuntu-lxc/lxd-stable
-      sudo aptitude update
+      sudo -E add-apt-repository -y ppa:ubuntu-lxc/lxd-stable
+      sudo -E aptitude update
       ;;
 
   esac
 
-  sudo aptitude install -y lxd
+  sudo -E aptitude install -y lxd
   sudo usermod -aG lxd ubuntu
 
   cat <<EOF | sudo tee /etc/default/lxd-bridge
@@ -54,7 +58,7 @@ EOF
 
   sudo lxc info
 
-  sudo lxc image copy ubuntu:16.04 local: --alias xenial
+  sudo -E lxc image copy ubuntu:16.04 local: --alias xenial
   sudo chown -vR ubuntu:ubuntu ~ubuntu/.config 2>&-
 
   sudo lxc image list
