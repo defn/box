@@ -4,6 +4,8 @@ function limbo_update {
   local shome="${_limbo_home:-"$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"}"
   source "$shome/script/profile"
 
+  set -x
+
   case "$(uname -s)" in
     Darwin)
       sudo route add -net "${BASEBOX_DOCKER_NETWORK_PREFIX}.0" "${BASEBOX_IP}" 255.255.255.0
@@ -15,7 +17,7 @@ function limbo_update {
       ;;
   esac
 
-  vagrant ssh -- sudo route add -net "${BASEBOX_DOCKER_NETWORK_PREFIX}.0" netmask 255.255.255.0 gw $(limbo lxc info docker | egrep 'eth0:\tinet\t' | awk '{print $3}')
+  limbo vagrant ssh -- sudo route add -net "${BASEBOX_DOCKER_NETWORK_PREFIX}.0" netmask 255.255.255.0 gw $(limbo lxc info docker | egrep 'eth0:\tinet\t' | awk '{print $3}')
 }
 
 limbo_update
