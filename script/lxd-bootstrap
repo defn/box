@@ -9,8 +9,6 @@ function main {
   source /etc/lsb-release
   export DEBIAN_FRONTEND=noninteractive
 
-  echo "Acquire::http::Proxy \"http://${cache_vip}:3128\";" | sudo tee /etc/apt/apt.conf.d/99boxcache
-
   case "$DISTRIB_CODENAME" in
     trusty)
       sudo -E add-apt-repository -y ppa:ubuntu-lxc/lxd-stable
