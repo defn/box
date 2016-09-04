@@ -9,7 +9,7 @@ function main {
   source /etc/lsb-release
   export DEBIAN_FRONTEND=noninteractive
 
-  echo "Acquire::http::Proxy \"${cache_vip}\";" | sudo tee /etc/apt/apt.conf.d/99boxcache
+  echo "Acquire::http::Proxy \"http://${cache_vip}:3128\";" | sudo tee /etc/apt/apt.conf.d/99boxcache
 
   case "$DISTRIB_CODENAME" in
     trusty)
