@@ -4,13 +4,12 @@ set -x
 
 function main {
   local net_bridge="$1"; shift
+  local cache_vip="$1"; shift
 
   source /etc/lsb-release
   export DEBIAN_FRONTEND=noninteractive
 
-  if [[ -n "${http_proxy:-}" ]]; then
-    echo "Acquire::http::Proxy \"$http_proxy\";" | sudo tee /etc/apt/apt.conf.d/99boxcache
-  fi
+  echo "Acquire::http::Proxy \"${cache_vip}\";" | sudo tee /etc/apt/apt.conf.d/99boxcache
 
   case "$DISTRIB_CODENAME" in
     trusty)

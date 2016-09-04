@@ -11,7 +11,7 @@ block_args = [ ENV['BASEBOX_HOME_URL'] ]
 }
 
 lxd_script = "#{shome}/script/lxd-bootstrap"
-lxd_args = [ ENV['BASEBOX_LXD_NETWORK_PREFIX'] ]
+lxd_args = [ ENV['BASEBOX_LXD_NETWORK_PREFIX'], ENV['CACHE_VIP'] ]
 
 if ENV['ssh_gateway_user'].nil? || ENV['ssh_gateway_user'].empty?
   block_args << ENV['USER']
