@@ -10,9 +10,12 @@ Content-Disposition: attachment; filename="part-001"
 
 users:
   - name: ubuntu
+    shell: /bin/bash
     sudo: "ALL=(ALL) NOPASSWD: ALL"
     ssh-authorized-keys:
       - ${VAGRANT_SSH_KEY}
+
+manage_etc_hosts: true
 
 --===============88888888888888888888888888==
 MIME-Version: 1.0
