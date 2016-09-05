@@ -10,7 +10,7 @@ function limbo_media_prep {
 }
 
 function source_id {
-  ls -d ~/Documents/Parallels/$(prlctl list "$(limbo id)" | tail +2 | awk '{print $4}').pvm 2>&- | awk '{print $1}' || true
+  ls -d ~/Documents/Parallels/$(prlctl list "$(limbo id)" | tail +2 | awk '{print $4}').pvm 2>/dev/null | awk '{print $1}' || true
 }
 
 function main {

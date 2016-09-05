@@ -39,12 +39,12 @@ LXD_IPV6_NAT="false"
 LXD_IPV6_PROXY="false"
 EOF
 
-  sudo service lxd stop 2>&- || true
+  sudo service lxd stop 2>/dev/null || true
   sudo service lxd start
 
   if sudo lvs system/thinpool-data; then
     if ! sudo lvs system/thinpool-data | awk 'NR == 2 { print $3 }' | grep ^t; then
-      sudo lvremove -f system/thinpool-data 2>&- >/dev/null || true
+      sudo lvremove -f system/thinpool-data 2>/dev/null >/dev/null || true
       sudo lxc config set storage.lvm_vg_name system
     fi
   fi
@@ -56,7 +56,7 @@ EOF
   sudo lxc info
 
   sudo -E lxc image copy ubuntu:16.04 local: --alias xenial
-  sudo chown -vR ubuntu:ubuntu ~ubuntu/.config 2>&-
+  sudo chown -vR ubuntu:ubuntu ~ubuntu/.config 2>/dev/null
 
   sudo lxc image list
 }
