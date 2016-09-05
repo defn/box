@@ -6,8 +6,6 @@ function main {
 
   set -x
 
-  sudo chown -R ubuntu:ubuntu ~ubuntu/.config
-
   source /etc/lsb-release
   export DEBIAN_FRONTEND=noninteractive
 
@@ -53,6 +51,8 @@ EOF
 
   sudo lxc config set core.https_address [::]
   sudo lxc config set core.trust_password ubuntu
+
+  sudo chown -R ubuntu:ubuntu ~ubuntu/.config
 }
 
 main "$@"
