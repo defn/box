@@ -15,7 +15,6 @@ users:
     ssh-authorized-keys:
       - ${VAGRANT_SSH_KEY}
 manage_etc_hosts: true
-packages: [aptitude aptitude install -y ntp curl unzip git perl ruby language-pack-en nfs-common build-essential dkms lvm2 xfsprogs xfsdump bridge-utils thin-provisioning-tools software-properties-common]
 
 --===============88888888888888888888888888==
 MIME-Version: 1.0
