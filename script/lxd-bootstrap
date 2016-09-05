@@ -6,7 +6,7 @@ function main {
 
   set -x
 
-  sudo chown -R ~ubuntu/.config
+  sudo chown -R ubuntu:ubuntu ~ubuntu/.config
 
   source /etc/lsb-release
   export DEBIAN_FRONTEND=noninteractive
