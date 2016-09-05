@@ -53,12 +53,8 @@ EOF
   sudo lxc config set core.trust_password ubuntu
   sudo lxc config set storage.lvm_volume_size 20GiB
 
-  sudo lxc info
-
   sudo -E lxc image copy ubuntu:16.04 local: --alias xenial
   sudo chown -vR ubuntu:ubuntu ~ubuntu/.config 2>/dev/null
-
-  sudo lxc image list
 }
 
 main "$@"
