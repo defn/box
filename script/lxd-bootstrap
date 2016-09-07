@@ -9,6 +9,24 @@ function main {
   source /etc/lsb-release
   export DEBIAN_FRONTEND=noninteractive
 
+
+  local use_btrfs=
+  if sudo lvs system/thinpool-data 1>/dev/null 2>&1; then
+    if ! sudo lvs system/thinpool-data | awk 'NR == 2 { print $3 }' | grep ^t; then
+      sudo lvremove -f system/thinpool-data 2>/dev/null >/dev/null || true
+
+      if [[ -n "$use_btrfs" ]]; then
+        sudo -E apt-get install -y btrfs-tools
+        sudo lvcreate -n btrfs -L 30G system
+        sudo mkfs.btrfs /dev/system/btrfs
+        sudo mkdir /var/lib/lxd
+        sudo mount -o user_subvol_rm_allowed /dev/system/btrfs /var/lib/lxd
+      else
+        sudo lxc config set storage.lvm_vg_name system
+      fi
+    fi
+  fi
+
   case "$DISTRIB_CODENAME" in
     trusty)
       sudo -E add-apt-repository -y ppa:ubuntu-lxc/lxd-stable
@@ -18,7 +36,7 @@ function main {
   esac
 
   sudo -E aptitude install -y lxd
-  sudo usermod -aG lxd ubuntu
+  sudo service lxd stop 2>/dev/null || true
 
   cat <<EOF | sudo tee /etc/default/lxd-bridge
 USE_LXD_BRIDGE="true"
@@ -39,22 +57,12 @@ LXD_IPV6_NAT="false"
 LXD_IPV6_PROXY="false"
 EOF
 
-  sudo service lxd stop 2>/dev/null || true
-
-  if sudo lvs system/thinpool-data 1>/dev/null 2>&1; then
-    if ! sudo lvs system/thinpool-data | awk 'NR == 2 { print $3 }' | grep ^t; then
-      sudo lvremove -f system/thinpool-data 2>/dev/null >/dev/null || true
-      sudo lvcreate -n btrfs -L 30G system
-      sudo mkfs.btrfs /dev/system/btrfs
-      sudo mv /var/lib/lxd /var/lib/lxd.old
-      sudo mount -o user_subvol_rm_allowed /dev/system/btrfs /var/lib/lxd
-    fi
-  fi
-
   sudo service lxd start
 
   sudo lxc config set core.https_address [::]
   sudo lxc config set core.trust_password ubuntu
+
+  sudo usermod -aG lxd ubuntu
 
   sudo chown -R ubuntu:ubuntu ~ubuntu/.config
 }
