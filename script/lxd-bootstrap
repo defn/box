@@ -9,7 +9,6 @@ function main {
   source /etc/lsb-release
   export DEBIAN_FRONTEND=noninteractive
 
-
   local use_btrfs=
   if sudo lvs system/thinpool-data 1>/dev/null 2>&1; then
     sudo lvremove -f system/thinpool-data 2>/dev/null >/dev/null || true
@@ -21,7 +20,6 @@ function main {
       sudo mkdir /var/lib/lxd
       sudo mount -o user_subvol_rm_allowed /dev/system/btrfs /var/lib/lxd
     else
-      sudo lxc config set storage.lvm_vg_name system
     fi
   fi
 
@@ -59,6 +57,7 @@ EOF
 
   sudo lxc config set core.https_address [::]
   sudo lxc config set core.trust_password ubuntu
+  sudo lxc config set storage.lvm_vg_name system
 
   sudo usermod -aG lxd ubuntu
 
