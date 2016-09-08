@@ -12,18 +12,16 @@ function main {
 
   local use_btrfs=
   if sudo lvs system/thinpool-data 1>/dev/null 2>&1; then
-    if ! sudo lvs system/thinpool-data | awk 'NR == 2 { print $3 }' | grep ^t; then
-      sudo lvremove -f system/thinpool-data 2>/dev/null >/dev/null || true
+    sudo lvremove -f system/thinpool-data 2>/dev/null >/dev/null || true
 
-      if [[ -n "$use_btrfs" ]]; then
-        sudo -E apt-get install -y btrfs-tools
-        sudo lvcreate -n btrfs -L 30G system
-        sudo mkfs.btrfs /dev/system/btrfs
-        sudo mkdir /var/lib/lxd
-        sudo mount -o user_subvol_rm_allowed /dev/system/btrfs /var/lib/lxd
-      else
-        sudo lxc config set storage.lvm_vg_name system
-      fi
+    if [[ -n "$use_btrfs" ]]; then
+      sudo -E apt-get install -y btrfs-tools
+      sudo lvcreate -n btrfs -L 30G system
+      sudo mkfs.btrfs /dev/system/btrfs
+      sudo mkdir /var/lib/lxd
+      sudo mount -o user_subvol_rm_allowed /dev/system/btrfs /var/lib/lxd
+    else
+      sudo lxc config set storage.lvm_vg_name system
     fi
   fi
 
