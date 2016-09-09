@@ -14,7 +14,7 @@ cidata/user-data: cidata/user-data.template .ssh/ssh-vagrant
 
 .ssh/ssh-vagrant:
 	@mkdir -p $(shell dirname $@)
-	@ssh-keygen -f $@ -P ''
+	@ssh-keygen -f $@ -P '' -C "vagrant@$(shell uname -n)"
 
 key: .ssh/ssh-vagrant
 	@aws ec2 import-key-pair --key-name vagrant-$(shell md5 -q .ssh/ssh-vagrant.pub) --public-key-material "$(shell cat .ssh/ssh-vagrant.pub)"
