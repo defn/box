@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+function main {
+	while true; do
+		if [[ -f "/var/lib/cloud/instance/boot-finished" ]]; then
+			break
+		fi
+		find /var/lib/cloud/instance/ -ls
+		sleep 1
+	done
+
+  rm -f /var/lib/cloud/instance
+  if cloud-init init; then
+    while true; do
+      if [[ -f "/var/lib/cloud/instance/boot-finished" ]]; then
+        break
+      fi
+      find /var/lib/cloud/instance/ -ls
+      sleep 1
+    done
+  else
+    return 1
+  fi
+}
+
+main "$@"

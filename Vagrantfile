@@ -13,6 +13,8 @@ block_args = [ ENV['BASEBOX_HOME_URL'] ]
 lxd_script = "#{shome}/script/lxd-bootstrap"
 lxd_args = [ ENV['BASEBOX_LXD_NETWORK_PREFIX'], ENV['CACHE_VIP'] ]
 
+ci_script = "#{shome}/script/cloud-init-bootstrap"
+
 if ENV['ssh_gateway_user'].nil? || ENV['ssh_gateway_user'].empty?
   block_args << ENV['USER']
 end
@@ -47,11 +49,9 @@ Vagrant.configure("2") do |config|
 
     override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', type: "nfs"
 
-    override.vm.provision "shell",
-      inline: "rm -rf /var/lib/cloud/instance; cloud-init init || true",
-      privileged: true
-    override.vm.provision "shell", path: lxd_script,    args: lxd_args,    privileged: false
-    override.vm.provision "shell", path: block_script,  args: block_args,  privileged: false
+    override.vm.provision "shell", path: ci_script,    args: [],         privileged: true
+    override.vm.provision "shell", path: lxd_script,   args: lxd_args,   privileged: false
+    override.vm.provision "shell", path: block_script, args: block_args, privileged: false
 
     v.gui = false
     v.linked_clone = true
@@ -74,11 +74,9 @@ Vagrant.configure("2") do |config|
 
     override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', type: "nfs"
 
-    override.vm.provision "shell",
-      inline: "rm -rf /var/lib/cloud/instance; cloud-init init || true",
-      privileged: true
-    override.vm.provision "shell", path: lxd_script,    args: lxd_args,    privileged: false
-    override.vm.provision "shell", path: block_script,  args: block_args,  privileged: false
+    override.vm.provision "shell", path: ci_script,    args: [],         privileged: true
+    override.vm.provision "shell", path: lxd_script,   args: lxd_args,   privileged: false
+    override.vm.provision "shell", path: block_script, args: block_args, privileged: false
 
     v.linked_clone = ENV['LIMBO_LINKED_CLONE'] ? true : false
     v.check_guest_tools = false
@@ -101,11 +99,9 @@ Vagrant.configure("2") do |config|
     override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', 
       type: "nfs", nfs_udp: false, nfs_export: false
 
-    override.vm.provision "shell",
-      inline: "rm -rf /var/lib/cloud/instance; cloud-init init || true",
-      privileged: true
-    override.vm.provision "shell", path: lxd_script,     args: lxd_args,    privileged: false
-    override.vm.provision "shell", path: block_script,   args: block_args,  privileged: false
+    override.vm.provision "shell", path: ci_script,    args: [],         privileged: true
+    override.vm.provision "shell", path: lxd_script,   args: lxd_args,   privileged: false
+    override.vm.provision "shell", path: block_script, args: block_args, privileged: false
 
     v.linked_clone = true
     v.memory = 1024
@@ -134,9 +130,7 @@ Vagrant.configure("2") do |config|
     override.vm.box = ENV['BASEBOX_NAME']
     override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', disabled: true
 
-    override.vm.provision "shell",
-      inline: "rm -rf /var/lib/cloud/instance; cloud-init init || true",
-      privileged: true
+    override.vm.provision "shell", path: ci_script,    args: [],                          privileged: true
     override.vm.provision "shell", path: block_script, args: [ ENV['BASEBOX_HOME_URL'] ], privileged: false
 
     v.ami = "meh" if ENV['LIMBO_FAKE']

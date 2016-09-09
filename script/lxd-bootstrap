@@ -4,14 +4,6 @@ function main {
   local net_bridge="$1"; shift
   local cache_vip="$1"; shift
 
-	while true; do
-		if [[ -f "/var/lib/cloud/instance/boot-finished" ]]; then
-			break
-		fi
-		find /var/lib/cloud/instance/ -ls
-		sleep 1
-	done
-
   set -x
   sudo service lxd stop 2>/dev/null || true
 
