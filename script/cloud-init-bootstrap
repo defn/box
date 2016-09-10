@@ -6,7 +6,7 @@ function main {
 			break
 		fi
 		find /var/lib/cloud/instance/ -ls
-		sleep 1
+		sleep 3
 	done
 
   rm -f /var/lib/cloud/instance
@@ -16,7 +16,7 @@ function main {
         break
       fi
       find /var/lib/cloud/instance/ -ls
-      sleep 1
+      sleep 3
     done
   else
     return 1

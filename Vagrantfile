@@ -50,7 +50,7 @@ Vagrant.configure("2") do |config|
     override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', type: "nfs"
 
     override.vm.provision "shell", path: ci_script,    args: [],         privileged: true
-    override.vm.provision "shell", path: lxd_script,   args: lxd_args,   privileged: false
+    override.vm.provision "shell", path: lxd_script,   args: lxd_args,   privileged: true
     override.vm.provision "shell", path: block_script, args: block_args, privileged: false
 
     v.gui = false
@@ -75,7 +75,7 @@ Vagrant.configure("2") do |config|
     override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', type: "nfs"
 
     override.vm.provision "shell", path: ci_script,    args: [],         privileged: true
-    override.vm.provision "shell", path: lxd_script,   args: lxd_args,   privileged: false
+    override.vm.provision "shell", path: lxd_script,   args: lxd_args,   privileged: true
     override.vm.provision "shell", path: block_script, args: block_args, privileged: false
 
     v.linked_clone = ENV['LIMBO_LINKED_CLONE'] ? true : false
@@ -100,7 +100,7 @@ Vagrant.configure("2") do |config|
       type: "nfs", nfs_udp: false, nfs_export: false
 
     override.vm.provision "shell", path: ci_script,    args: [],         privileged: true
-    override.vm.provision "shell", path: lxd_script,   args: lxd_args,   privileged: false
+    override.vm.provision "shell", path: lxd_script,   args: lxd_args,   privileged: true
     override.vm.provision "shell", path: block_script, args: block_args, privileged: false
 
     v.linked_clone = true

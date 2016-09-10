@@ -5,9 +5,12 @@ function main {
   local cache_vip="$1"; shift
 
   set -x
-  sudo service lxd stop 2>/dev/null || true
+  service lxd stop 2>/dev/null || true
+  rm -rf /var/lib/lxd
+  mkdir -p /var/lib/lxd
+  mount -o user_subvol_rm_allowed /dev/system/lxd /var/lib/lxd
 
-  cat <<EOF | sudo tee /etc/default/lxd-bridge
+  cat <<EOF | tee /etc/default/lxd-bridge
 USE_LXD_BRIDGE="true"
 LXD_BRIDGE="lxdbr0"
 UPDATE_PROFILE="true"
@@ -26,12 +29,12 @@ LXD_IPV6_NAT="false"
 LXD_IPV6_PROXY="false"
 EOF
 
-  sudo service lxd start
+  service lxd start
 
-  sudo lxc config set core.https_address [::]
-  sudo lxc config set core.trust_password ubuntu
+  lxc config set core.https_address [::]
+  lxc config set core.trust_password ubuntu
 
-  sudo chown -R ubuntu:ubuntu ~ubuntu/.config
+  chown -R ubuntu:ubuntu ~ubuntu/.config
 }
 
 main "$@"
