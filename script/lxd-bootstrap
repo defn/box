@@ -5,10 +5,8 @@ function main {
   local cache_vip="$1"; shift
 
   set -x
+
   service lxd stop 2>/dev/null || true
-  rm -rf /var/lib/lxd
-  mkdir -p /var/lib/lxd
-  mount -o user_subvol_rm_allowed /dev/system/lxd /var/lib/lxd
 
   cat <<EOF | tee /etc/default/lxd-bridge
 USE_LXD_BRIDGE="true"
@@ -33,8 +31,6 @@ EOF
 
   lxc config set core.https_address [::]
   lxc config set core.trust_password ubuntu
-
-  chown -R ubuntu:ubuntu ~ubuntu/.config
 }
 
 main "$@"
