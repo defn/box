@@ -1,23 +1,9 @@
 shome=File.expand_path("..", __FILE__)
 
-block_script = %x{which block-cibuild 2>/dev/null}.chomp
-block_args = [ ENV['BASEBOX_HOME_URL'] ]
-%w(http_proxy ssh_gateway ssh_gateway_user).each {|ele|
-  unless ENV[ele].nil? || ENV[ele].empty?
-    block_args << ENV[ele]
-  else
-    break
-  end
-}
-
 lxd_script = "#{shome}/script/lxd-bootstrap"
 lxd_args = [ ENV['BASEBOX_LXD_NETWORK_PREFIX'], ENV['CACHE_VIP'] ]
 
 ci_script = "#{shome}/script/cloud-init-bootstrap"
-
-if ENV['ssh_gateway_user'].nil? || ENV['ssh_gateway_user'].empty?
-  block_args << ENV['USER']
-end
 
 aws_region = ENV['AWS_DEFAULT_REGION']
 aws_access_key_id = ENV['AWS_ACCESS_KEY_ID']
@@ -51,7 +37,6 @@ Vagrant.configure("2") do |config|
 
     override.vm.provision "shell", path: ci_script,    args: [],         privileged: true
     override.vm.provision "shell", path: lxd_script,   args: lxd_args,   privileged: true
-    override.vm.provision "shell", path: block_script, args: block_args, privileged: false
 
     v.gui = false
     v.linked_clone = true
@@ -76,7 +61,6 @@ Vagrant.configure("2") do |config|
 
     override.vm.provision "shell", path: ci_script,    args: [],         privileged: true
     override.vm.provision "shell", path: lxd_script,   args: lxd_args,   privileged: true
-    override.vm.provision "shell", path: block_script, args: block_args, privileged: false
 
     v.linked_clone = ENV['LIMBO_LINKED_CLONE'] ? true : false
     v.check_guest_tools = false
@@ -101,7 +85,6 @@ Vagrant.configure("2") do |config|
 
     override.vm.provision "shell", path: ci_script,    args: [],         privileged: true
     override.vm.provision "shell", path: lxd_script,   args: lxd_args,   privileged: true
-    override.vm.provision "shell", path: block_script, args: block_args, privileged: false
 
     v.linked_clone = true
     v.memory = 1024
@@ -131,7 +114,6 @@ Vagrant.configure("2") do |config|
     override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', disabled: true
 
     override.vm.provision "shell", path: ci_script,    args: [],                          privileged: true
-    override.vm.provision "shell", path: block_script, args: [ ENV['BASEBOX_HOME_URL'] ], privileged: false
 
     v.ami = "meh" if ENV['LIMBO_FAKE']
 
@@ -155,8 +137,6 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider "docker" do |v, override|
     override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant'
-
-    override.vm.provision "shell", path: block_script, args: block_args, privileged: false
 
     v.image = ENV['BASEBOX_SOURCE'] || "#{ENV['BASEBOX_NAME']}:vagrant"
     v.cmd = [ "/usr/sbin/sshd", "-D" ]
