@@ -2,13 +2,13 @@ cidata.iso: cidata/user-data cidata/meta-data
 	mkisofs -R -V cidata -o $@.tmp cidata
 	mv $@.tmp $@
 
-cidata/meta-data: cidata/user-data
+cidata/meta-data: cidata/user-data Makefile
 	@mkdir -p cidata
 	@echo --- | tee $@.tmp
 	@echo instance-id: $(shell basename $(shell pwd)) | tee -a $@.tmp
 	mv $@.tmp $@
 
-cidata/user-data: cidata/user-data.template .ssh/ssh-vagrant
+cidata/user-data: cidata/user-data.template .ssh/ssh-vagrant Makefile
 	@cat "$<" | env VAGRANT_SSH_KEY="$(shell cat .ssh/ssh-vagrant.pub)" envsubst '$$USER $$VAGRANT_SSH_KEY' | tee "$@.tmp"
 	mv "$@.tmp" "$@"
 
