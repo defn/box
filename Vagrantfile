@@ -44,7 +44,7 @@ Vagrant.configure("2") do |config|
     v.vmx["ethernet1.vnet"] = "vmnet3"
 
     v.vmx["ide1:0.present"]    = "TRUE"
-    v.vmx["ide1:0.fileName"]   = "#{ENV['LIMBO_HOME']}/cidata.iso"
+    v.vmx["ide1:0.fileName"]   = "#{shome}/cidata.iso"
     v.vmx["ide1:0.deviceType"] = "cdrom-image"
     v.vmx["ide1:0.startconnected"] = "TRUE"
   end
@@ -66,7 +66,7 @@ Vagrant.configure("2") do |config|
     v.customize [
       "set", :id,
       "--device-set", "cdrom0",
-      "--image", "#{ENV['LIMBO_HOME']}/cidata.iso",
+      "--image", "#{shome}/cidata.iso",
       "--connect"
     ]
   end
@@ -94,7 +94,7 @@ Vagrant.configure("2") do |config|
       '--port', 1, 
       '--device', 0, 
       '--type', 'dvddrive', 
-      '--medium', "#{ENV['LIMBO_HOME']}/cidata.iso"
+      '--medium', "#{shome}/cidata.iso"
     ]
     v.customize [
       'storagectl', :id,
