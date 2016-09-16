@@ -25,7 +25,7 @@ Content-Disposition: attachment; filename="part-002"
 exec 1>/root/.cloud-init.hostname
 exec 2>/root/.cloud-init.stderr
 echo "#cloud-config"
-echo "hostname: vagrant-${USER}-${INSTANCE_ID}"
+echo "hostname: vagrant-${INSTANCE_ID}"-$$
 echo "manage_etc_hosts: true"
 
 --===============88888888888888888888888888==

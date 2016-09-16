@@ -24,4 +24,6 @@ if [[ "$VAGRANT_CWD" != "$shome" ]]; then
   ln -nfs "$shome/.ssh" "$VAGRANT_CWD/"
   ln -nfs "../../Makefile" "$VAGRANT_CWD/"
   ln -nfs "../../../cidata/user-data.template" "$VAGRANT_CWD/cidata/"
+
+  (cd "$VAGRANT_CWD" && make)
 fi 

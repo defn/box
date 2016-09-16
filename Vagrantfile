@@ -94,7 +94,7 @@ Vagrant.configure("2") do |config|
       '--port', 1, 
       '--device', 0, 
       '--type', 'dvddrive', 
-      '--medium', "#{ENV['LIMBO_HOME']}/cidata.iso"
+      '--medium', "#{shome}/cidata.iso"
     ]
     v.customize [
       'storagectl', :id,
