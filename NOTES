@@ -3,3 +3,10 @@
 "/vagrant" "/vagrant/tmp/packer" -network 172.28.0.0 -mask 255.255.0.0 -alldirs -mapall=1000:1000
 
 nfsd restart
+
+/etc/resolver/consul
+
+domain consul
+port 8600
+nameserver 127.0.0.1.8600
+
