@@ -18,8 +18,10 @@ esac
 
 
 if [[ "$VAGRANT_CWD" != "$shome" ]]; then
-  mkdir -p "$VAGRANT_CWD"
+  mkdir -p "$VAGRANT_CWD/cidata"
   ln -nfs "$shome/Vagrantfile" "$VAGRANT_CWD/"
   ln -nfs "$shome/script" "$VAGRANT_CWD/"
   ln -nfs "$shome/.ssh" "$VAGRANT_CWD/"
+  ln -nfs "../../Makefile" "$VAGRANT_CWD/"
+  ln -nfs "../../../cidata/user-data.template" "$VAGRANT_CWD/cidata/"
 fi 
