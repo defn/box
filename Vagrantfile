@@ -44,7 +44,7 @@ Vagrant.configure("2") do |config|
     v.vmx["ethernet1.vnet"] = "vmnet3"
 
     v.vmx["ide1:0.present"]    = "TRUE"
-    v.vmx["ide1:0.fileName"]   = "#{ENV['LIMBO_HOME']}/cidata.iso"
+    v.vmx["ide1:0.fileName"]   = "#{shome}/cidata.iso"
     v.vmx["ide1:0.deviceType"] = "cdrom-image"
     v.vmx["ide1:0.startconnected"] = "TRUE"
   end
