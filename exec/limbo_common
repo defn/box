@@ -25,5 +25,5 @@ if [[ "$VAGRANT_CWD" != "$shome" ]]; then
   ln -nfs "../../Makefile" "$VAGRANT_CWD/"
   ln -nfs "../../../cidata/user-data.template" "$VAGRANT_CWD/cidata/"
 
-  (cd "$VAGRANT_CWD" && make)
+  (cd "$VAGRANT_CWD" && make) >/dev/null
 fi 
