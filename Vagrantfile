@@ -66,7 +66,7 @@ Vagrant.configure("2") do |config|
     v.customize [
       "set", :id,
       "--device-set", "cdrom0",
-      "--image", "#{ENV['LIMBO_HOME']}/cidata.iso",
+      "--image", "#{shome}/cidata.iso",
       "--connect"
     ]
   end
