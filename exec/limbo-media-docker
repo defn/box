@@ -11,7 +11,7 @@ function limbo_media_prep {
 }
 
 function main {
-  local shome="${_limbo_home:-"$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"}"
+  local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
   source "$shome/script/profile"
   source limbo_common
 
