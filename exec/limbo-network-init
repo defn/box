@@ -7,7 +7,10 @@ function limbo_update {
   set -x
 
   case "$(uname -s)" in
-    Darwin) runmany 'sudo route add -net "${1}.0/24" "${BASEBOX_IP}" || true' "${BASEBOX_NETWORK_PREFIX}"{0..9} ;;
+    Darwin) 
+      runmany 'sudo route add -net "${1}.0/24" "${BASEBOX_IP}" || true' "${BASEBOX_NETWORK_PREFIX}"{0..9}
+      runmany 'sudo route add -net "250.${1}.0.0/24" "${BASEBOX_IP}" || true' "${BASEBOX_NETWORK_PREFIX##*.}"{0..9}
+      ;;
     Linux) runmany 'sudo ip route replace "${1}.0/24" via "${BASEBOX_IP}"' "${BASEBOX_NETWORK_PREFIX}"{0..9} ;;
   esac
 }
