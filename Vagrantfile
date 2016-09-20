@@ -16,7 +16,7 @@ if ENV['VAGRANT_DEFAULT_PROVIDER'] == "aws"
 end
 
 ssh_keys = [
-  "#{shome}/.ssh/ssh-vagrant"
+  "#{shome}/.ssh/ssh-container"
 ]
 
 Vagrant.configure("2") do |config|
@@ -115,7 +115,7 @@ Vagrant.configure("2") do |config|
     v.access_key_id = aws_access_key_id
     v.secret_access_key= aws_secret_access_key
 
-    v.keypair_name = "vagrant-#{Digest::MD5.file("#{shome}/.ssh/ssh-vagrant.pub").hexdigest}"
+    v.keypair_name = "vagrant-#{Digest::MD5.file("#{shome}/.ssh/ssh-container.pub").hexdigest}"
     v.instance_type = 't2.medium'
     v.block_device_mapping = [
       { 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 100 },
