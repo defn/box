@@ -9,7 +9,7 @@ cidata/meta-data: cidata/user-data Makefile
 	mv $@.tmp $@
 
 cidata/user-data: cidata/user-data.template .ssh/ssh-vagrant Makefile
-	@cat "$<" | env VAGRANT_SSH_KEY="$(shell cat .ssh/ssh-vagrant.pub)" envsubst '$$USER $$VAGRANT_SSH_KEY' | tee "$@.tmp"
+	@cat "$<" | env CONTAINER_SSH_KEY="$(shell cat .ssh/ssh-vagrant.pub)" envsubst '$$USER $$CONTAINER_SSH_KEY $$CACHE_VIP' | tee "$@.tmp"
 	mv "$@.tmp" "$@"
 
 .ssh/ssh-vagrant:

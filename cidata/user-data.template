@@ -13,8 +13,43 @@ users:
     shell: /bin/bash
     sudo: "ALL=(ALL) NOPASSWD: ALL"
     ssh-authorized-keys:
-      - ${VAGRANT_SSH_KEY}
+      - ${CONTAINER_SSH_KEY}
+
 manage_etc_hosts: true
+
+write_files:
+ - owner: root:root
+   path: /etc/apt/apt.conf.d/99boxcache
+   permissions: '0644'
+   content: |
+       Acquire::http::Proxy "http://${CACHE_VIP}:3128";
+       Acquire::Languages "none";
+
+packages:
+ - openssh-server
+ - aptitude
+ - ntp
+ - curl
+ - unzip
+ - git
+ - perl
+ - ruby
+ - language-pack-en
+ - nfs-common
+ - build-essential
+ - dkms
+ - lvm2
+ - xfsprogs
+ - xfsdump
+ - bridge-utils
+ - thin-provisioning-tools
+ - software-properties-common
+ - btrfs-tools
+ - ubuntu-fan
+
+runcmd:
+  - touch /root/.cloud-init.hostname
+  - install -d -o root -g root -m 0755  /var/run/sshd
 
 --===============88888888888888888888888888==
 MIME-Version: 1.0
