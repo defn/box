@@ -19,8 +19,7 @@
 /sv
 
 # ssh keys
-/.ssh/ssh-vagrant
-/.ssh/ssh-vagrant.pub
+/.ssh
 
 # lxc
 /.lxc
