@@ -26,6 +26,8 @@ Vagrant.configure("2") do |config|
   config.ssh.insert_key = false
   config.ssh.private_key_path = ssh_keys
 
+  config.vm.base_mac = "00163EFFFF#{sprintf("%02x",ENV['BASEBOX_IP'].split(".")[-1].to_i)}"
+
   config.vm.provider "vmware_fusion" do |v, override|
     override.vm.box = ENV['BASEBOX_NAME']
     override.vm.network "private_network", ip: ENV['BASEBOX_IP'], nic_type: "vmnet3"
@@ -73,7 +75,8 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider "virtualbox" do |v, override|
     override.vm.box = ENV['BASEBOX_NAME']
-    override.vm.network "private_network", ip: ENV['BASEBOX_IP']
+    override.vm.network "public_network", bridge: "#{ENV['LIMBO_BRIDGE'] || "en0: Wi-Fi (AirPort)"}", mac: "00163EFF#{sprintf("%02x",ENV['BASEBOX_IP'].split(".")[-1].to_i)}FF"
+    override.vm.network "private_network", ip: ENV['BASEBOX_IP'], mac: "00163E#{sprintf("%02x",ENV['BASEBOX_IP'].split(".")[-1].to_i)}FFFF"
 
     override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', 
       type: "nfs", nfs_udp: false, nfs_export: false
