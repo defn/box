@@ -1,7 +1,3 @@
-VBoxManage guestproperty enumerate $(cat .vagrant/machines/local/virtualbox/id) --patterns '/VirtualBox/GuestInfo/Net/1/*' | sed 's#: #:#g; s#,##g' | talign
+VBoxManage guestproperty enumerate $(cat .vagrant/machines/local/virtualbox/id) --patterns '/VirtualBox/GuestInfo/Net/1/*'
 
-ip route show | awk '$1 == "default" { print $3 }'
-
-ensure locale is utf8 in docker, elixir wants it that way
-
-"/vagrant" "/vagrant/tmp/packer" 172.16.10.185 -alldirs -mapall=1000:1000
+"/vagrant" -network 172.28.0.0 -mask 255.255.0.0 -alldirs -mapall=1000:1000
