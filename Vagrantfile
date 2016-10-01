@@ -34,7 +34,7 @@ Vagrant.configure("2") do |config|
 
     override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', type: "nfs"
 
-    override.vm.provision "shell", path: ci_script,    args: [],         privileged: true
+    override.vm.provision "shell", path: ci_script, args: [], privileged: true
 
     v.gui = false
     v.linked_clone = true
@@ -57,7 +57,7 @@ Vagrant.configure("2") do |config|
 
     override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', type: "nfs"
 
-    override.vm.provision "shell", path: ci_script,    args: [],         privileged: true
+    override.vm.provision "shell", path: ci_script, args: [], privileged: true
 
     v.linked_clone = ENV['LIMBO_LINKED_CLONE'] ? true : false
     v.check_guest_tools = false
@@ -75,20 +75,18 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider "virtualbox" do |v, override|
     override.vm.box = ENV['BASEBOX_NAME']
-    override.vm.network "public_network", bridge: "#{ENV['LIMBO_BRIDGE'] || "en0: Wi-Fi (AirPort)"}", mac: "00163EFF#{sprintf("%02x",ENV['BASEBOX_IP'].split(".")[-1].to_i)}FF"
-    override.vm.network "private_network", ip: ENV['BASEBOX_IP'], mac: "00163E#{sprintf("%02x",ENV['BASEBOX_IP'].split(".")[-1].to_i)}FFFF"
+    override.vm.network "public_network", bridge: "#{ENV['LIMBO_BRIDGE'] || "en0: Wi-Fi (AirPort)"}", mac: "00163EFF#{sprintf("%02x",ENV['BASEBOX_IP'].split(".")[-1].to_i)}FF", nic_type: "virtio"
+    override.vm.network "private_network", ip: ENV['BASEBOX_IP'], mac: "00163E#{sprintf("%02x",ENV['BASEBOX_IP'].split(".")[-1].to_i)}FFFF",  auto_config: false, nic_type: "virtio"
 
-    override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', 
-      type: "nfs", nfs_udp: false, nfs_export: false
+    override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant'
 
-    override.vm.provision "shell", path: ci_script,    args: [],         privileged: true
+    override.vm.provision "shell", path: ci_script, args: [], privileged: true
 
     v.linked_clone = true
     v.memory = 1024
     v.cpus = 1
 
     v.customize [ 'modifyvm', :id, '--nictype1', 'virtio' ]
-    v.customize [ 'modifyvm', :id, '--nictype2', 'virtio' ]
     v.customize [ 'modifyvm', :id, '--paravirtprovider', 'kvm' ]
 
     v.customize [ 
@@ -110,7 +108,7 @@ Vagrant.configure("2") do |config|
     override.vm.box = ENV['BASEBOX_NAME']
     override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant', disabled: true
 
-    override.vm.provision "shell", path: ci_script,    args: [],                          privileged: true
+    override.vm.provision "shell", path: ci_script, args: [], privileged: true
 
     v.ami = "meh" if ENV['LIMBO_FAKE']
 
