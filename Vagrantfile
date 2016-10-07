@@ -75,7 +75,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider "virtualbox" do |v, override|
     override.vm.box = ENV['BASEBOX_NAME']
-    override.vm.network "public_network", bridge: "#{ENV['LIMBO_BRIDGE'] || "en0: Wi-Fi (AirPort)"}", mac: "00163EFF#{sprintf("%02x",ENV['BASEBOX_IP'].split(".")[-1].to_i)}FF", nic_type: "virtio"
+    override.vm.network "public_network", bridge: "#{ENV['LIMBO_BRIDGE'] || "en1: Wi-Fi (AirPort)"}", mac: "00163EFF#{sprintf("%02x",ENV['BASEBOX_IP'].split(".")[-1].to_i)}FF", nic_type: "virtio"
     override.vm.network "private_network", ip: ENV['BASEBOX_IP'], mac: "00163E#{sprintf("%02x",ENV['BASEBOX_IP'].split(".")[-1].to_i)}FFFF",  auto_config: false, nic_type: "virtio"
 
     override.vm.synced_folder ENV['CACHE_DIR'], '/vagrant'
