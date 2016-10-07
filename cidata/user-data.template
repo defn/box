@@ -16,6 +16,7 @@ users:
       - ${CONTAINER_SSH_KEY}
 
 manage_etc_hosts: true
+hostname: INSTANCE_ID
 
 write_files:
  - owner: root:root
@@ -24,6 +25,15 @@ write_files:
    content: |
        Acquire::http::Proxy "http://${CACHE_VIP}:3128";
        Acquire::Languages "none";
+
+lxd:
+  init:
+    network_address: 0.0.0.0
+    network_port: 8443
+    trust_password: ubuntu
+  bridge:
+    mode: existing
+    name: br0
 
 packages:
  - openssh-server
@@ -46,28 +56,24 @@ packages:
  - software-properties-common
  - btrfs-tools
  - ubuntu-fan
+ - linux-generic
+ - zfsutils-linux
+ - ifmetric
 
 runcmd:
-  - touch /root/.cloud-init.hostname
-  - install -d -o root -g root -m 0755  /var/run/sshd
+  - "apt purge -y open-iscsi"
+  - "add-apt-repository -y ppa:ubuntu-lxc/lxd-stable"
+  - "apt update"
+  - "env DEBIAN_FRONTEND=noninteractive apt -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold install -y lxd zfsutils-linux criu lxd-tools docker.io"
+  - "env DEBIAN_FRONTEND=noninteractive apt -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold upgrade -y"
+  - "usermod -aG lxd ubuntu"
+  - "usermod -aG docker ubuntu"
 
 --===============88888888888888888888888888==
 MIME-Version: 1.0
 Content-Type: text/cloud-boothook
 Content-Disposition: attachment; filename="part-002"
 
-#!/bin/bash
-exec 1>/root/.cloud-init.hostname
-exec 2>/root/.cloud-init.stderr
-echo "#cloud-config"
-echo "hostname: ${INSTANCE_ID}"
-echo "manage_etc_hosts: true"
-
---===============88888888888888888888888888==
-MIME-Version: 1.0
-Content-Type: text/x-include-once-url
-Content-Disposition: attachment; filename="part-003"
-
-file:///root/.cloud-init.hostname
+hostname "${INSTANCE_ID}"
 
 --===============88888888888888888888888888==

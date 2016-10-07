@@ -6,17 +6,6 @@ function main {
     echo "Waiting for cloud-init boot-finished: $(date)"
 		sleep 3
 	done
-
-  rm -f /var/lib/cloud/instance
-  if ! cloud-init init; then
-    return 1
-  fi
-
-  while true; do
-    if [[ -f "/var/lib/cloud/instance/boot-finished" ]]; then break; fi
-    echo "Waiting for cloud-init boot-finished: $(date)"
-    sleep 3
-  done
 }
 
 main "$@"

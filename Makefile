@@ -1,4 +1,4 @@
-all: cidata/meta-data cidata/user-data
+all: cidata.iso
 	@true
 
 cidata/user-data: cidata/user-data.template .ssh/ssh-container Makefile

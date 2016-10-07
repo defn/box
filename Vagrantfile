@@ -16,7 +16,7 @@ if ENV['VAGRANT_DEFAULT_PROVIDER'] == "aws"
 end
 
 ssh_keys = [
-  "#{shome}/.ssh/ssh-container"
+  "/Users/dnghiem/work/limbo/.ssh/ssh-container"
 ]
 
 Vagrant.configure("2") do |config|
