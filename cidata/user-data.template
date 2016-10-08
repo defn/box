@@ -61,7 +61,6 @@ packages:
  - ifmetric
 
 runcmd:
-  - sed -i -e '$a\\nUseDNS no\\nMaxAuthTries 20\\n" /etc/ssh/sshd_config
   - "apt purge -y open-iscsi"
   - "add-apt-repository -y ppa:ubuntu-lxc/lxd-stable"
   - "apt update"
