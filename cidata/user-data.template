@@ -19,4 +19,13 @@ manage_etc_hosts: true
 
 package_upgrade: true
 
+lxd:
+  init:
+    network_address: 0.0.0.0
+    network_port: 8443
+    trust_password: ubuntu
+  bridge:
+    mode: existing
+    name: br0
+
 --===============88888888888888888888888888==
