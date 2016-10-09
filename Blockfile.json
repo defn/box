@@ -13,8 +13,7 @@
       "homebrew",
       "pkgsrc"
     ],
-    [
-      "dream"
-    ]
+    "vagrant",
+    "provision"
   ]
 }
