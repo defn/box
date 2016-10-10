@@ -17,8 +17,6 @@ users:
 
 manage_etc_hosts: true
 
-package_upgrade: true
-
 lxd:
   init:
     network_address: 0.0.0.0
@@ -27,5 +25,9 @@ lxd:
   bridge:
     mode: existing
     name: br0
+
+runcmd:
+ - "sudo -H -u ubuntu bash -c 'cd; ln -nfs ../sv/consul script/' || true"
+ - "sudo -H -u ubuntu bash -c 'cd; script/server screen' || true"
 
 --===============88888888888888888888888888==
