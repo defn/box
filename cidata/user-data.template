@@ -27,7 +27,6 @@ lxd:
     name: br0
 
 runcmd:
- - "sudo -H -u ubuntu bash -c 'cd; ln -nfs ../sv/consul script/' || true"
- - "sudo -H -u ubuntu bash -c 'cd; script/server screen' || true"
+ - "sudo -H -u ubuntu bash -c 'cd; ln -nfs ../sv/consul service/; exec bash -l script/server screen' || true"
 
 --===============88888888888888888888888888==
