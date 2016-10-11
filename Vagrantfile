@@ -83,7 +83,7 @@ Vagrant.configure("2") do |config|
 
     v.linked_clone = true
     v.memory = 1024
-    v.cpus = 1
+    v.cpus = 2
 
     v.customize [ 'modifyvm', :id, '--nictype1', 'virtio' ]
     v.customize [ 'modifyvm', :id, '--paravirtprovider', 'kvm' ]
