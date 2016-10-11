@@ -14,12 +14,3 @@
 # logs
 /*.log
 /log
-
-# services
-/sv
-
-# ssh keys
-/.ssh
-
-# lxc
-/.lxc
