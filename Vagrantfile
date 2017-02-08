@@ -26,11 +26,9 @@ Vagrant.configure("2") do |config|
   config.ssh.insert_key = false
   config.ssh.private_key_path = ssh_keys
 
-  config.vm.base_mac = "00163EFFFF#{sprintf("%02x",ENV['BASEBOX_IP'].split(".")[-1].to_i)}"
-
   config.vm.provider "vmware_fusion" do |v, override|
     override.vm.box = ENV['BASEBOX_NAME']
-    override.vm.network "private_network", ip: ENV['BASEBOX_IP'], nic_type: "vmnet3"
+    #override.vm.network "private_network", ip: ENV['BASEBOX_IP'], nic_type: "vmnet3"
 
     override.vm.synced_folder ENV['HOME'], '/vagrant', disabled: true
     override.vm.synced_folder '/data', '/data', type: "nfs"
@@ -55,7 +53,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider "parallels" do |v, override|
     override.vm.box = ENV['BASEBOX_NAME']
-    override.vm.network "private_network", ip: ENV['BASEBOX_IP']
+    #override.vm.network "private_network", ip: ENV['BASEBOX_IP']
 
     override.vm.synced_folder ENV['HOME'], '/vagrant', disabled: true
     override.vm.synced_folder '/data', '/data', type: "nfs"
@@ -80,7 +78,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider "virtualbox" do |v, override|
     override.vm.box = ENV['BASEBOX_NAME']
-    override.vm.network "private_network", ip: ENV['BASEBOX_IP'], mac: "00163E#{sprintf("%02x",ENV['BASEBOX_IP'].split(".")[-1].to_i)}FFFF",  auto_config: false, nic_type: "virtio"
+    override.vm.network "private_network", ip: '172.28.128.10', nic_type: 'virtio'
 
     override.vm.synced_folder ENV['HOME'], '/vagrant', disabled: true
     override.vm.synced_folder '/data', '/data'
