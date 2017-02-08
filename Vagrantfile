@@ -33,7 +33,8 @@ Vagrant.configure("2") do |config|
     override.vm.network "private_network", ip: ENV['BASEBOX_IP'], nic_type: "vmnet3"
 
     override.vm.synced_folder ENV['HOME'], '/vagrant', disabled: true
-    override.vm.synced_folder ENV['CACHE_DIR'], ENV['CACHE_DIR'], type: "nfs"
+    override.vm.synced_folder '/data', '/data', type: "nfs"
+    override.vm.synced_folder '/config', '/config', type: "nfs"
 
     override.vm.provision "shell", path: ci_script, args: [], privileged: true
 
@@ -57,7 +58,9 @@ Vagrant.configure("2") do |config|
     override.vm.network "private_network", ip: ENV['BASEBOX_IP']
 
     override.vm.synced_folder ENV['HOME'], '/vagrant', disabled: true
-    override.vm.synced_folder ENV['CACHE_DIR'], ENV['CACHE_DIR'], type: "nfs"
+    override.vm.synced_folder '/data', '/data', type: "nfs"
+    override.vm.synced_folder '/config', '/config', type: "nfs"
+
 
     override.vm.provision "shell", path: ci_script, args: [], privileged: true
 
@@ -80,7 +83,9 @@ Vagrant.configure("2") do |config|
     override.vm.network "private_network", ip: ENV['BASEBOX_IP'], mac: "00163E#{sprintf("%02x",ENV['BASEBOX_IP'].split(".")[-1].to_i)}FFFF",  auto_config: false, nic_type: "virtio"
 
     override.vm.synced_folder ENV['HOME'], '/vagrant', disabled: true
-    override.vm.synced_folder ENV['CACHE_DIR'], ENV['CACHE_DIR']
+    override.vm.synced_folder '/data', '/data'
+    override.vm.synced_folder '/config', '/config'
+
 
     override.vm.provision "shell", path: ci_script, args: [], privileged: true
 
@@ -109,7 +114,9 @@ Vagrant.configure("2") do |config|
   config.vm.provider "aws" do |v, override|
     override.vm.box = ENV['BASEBOX_NAME']
     override.vm.synced_folder ENV['HOME'], '/vagrant', disabled: true
-    override.vm.synced_folder ENV['CACHE_DIR'], ENV['CACHE_DIR']
+    override.vm.synced_folder '/data', '/data'
+    override.vm.synced_folder '/config', '/config'
+
 
     override.vm.provision "shell", path: ci_script, args: [], privileged: true
 
@@ -135,7 +142,9 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider "docker" do |v, override|
     override.vm.synced_folder ENV['HOME'], '/vagrant', disabled: true
-    override.vm.synced_folder ENV['CACHE_DIR'], ENV['CACHE_DIR']
+    override.vm.synced_folder '/data', '/data'
+    override.vm.synced_folder '/config', '/config'
+
 
     v.image = ENV['BASEBOX_SOURCE'] || "#{ENV['BASEBOX_NAME']}:vagrant"
     v.cmd = [ "/usr/sbin/sshd", "-D" ]
