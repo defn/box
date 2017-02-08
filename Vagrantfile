@@ -86,7 +86,6 @@ Vagrant.configure("2") do |config|
     override.vm.synced_folder '/data', '/data'
     override.vm.synced_folder '/config', '/config'
 
-
     override.vm.provision "shell", path: ci_script, args: [], privileged: true
 
     v.linked_clone = true
@@ -95,6 +94,8 @@ Vagrant.configure("2") do |config|
 
     v.customize [ 'modifyvm', :id, '--nictype1', 'virtio' ]
     v.customize [ 'modifyvm', :id, '--paravirtprovider', 'kvm' ]
+    v.customize [ 'modifyvm', :id, '--cableconnected1', 'on' ]
+    v.customize [ 'modifyvm', :id, '--cableconnected2', 'on' ]
 
     v.customize [ 
       'storageattach', :id, 
