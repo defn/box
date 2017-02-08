@@ -1,18 +1,5 @@
 {
   "require": [
-    [ 
-      "cache",
-      "squid",
-      "artifacts",
-      "launch-config",
-      "python",
-      "service"
-    ],
-    [
-      "build-essential",
-      "homebrew",
-      "pkgsrc"
-    ],
     "vagrant",
     "provision"
   ]
