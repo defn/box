@@ -9,11 +9,6 @@ case "${VAGRANT_DEFAULT_PROVIDER:-}" in
   vmware*)    basebox_type='vmx' ;;
   virtualbox) basebox_type='ovf' ;;
   parallels)  basebox_type='pvm' ;;
-  docker)     
-    if [[ -n "${BASEBOX_INSTANCE:-}" ]]; then
-      VAGRANT_CWD="$shome/instance/${BASEBOX_INSTANCE}-${VAGRANT_DEFAULT_PROVIDER}"
-    fi
-    ;;
 esac
 
 

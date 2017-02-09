@@ -138,34 +138,4 @@ Vagrant.configure("2") do |config|
       'Provisioner' => 'vagrant'
     }
   end
-
-  config.vm.provider "docker" do |v, override|
-    override.vm.synced_folder ENV['HOME'], '/vagrant', disabled: true
-    override.vm.synced_folder '/data', '/data'
-    override.vm.synced_folder '/config', '/config'
-
-
-    v.image = ENV['BASEBOX_SOURCE'] || "#{ENV['BASEBOX_NAME']}:vagrant"
-    v.cmd = [ "/usr/sbin/sshd", "-D" ]
-    v.volumes = [ "/var/run/sshd" ]
-    v.create_args = [ ]
-    v.has_ssh = true
-
-    module VagrantPlugins
-      module DockerProvider
-        class Provider < Vagrant.plugin("2", :provider)
-          def host_vm?
-            false
-          end
-        end
-        module Action
-          class Create
-            def forwarded_ports(include_ssh=false)
-              return []
-            end
-          end
-        end
-      end
-    end # end docker monkey patching
-  end
 end
