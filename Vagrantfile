@@ -16,7 +16,7 @@ if ENV['VAGRANT_DEFAULT_PROVIDER'] == "aws"
 end
 
 ssh_keys = [
-  "#{ENV['BLOCK_PATH']}/limbo/.ssh/ssh-container"
+  "#{ENV['BLOCK_PATH']}/base/.ssh/ssh-container"
 ]
 
 Vagrant.configure("2") do |config|
@@ -46,7 +46,7 @@ Vagrant.configure("2") do |config|
     v.vmx["ethernet1.vnet"] = "vmnet3"
 
     v.vmx["ide1:0.present"]    = "TRUE"
-    v.vmx["ide1:0.fileName"]   = "#{shome}/cidata.iso"
+    v.vmx["ide1:0.fileName"]   = "#{ENV['BLOCK_PATH']}/base/cidata.iso"
     v.vmx["ide1:0.deviceType"] = "cdrom-image"
     v.vmx["ide1:0.startconnected"] = "TRUE"
   end
@@ -71,7 +71,7 @@ Vagrant.configure("2") do |config|
     v.customize [
       "set", :id,
       "--device-set", "cdrom0",
-      "--image", "#{shome}/cidata.iso",
+      "--image", "#{ENV['BLOCK_PATH']}/base/cidata.iso",
       "--connect"
     ]
   end
@@ -101,7 +101,7 @@ Vagrant.configure("2") do |config|
       '--port', 1, 
       '--device', 0, 
       '--type', 'dvddrive', 
-      '--medium', "#{shome}/cidata.iso"
+      '--medium', "#{ENV['BLOCK_PATH']}/base/cidata.iso"
     ]
     v.customize [
       'storagectl', :id,
@@ -125,7 +125,7 @@ Vagrant.configure("2") do |config|
     v.access_key_id = aws_access_key_id
     v.secret_access_key= aws_secret_access_key
 
-    v.keypair_name = "vagrant-#{Digest::MD5.file("#{shome}/.ssh/ssh-container.pub").hexdigest}"
+    v.keypair_name = "vagrant-#{Digest::MD5.file("#{ENV['BLOCK_PATH']}/base/.ssh/ssh-container.pub").hexdigest}"
     v.instance_type = 't2.medium'
     v.block_device_mapping = [
       { 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 100 },
