@@ -112,6 +112,10 @@ Vagrant.configure("2") do |config|
     v.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']
     v.session_token = ENV['AWS_SESSION_TOKEN'] if ENV['AWS_SESSION_TOKEN']
 
+    v.ssh_host_attribute = :private_ip_address
+    v.subnet_id = ENV['aws_subnet_id']
+    v.security_groups = ENV['aws_security_groups'].split(/\s+/)
+
     v.keypair_name = "vagrant-#{Digest::MD5.file("#{ENV['BLOCK_PATH']}/base/.ssh/ssh-container.pub").hexdigest}"
     v.instance_type = 't2.nano'
     v.block_device_mapping = [
