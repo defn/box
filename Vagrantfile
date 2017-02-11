@@ -100,9 +100,8 @@ Vagrant.configure("2") do |config|
   config.vm.provider "aws" do |v, override|
     override.vm.box = ENV['BASEBOX_NAME']
     override.vm.synced_folder ENV['HOME'], '/vagrant', disabled: true
-    override.vm.synced_folder '/data', '/data'
+    override.vm.synced_folder '/data/cache/packages', '/data/cache/packages'
     override.vm.synced_folder '/config', '/config'
-
 
     override.vm.provision "shell", path: ci_script, args: [], privileged: true
 
@@ -111,7 +110,7 @@ Vagrant.configure("2") do |config|
     v.region = ENV['AWS_DEFAULT_REGION']
     v.access_key_id = ENV['AWS_ACCESS_KEY_ID']
     v.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']
-    v.aws.session_token = ENV['AWS_SESSION_TOKEN'] if ENV['AWS_SESSION_TOKEN']
+    v.session_token = ENV['AWS_SESSION_TOKEN'] if ENV['AWS_SESSION_TOKEN']
 
     v.keypair_name = "vagrant-#{Digest::MD5.file("#{ENV['BLOCK_PATH']}/base/.ssh/ssh-container.pub").hexdigest}"
     v.instance_type = 't2.nano'
