@@ -101,7 +101,6 @@ Vagrant.configure("2") do |config|
     override.vm.box = ENV['BASEBOX_NAME']
     override.vm.synced_folder ENV['HOME'], '/vagrant', disabled: true
     override.vm.synced_folder '/data/cache/packages', '/data/cache/packages'
-    override.vm.synced_folder '/config', '/config'
 
     override.vm.provision "shell", path: ci_script, args: [], privileged: true
 
