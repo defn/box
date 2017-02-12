@@ -6,11 +6,6 @@ function main {
   source limbo_common
 
   vagrant up --no-provision
-  case "$VAGRANT_DEFAULT_PROVIDER" in
-    aws)
-      limbo sync
-      ;;
-  esac
   if [[ "$#" == 0 ]]; then
     set -- provision
   fi
