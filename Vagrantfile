@@ -111,8 +111,8 @@ Vagrant.configure("2") do |config|
     v.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']
     v.session_token = ENV['AWS_SESSION_TOKEN'] if ENV['AWS_SESSION_TOKEN']
 
-    #v.ssh_host_attribute = :private_ip_address
-    v.associate_public_ip = true if ENV['aws_subnet_id']
+    v.ssh_host_attribute = :private_ip_address if if ENV['aws_subnet_id']
+    v.associate_public_ip = false if ENV['aws_subnet_id']
     v.subnet_id = ENV['aws_subnet_id'] if ENV['aws_subnet_id']
     v.security_groups = ENV['aws_security_groups'].split(/\s+/) if ENV['aws_security_groups']
 
