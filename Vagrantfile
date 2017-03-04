@@ -101,6 +101,7 @@ Vagrant.configure("2") do |config|
     override.vm.box = ENV['BASEBOX_NAME']
     override.vm.synced_folder ENV['HOME'], '/vagrant', disabled: true
     override.vm.synced_folder '/data/cache/packages', '/data/cache/packages'
+    override.vm.synced_folder '/data/cache/wheels', '/data/cache/wheels'
 
     override.vm.provision "shell", path: ci_script, args: [], privileged: true
 
@@ -117,7 +118,7 @@ Vagrant.configure("2") do |config|
     v.security_groups = ENV['aws_security_groups'].split(/\s+/) if ENV['aws_security_groups']
 
     v.keypair_name = "vagrant-#{Digest::MD5.file("#{ENV['BLOCK_PATH']}/base/.ssh/ssh-container.pub").hexdigest}"
-    v.instance_type = 't2.nano'
+    v.instance_type = 'm3.medium'
     v.block_device_mapping = [
       { 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 100 },
       { 'DeviceName' => '/dev/sdb', 'VirtualName' => 'ephemeral0', },
