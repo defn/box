@@ -120,7 +120,7 @@ Vagrant.configure("2") do |config|
     v.keypair_name = "vagrant-#{Digest::MD5.file("#{ENV['BLOCK_PATH']}/base/.ssh/ssh-container.pub").hexdigest}"
     v.instance_type = 'm3.medium'
     v.block_device_mapping = [
-      { 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 100 },
+      { 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 30 },
       { 'DeviceName' => '/dev/sdb', 'VirtualName' => 'ephemeral0', },
       { 'DeviceName' => '/dev/sdc', 'VirtualName' => 'ephemeral1', },
       { 'DeviceName' => '/dev/sdd', 'VirtualName' => 'ephemeral2', },
