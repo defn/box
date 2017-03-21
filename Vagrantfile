@@ -1,3 +1,30 @@
+require "net/ssh"
+
+module Net::SSH
+  class << self
+    alias_method :old_start, :start
+
+    def start(host, username, opts)
+      opts[:keys_only] = false
+      self.old_start(host, username, opts)
+    end
+  end
+end
+
+Vagrant.configure("2") do |config|
+  module Vagrant
+    module Util
+      class Platform
+        class << self
+          def solaris?
+            true
+          end
+        end
+      end
+		end
+	end
+end
+
 shome=File.expand_path("..", __FILE__)
 
 ci_script = "#{shome}/script/cloud-init-bootstrap"
@@ -112,7 +139,7 @@ Vagrant.configure("2") do |config|
     v.subnet_id = ENV['aws_subnet_id'] if ENV['aws_subnet_id']
     v.security_groups = ENV['aws_security_groups'].split(/\s+/) if ENV['aws_security_groups']
 
-    v.keypair_name = ENV['aws_keypair'] || "default"
+    v.keypair_name = ENV['AWS_KEYPAIR']
     v.instance_type = 'm3.medium'
     v.block_device_mapping = [
       { 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 30 },
