@@ -2,16 +2,11 @@ shome=File.expand_path("..", __FILE__)
 
 ci_script = "#{shome}/script/cloud-init-bootstrap"
 
-ssh_keys = [
-  "#{ENV['BLOCK_PATH']}/base/.ssh/ssh-container"
-]
-
 Vagrant.configure("2") do |config|
   config.ssh.shell = "bash"
   config.ssh.username = "ubuntu"
   config.ssh.forward_agent = true
   config.ssh.insert_key = false
-  config.ssh.private_key_path = ssh_keys
 
   config.vm.provider "vmware_fusion" do |v, override|
     override.vm.box = ENV['BASEBOX_NAME']
@@ -117,7 +112,7 @@ Vagrant.configure("2") do |config|
     v.subnet_id = ENV['aws_subnet_id'] if ENV['aws_subnet_id']
     v.security_groups = ENV['aws_security_groups'].split(/\s+/) if ENV['aws_security_groups']
 
-    v.keypair_name = "vagrant-#{Digest::MD5.file("#{ENV['BLOCK_PATH']}/base/.ssh/ssh-container.pub").hexdigest}"
+    v.keypair_name = ENV['aws_keypair'] || "default"
     v.instance_type = 'm3.medium'
     v.block_device_mapping = [
       { 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 30 },
