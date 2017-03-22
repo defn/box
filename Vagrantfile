@@ -55,7 +55,7 @@ Vagrant.configure("2") do |config|
     v.vmx["ethernet1.vnet"] = "vmnet3"
 
     v.vmx["ide1:0.present"]    = "TRUE"
-    v.vmx["ide1:0.fileName"]   = "#{ENV['BLOCK_PATH']}/base/cidata.iso"
+    v.vmx["ide1:0.fileName"]   = "#{ENV['BLOCK_PATH']}/base/cidata.vagrant"
     v.vmx["ide1:0.deviceType"] = "cdrom-image"
     v.vmx["ide1:0.startconnected"] = "TRUE"
   end
@@ -80,7 +80,7 @@ Vagrant.configure("2") do |config|
     v.customize [
       "set", :id,
       "--device-set", "cdrom0",
-      "--image", "#{ENV['BLOCK_PATH']}/base/cidata.iso",
+      "--image", "#{ENV['BLOCK_PATH']}/base/cidata.vagrant",
       "--connect"
     ]
   end
@@ -110,7 +110,7 @@ Vagrant.configure("2") do |config|
       '--port', 1, 
       '--device', 0, 
       '--type', 'dvddrive', 
-      '--medium', "#{ENV['BLOCK_PATH']}/base/cidata.iso"
+      '--medium', "#{ENV['BLOCK_PATH']}/base/cidata.vagrant"
     ]
     v.customize [
       'storagectl', :id,
