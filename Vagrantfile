@@ -142,7 +142,7 @@ Vagrant.configure("2") do |config|
     v.keypair_name = ENV['AWS_KEYPAIR']
     v.instance_type = 'm3.medium'
     v.block_device_mapping = [
-      { 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 30 },
+      { 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 40 },
       { 'DeviceName' => '/dev/sdb', 'VirtualName' => 'ephemeral0', },
       { 'DeviceName' => '/dev/sdc', 'VirtualName' => 'ephemeral1', },
       { 'DeviceName' => '/dev/sdd', 'VirtualName' => 'ephemeral2', },
