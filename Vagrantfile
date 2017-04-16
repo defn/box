@@ -123,8 +123,8 @@ Vagrant.configure("2") do |config|
     override.vm.box = ENV['BASEBOX_NAME']
     override.nfs.functional = false
     override.vm.synced_folder ENV['HOME'], '/vagrant', disabled: true
-    override.vm.synced_folder '/data/cache/packages', '/data/cache/packages'
-    override.vm.synced_folder '/data/cache/wheels', '/data/cache/wheels'
+    #override.vm.synced_folder '/data/cache/packages', '/data/cache/packages'
+    #override.vm.synced_folder '/data/cache/wheels', '/data/cache/wheels'
     override.vm.synced_folder '/data/cache/nodist', '/data/cache/nodist'
 
     override.vm.provision "shell", path: ci_script, args: [], privileged: true
@@ -142,7 +142,7 @@ Vagrant.configure("2") do |config|
     v.security_groups = [ ENV['AWS_SG'] ]
 
     v.keypair_name = ENV['AWS_KEYPAIR']
-    v.instance_type = 'm3.medium'
+    v.instance_type = ENV['AWS_TYPE'] || 'm3.medium'
     v.block_device_mapping = [
       { 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 40 },
       { 'DeviceName' => '/dev/sdb', 'VirtualName' => 'ephemeral0', },
