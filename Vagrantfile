@@ -135,10 +135,10 @@ Vagrant.configure("2") do |config|
     v.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY'] || %x{aws configure get aws_secret_access_key}.chomp
     v.session_token = ENV['AWS_SESSION_TOKEN'] if ENV['AWS_SESSION_TOKEN'] || %x{aws configure get aws_session_token}.chomp
 
-    v.ssh_host_attribute = :private_ip_address if ENV['aws_subnet_id']
-    v.associate_public_ip = false if ENV['aws_subnet_id']
-    v.subnet_id = ENV['aws_subnet_id'] if ENV['aws_subnet_id']
-    v.security_groups = ENV['aws_security_groups'].split(/\s+/) if ENV['aws_security_groups']
+    v.associate_public_ip = ENV['AWS_SUBNET'] ? (ENV['AWS_PUBLIC'] ? true : false) : true
+    v.ssh_host_attribute = ENV['AWS_SUBNET'] ? (ENV['AWS_PUBLIC'] ? :public_ip_address : :private_ip_address) : :public_ip_address
+    v.subnet_id = ENV['AWS_SUBNET'] if ENV['AWS_SUBNET']
+    v.security_groups = ENV['AWS_SG'].split(/\s+/) if ENV['AWS_SG']
 
     v.keypair_name = ENV['AWS_KEYPAIR']
     v.instance_type = 'm3.medium'
