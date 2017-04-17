@@ -141,7 +141,7 @@ Vagrant.configure("2") do |config|
     v.security_groups = [ ENV['AWS_SG'] ]
 
     v.keypair_name = ENV['AWS_KEYPAIR']
-    v.instance_type = ENV['AWS_TYPE'] || 'm3.medium'
+    v.instance_type = ENV['AWS_TYPE'] || 'c4.large'
     v.block_device_mapping = [
       { 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 40 },
       { 'DeviceName' => '/dev/sdb', 'VirtualName' => 'ephemeral0', },
