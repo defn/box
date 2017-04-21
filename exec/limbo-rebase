@@ -6,7 +6,6 @@ function main {
   source limbo_common
 
   limbo media packer
-  env BASEBOX_SOURCE="${BASEBOX_NAME}:packer" limbo build "$@"
 }
 
 source sub-chain "$BASH_SOURCE" "$@"
