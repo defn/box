@@ -6,6 +6,11 @@ function main {
   source limbo_common
 
   limbo export "$@"
+  case "${1:-}" in
+    aws)
+      limbo vagrant destroy -f
+      ;;
+  esac
   limbo repackage "$@"
 }
 
