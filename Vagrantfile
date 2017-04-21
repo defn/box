@@ -35,56 +35,6 @@ Vagrant.configure("2") do |config|
   config.ssh.forward_agent = true
   config.ssh.insert_key = false
 
-  config.vm.provider "vmware_fusion" do |v, override|
-    override.vm.box = ENV['BASEBOX_NAME']
-    #override.vm.network "private_network", ip: ENV['BASEBOX_IP'], nic_type: "vmnet3"
-
-    override.vm.synced_folder ENV['HOME'], '/vagrant', disabled: true
-    override.vm.synced_folder '/data', '/data', type: "nfs"
-    override.vm.synced_folder '/config', '/config', type: "nfs"
-
-    override.vm.provision "shell", path: ci_script, args: [], privileged: true
-
-    v.gui = false
-    v.linked_clone = true
-    v.verify_vmnet = true
-    v.vmx["memsize"] = "1024"
-    v.vmx["numvcpus"] = "1"
-
-    v.vmx["ethernet0.vnet"] = "vmnet3"
-    v.vmx["ethernet1.vnet"] = "vmnet3"
-
-    v.vmx["ide1:0.present"]    = "TRUE"
-    v.vmx["ide1:0.fileName"]   = "#{ENV['BLOCK_PATH']}/base/cidata.vagrant.iso"
-    v.vmx["ide1:0.deviceType"] = "cdrom-image"
-    v.vmx["ide1:0.startconnected"] = "TRUE"
-  end
-
-  config.vm.provider "parallels" do |v, override|
-    override.vm.box = ENV['BASEBOX_NAME']
-    #override.vm.network "private_network", ip: ENV['BASEBOX_IP']
-
-    override.vm.synced_folder ENV['HOME'], '/vagrant', disabled: true
-    override.vm.synced_folder '/data', '/data', type: "nfs"
-    override.vm.synced_folder '/config', '/config', type: "nfs"
-
-
-    override.vm.provision "shell", path: ci_script, args: [], privileged: true
-
-    v.linked_clone = ENV['LIMBO_LINKED_CLONE'] ? true : false
-    v.check_guest_tools = false
-    
-    v.memory = 1024
-    v.cpus = 1
-
-    v.customize [
-      "set", :id,
-      "--device-set", "cdrom0",
-      "--image", "#{ENV['BLOCK_PATH']}/base/cidata.vagrant.iso",
-      "--connect"
-    ]
-  end
-
   config.vm.provider "virtualbox" do |v, override|
     override.vm.box = ENV['BASEBOX_NAME']
     override.vm.network "private_network", ip: '172.28.128.10', nic_type: 'virtio'
