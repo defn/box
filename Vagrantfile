@@ -123,8 +123,8 @@ Vagrant.configure("2") do |config|
     override.vm.box = ENV['BASEBOX_NAME']
     override.nfs.functional = false
     override.vm.synced_folder ENV['HOME'], '/vagrant', disabled: true
-    override.vm.synced_folder '/data/cache/nodist', '/data/cache/nodist'
-    override.vm.synced_folder ENV['AWS_SYNC'], ENV['AWS_SYNC'] if ENV['AWS_SYNC']
+    override.vm.synced_folder '/data/cache/nodist', '/data/cache/nodist', type: "rsync", rsync__args: [ "-ia" ]
+    override.vm.synced_folder ENV['AWS_SYNC'], ENV['AWS_SYNC'], type: "rsync", rsync__args: [ "-ia" ] if ENV['AWS_SYNC']
 
     override.vm.provision "shell", path: ci_script, args: [], privileged: true
 
