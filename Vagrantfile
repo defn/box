@@ -40,8 +40,8 @@ Vagrant.configure("2") do |config|
     override.vm.network "private_network", ip: '172.28.128.10', nic_type: 'virtio'
 
     override.vm.synced_folder ENV['HOME'], '/vagrant', disabled: true
-    override.vm.synced_folder '/data', '/data'
-    override.vm.synced_folder '/config', '/config'
+    override.vm.synced_folder '/data', '/data', type: "nfs"
+    override.vm.synced_folder '/config', '/config', type: "nfs"
 
     override.vm.provision "shell", path: ci_script, args: [], privileged: true
 
