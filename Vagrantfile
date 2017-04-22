@@ -81,9 +81,9 @@ Vagrant.configure("2") do |config|
     v.ami = "meh" if ENV['LIMBO_FAKE']
 
     v.region = ENV['AWS_DEFAULT_REGION']
-    v.access_key_id = ENV['AWS_ACCESS_KEY_ID'] || %x{aws configure get aws_access_key_id}.chomp
-    v.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY'] || %x{aws configure get aws_secret_access_key}.chomp
-    v.session_token = ENV['AWS_SESSION_TOKEN'] if ENV['AWS_SESSION_TOKEN'] || %x{aws configure get aws_session_token}.chomp
+    v.access_key_id = ENV['AWS_ACCESS_KEY_ID']
+    v.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']
+    v.session_token = ENV['AWS_SESSION_TOKEN'] if ENV['AWS_SESSION_TOKEN']
 
     v.associate_public_ip = ENV['AWS_PUBLIC'] == "true" ? true : false
     v.ssh_host_attribute = ENV['AWS_PRIVATE'] == "true" ? :private_ip_address : :public_ip_address
