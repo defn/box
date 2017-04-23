@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
 
-function limbo_media_add {
-  basebox remove || true
-  basebox add
-}
-
-function limbo_media_prep {
-  env LIMBO_FAKE=1 vagrant destroy -f
-}
-
 function main {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
   source "$shome/script/profile"
@@ -20,10 +11,11 @@ function main {
     shift
   fi
 
-  limbo_media_prep
+  env LIMBO_FAKE=1 vagrant destroy -f
   set -- "$nm_export" "$@"
   basebox build "$@"
-  limbo_media_add
+  basebox remove "$nm_suffix" || true
+  basebox add "$nm_suffix"
 }
 
 source sub "$BASH_SOURCE" "$@"
