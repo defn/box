@@ -5,12 +5,11 @@ function main {
   source "$shome/script/profile"
   source limbo_common
 
-  vagrant up --no-provision
-  if [[ "$#" == 0 ]]; then
-    set -- provision
+  if [[ -n "${1:-}" ]]; then
+    export BASEBOX_NAME="$1"; shift
   fi
-
-  vagrant "$@"
+  vagrant up --no-provision
+  vagrant provision
 }
 
 source sub-chain "$BASH_SOURCE" "$@"
