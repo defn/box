@@ -1,15 +1,5 @@
 #!/usr/bin/env bash
 
-function limbo_media_add {
-  basebox remove || true
-  basebox add
-}
-
-function limbo_media_prep {
-  vagrant destroy -f
-  (set +f; rm -f "${CACHE_DIR}/box/${VAGRANT_DEFAULT_PROVIDER}/${BASEBOX_NAME}${nm_suffix}.ovf" ${CACHE_DIR}/box/${VAGRANT_DEFAULT_PROVIDER}/${BASEBOX_NAME}${nm_suffix}-disk*.vmdk)
-}
-
 function source_id {
   echo "${CACHE_DIR}/box/${VAGRANT_DEFAULT_PROVIDER}/${BASEBOX_NAME}${nm_suffix}.ovf"
 }
@@ -29,8 +19,10 @@ function main {
 
   set -- "$basebox_type" "$nm_export" "$@"
   basebox build "$@"
-  limbo_media_prep
-  limbo_media_add
+  vagrant destroy -f
+  (set +f; rm -f "${CACHE_DIR}/box/${VAGRANT_DEFAULT_PROVIDER}/${BASEBOX_NAME}${nm_suffix}.ovf" ${CACHE_DIR}/box/${VAGRANT_DEFAULT_PROVIDER}/${BASEBOX_NAME}${nm_suffix}-disk*.vmdk)
+  basebox remove "$nm_suffix" || true
+  basebox add "$nm_suffix"
 }
 
 source sub "$BASH_SOURCE" "$@"

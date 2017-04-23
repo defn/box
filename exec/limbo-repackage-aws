@@ -17,13 +17,12 @@ function main {
     shift
   fi
 
-  export BASEBOX_SOURCE="$(source_id)"
+  export BASEBOX_SOURCE="${AMI_SOURCE:-$(source_id)}"
 
   basebox build "$@"
   vagrant destroy -f
-  basebox remove || true
-  basebox add
+  basebox remove "$nm_suffix" || true
+  basebox add "$nm_suffix"
 }
 
 source sub-chain "$BASH_SOURCE" "$@"
-
