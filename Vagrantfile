@@ -79,6 +79,7 @@ Vagrant.configure("2") do |config|
     override.vm.provision "shell", path: ci_script, args: [], privileged: true
 
     v.ami = "meh" if ENV['LIMBO_FAKE']
+    v.ami = ENV['AWS_INSTANCE'] if ENV['AWS_INSTANCE']
 
     v.region = ENV['AWS_DEFAULT_REGION']
     v.access_key_id = ENV['AWS_ACCESS_KEY_ID']
