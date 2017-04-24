@@ -71,6 +71,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider "aws" do |v, override|
     override.vm.box = ENV['BASEBOX_NAME']
+    override.vm.box = ENV['BASEBOX_NAME_OVERRIDE'] if ENV['BASEBOX_NAME_OVERRIDE']
     override.nfs.functional = false
     override.vm.synced_folder ENV['HOME'], '/vagrant', disabled: true
     override.vm.synced_folder '/data/cache/nodist', '/data/cache/nodist', type: "rsync", rsync__args: [ "-ia" ]
