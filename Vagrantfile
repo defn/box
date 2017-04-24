@@ -37,6 +37,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider "virtualbox" do |v, override|
     override.vm.box = ENV['BASEBOX_NAME']
+    override.vm.box = ENV['BASEBOX_NAME_OVERRIDE'] if ENV['BASEBOX_NAME_OVERRIDE']
     override.vm.network "private_network", ip: '172.28.128.10', nic_type: 'virtio'
 
     override.vm.synced_folder ENV['HOME'], '/vagrant', disabled: true
