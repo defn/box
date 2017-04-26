@@ -88,8 +88,8 @@ Vagrant.configure("2") do |config|
     v.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']
     v.session_token = ENV['AWS_SESSION_TOKEN'] if ENV['AWS_SESSION_TOKEN']
 
-    v.associate_public_ip = ENV['AWS_PUBLIC'] == "true" ? true : false
-    v.ssh_host_attribute = ENV['AWS_PRIVATE'] == "true" ? :private_ip_address : :public_ip_address
+    v.associate_public_ip = false
+    v.ssh_host_attribute = :private_ip_address
     v.subnet_id = ENV['AWS_SUBNET'] if ENV['AWS_SUBNET']
     v.security_groups = [ ENV['AWS_SG'] ]
 
