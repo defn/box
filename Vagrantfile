@@ -86,15 +86,15 @@ Vagrant.configure("2") do |config|
     v.region = ENV['AWS_DEFAULT_REGION']
     v.access_key_id = ENV['AWS_ACCESS_KEY_ID']
     v.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']
-    v.session_token = ENV['AWS_SESSION_TOKEN'] if ENV['AWS_SESSION_TOKEN']
+    v.session_token = ENV['AWS_SESSION_TOKEN']
 
     v.associate_public_ip = false
     v.ssh_host_attribute = :private_ip_address
-    v.subnet_id = ENV['AWS_SUBNET'] if ENV['AWS_SUBNET']
-    v.security_groups = [ ENV['AWS_SG'] ]
+    v.subnet_id = ENV['AWS_SUBNET']
+    v.security_groups = ENV['AWS_SG'].split(/\s+/)
 
     v.keypair_name = ENV['AWS_KEYPAIR']
-    v.instance_type = ENV['AWS_TYPE'] || 'c4.large'
+    v.instance_type = ENV['AWS_TYPE'] || 't2.small'
     v.block_device_mapping = [
       { 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 40 },
       { 'DeviceName' => '/dev/sdb', 'VirtualName' => 'ephemeral0', },
