@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-export VAGRANT_DEFAULT_PROVIDER='vmware_fusion'
-
-source sub-middleware "$BASH_SOURCE" "$@"

@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-export VAGRANT_DEFAULT_PROVIDER='parallels'
-
-source sub-middleware "$BASH_SOURCE" "$@"
