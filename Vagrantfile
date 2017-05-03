@@ -27,5 +27,7 @@ Vagrant.configure("2") do |config|
     override.vm.synced_folder '/data/cache/nodist', '/data/cache/nodist', type: "rsync", rsync__args: [ "-ia" ]
     override.vm.synced_folder ENV['AWS_SYNC'], ENV['AWS_SYNC'], type: "rsync", rsync__args: [ "-ia" ] if ENV['AWS_SYNC']
     override.vm.provision "shell", path: ci_script, args: [], privileged: true
+
+    v.ami = ENV['AWS_AMI'] if ENV['AWS_AMI']
   end
 end
