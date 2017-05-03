@@ -1,3 +1,4 @@
+shome=File.expand_path("..", __FILE__)
 ci_script = "#{shome}/script/cloud-init-bootstrap"
 
 Vagrant.configure("2") do |config|
@@ -11,7 +12,6 @@ Vagrant.configure("2") do |config|
     v.memory = 1024
     v.cpus = 2
 
-    shome=File.expand_path("..", __FILE__)
     v.customize [ 
       'storageattach', :id, 
       '--storagectl', 'SATA Controller', 
