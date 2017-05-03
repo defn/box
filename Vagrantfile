@@ -1,30 +1,3 @@
-require "net/ssh"
-
-module Net::SSH
-  class << self
-    alias_method :old_start, :start
-
-    def start(host, username, opts)
-      opts[:keys_only] = false
-      self.old_start(host, username, opts)
-    end
-  end
-end
-
-Vagrant.configure("2") do |config|
-  module Vagrant
-    module Util
-      class Platform
-        class << self
-          def solaris?
-            true
-          end
-        end
-      end
-		end
-	end
-end
-
 shome=File.expand_path("..", __FILE__)
 
 ci_script = "#{shome}/script/cloud-init-bootstrap"
@@ -66,11 +39,9 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provider "aws" do |v, override|
-    override.vm.box = ENV['BASEBOX_NAME']
-    override.vm.box = ENV['BASEBOX_NAME_OVERRIDE'] if ENV['BASEBOX_NAME_OVERRIDE']
+    override.vm.box = ENV['BASEBOX_NAME_OVERRIDE'] ? ENV['BASEBOX_NAME_OVERRIDE'] : ENV['BASEBOX_NAME']
     override.vm.synced_folder '/data/cache/nodist', '/data/cache/nodist', type: "rsync", rsync__args: [ "-ia" ]
     override.vm.synced_folder ENV['AWS_SYNC'], ENV['AWS_SYNC'], type: "rsync", rsync__args: [ "-ia" ] if ENV['AWS_SYNC']
-
     override.vm.provision "shell", path: ci_script, args: [], privileged: true
   end
 end
