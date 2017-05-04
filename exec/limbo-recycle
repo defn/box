@@ -5,7 +5,7 @@ function main {
   source "$shome/script/profile"
   source limbo_common
 
-  vagrant destroy -f || true
+  vagrant destroy -f 1>/dev/null 2>&1 || true
   limbo build "$@"
 }
 
