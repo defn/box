@@ -11,7 +11,7 @@ function main {
     shift
   fi
 
-  env AWS_AMI=id-fake vagrant destroy -f >/dev/null 2>&1 || true
+  vagrant destroy -f >/dev/null 2>&1 || true
   set -- "$nm_export" "$@"
   basebox build "$@"
   basebox remove "$nm_suffix" || true

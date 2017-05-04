@@ -21,7 +21,7 @@ function main {
 
   set -- "$nm_export" "$@"
   basebox build "$@"
-  vagrant destroy -f
+  vagrant destroy -f >/dev/null 2>&1 || true
   basebox remove "$nm_suffix" || true
   basebox add "$nm_suffix"
 }
