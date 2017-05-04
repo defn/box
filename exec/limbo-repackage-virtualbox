@@ -19,7 +19,7 @@ function main {
 
   set -- "$basebox_type" "$nm_export" "$@"
   basebox build "$@"
-  vagrant destroy -f
+  vagrant destroy -f >/dev/null 2>&1 || true
   (set +f; rm -f "${CACHE_DIR}/box/${VAGRANT_DEFAULT_PROVIDER}/${BASEBOX_NAME}${nm_suffix}.ovf" ${CACHE_DIR}/box/${VAGRANT_DEFAULT_PROVIDER}/${BASEBOX_NAME}${nm_suffix}-disk*.vmdk)
   basebox remove "$nm_suffix" || true
   basebox add "$nm_suffix"

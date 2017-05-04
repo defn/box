@@ -19,7 +19,7 @@ function main {
 
   export BASEBOX_SOURCE="${AMI_SOURCE:-$(source_id)}"
 
-  set -- "$nm_export" "$@"
+  set -- aws "$nm_export" "$@"
   basebox build "$@"
   vagrant destroy -f >/dev/null 2>&1 || true
   basebox remove "$nm_suffix" || true
