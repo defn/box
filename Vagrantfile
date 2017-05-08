@@ -1,5 +1,5 @@
 shome=File.expand_path("..", __FILE__)
-ci_script = "#{shome}/script/cloud-init-bootstrap"
+ci_script = "#{ENV['BLOCK_PATH']}/limbo/script/cloud-init-bootstrap"
 
 Vagrant.configure("2") do |config|
   config.vm.provider "virtualbox" do |v, override|
