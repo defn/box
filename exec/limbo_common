@@ -2,12 +2,6 @@
 
 source normalize
 
-export VAGRANT_CWD="$shome${BASEBOX_INSTANCE:+/instance/${BASEBOX_INSTANCE}}"
-if [[ "$VAGRANT_CWD" != "$shome" ]]; then
-  mkdir -p "$VAGRANT_CWD"
-  ln -nfs "$shome/Vagrantfile" "$VAGRANT_CWD/"
-fi 
-
 local basebox_type=
 case "${VAGRANT_DEFAULT_PROVIDER:-}" in
   virtualbox) basebox_type='ovf' ;;
