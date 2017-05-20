@@ -22,8 +22,6 @@ function main {
   set -- aws "$nm_export" "$@"
   basebox build "$@"
   vagrant destroy -f >/dev/null 2>&1 || true
-  basebox remove "$nm_suffix" || true
-  basebox add "$nm_suffix"
 }
 
 source sub-chain "$BASH_SOURCE" "$@"
