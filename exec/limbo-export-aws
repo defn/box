@@ -11,7 +11,7 @@ function main {
     case "$state" in
       available)
         if [[ -n "${GOLDEN_NAME:-}" ]]; then
-          aws ec2 create-tags --resource "$id_ami" --tags Key=Block,Value="$GOLDEN_NAME"
+          aws ec2 create-tags --resource "$id_ami" --tags Key=Block,Value="$GOLDEN_NAME-$(date +%s)"
         fi
         break
         ;;
