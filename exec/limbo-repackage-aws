@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function source_id {
-  aws ec2 describe-images --filter Name=name,Values="${BASEBOX_NAME}-vagrant-$(aws configure get region)"'-*' --owners self \
+  aws ec2 describe-images --filter Name=name,Values="block-vagrant-$(aws configure get region)"'-*' --owners self \
     | jq -r '.Images | sort_by(.CreationDate)[] | select(.State != "failed") | .ImageId' \
     | tail -1
 }
