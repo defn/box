@@ -5,7 +5,7 @@ function main {
   source "$shome/script/profile"
   source limbo_common
 
-   cat "$(set +f; ls -td .vagrant/machines/*/*/id | head -1)"; echo
+   cat "$(set +f; ls -td $VAGRANT_CWD/.vagrant/machines/*/*/id | head -1)"; echo
 }
 
 source sub-chain "$BASH_SOURCE" "$@"
