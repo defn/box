@@ -1,6 +1,5 @@
 {
   "require": [
-    "vagrant",
-    "provision"
+    "vagrant"
   ]
 }
