@@ -6,7 +6,7 @@ function main {
   source limbo_common
 
   if [[ -n "${1:-}" ]]; then
-    export BASEBOX_NAME="$1"; shift
+    shift 
   fi
   vagrant up --no-provision
   vagrant provision
