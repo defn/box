@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function main {
-  sudo chown ubuntu:ubuntu /data
+  sudo chown ubuntu:ubuntu /data /data/*/
 }
 
 main "$@"
