@@ -19,7 +19,9 @@ function main {
 
   if [[ -n "${LIMBO_EXPORT:-}" ]]; then
     AMI_SOURCE="$(cat "${LIMBO_EXPORT}")"
+    FOGG_AMI="${AMI_SOURCE}"
   fi
+
   export BASEBOX_SOURCE="${AMI_SOURCE:-$(source_id)}"
 
   set -- aws "$nm_export" "$@"
