@@ -17,6 +17,9 @@ function main {
     shift
   fi
 
+  if [[ -n "${LIMBO_EXPORT:-}" ]]; then
+    AMI_SOURCE="$(cat "${LIMBO_EXPORT}")"
+  fi
   export BASEBOX_SOURCE="${AMI_SOURCE:-$(source_id)}"
 
   set -- aws "$nm_export" "$@"

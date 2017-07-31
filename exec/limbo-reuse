@@ -5,6 +5,7 @@ function main {
   source "$shome/script/profile"
   source limbo_common
 
+  export LIMBO_EXPORT="$(mktemp -t XXXXXX)"
   limbo export "$@"
   limbo vagrant destroy -f
   limbo repackage "$@"

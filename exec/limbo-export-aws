@@ -13,6 +13,9 @@ function main {
         if [[ -n "${GOLDEN_NAME:-}" ]]; then
           aws ec2 create-tags --resource "$id_ami" --tags Key=Block,Value="$GOLDEN_NAME-$(date +%s)"
         fi
+        if [[ -n "${LIMBO_EXPORT:-}" ]]; then
+          echo "$id_ami" > "${LIMBO_EXPORT}"
+        fi
         break
         ;;
       pending)
