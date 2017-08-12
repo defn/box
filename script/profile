@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
   
 function _limbo_profile {
-  local shome="${_limbo_home:-"$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"}"
+  local shome="${_limbo_home:="$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"}"
   PATH="$shome/bin:$shome/exec:$PATH"
 
   export LIMBO_HOME="$shome"
